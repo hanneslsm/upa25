@@ -629,19 +629,19 @@
 	"templateParts": [
 		{
 			"area": "header",
-			"name": "header"
+			"name": "header",
+			"title": "Header (default)"
 		},
 		{
 			"area": "footer",
 			"name": "footer",
-			"title": "Footer"
+			"title": "Footer (default)"
 		},
 		{
 			"area": "footer",
 			"name": "footer-centered",
 			"title": "Footer Centered"
 		}
-
 	],
 	"version": 3,
 	"$schema": "https://schemas.wp.org/wp/6.8/theme.json"

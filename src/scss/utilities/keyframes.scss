@@ -1,0 +1,22 @@
+@keyframes float {
+	0% {
+		transform: translateY(2px);
+	}
+	50% {
+		transform: translateY(-2px);
+	}
+	100% {
+		transform: translateY(2px);
+	}
+}
+
+@keyframes poof {
+	0% {
+		opacity: 1;
+		transform: scale(1) rotate(0deg);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(0.2) rotate(720deg);
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"version": 3,
+	"$schema": "https://schemas.wp.org/wp/6.7/theme.json",
+	"blockTypes": ["core/paragraph"],
+	"slug": "overline",
+	"title": "Overline",
+	"styles":{
+		"typography": {
+			"fontSize": "clamp(0.75rem, 0.313vw + 0.625rem, 0.875rem)",
+			"fontWeight": "600",
+			"letterSpacing": "clamp(0.063rem, 0.156vw + 0rem, 0.125rem)",
+			"textTransform": "uppercase"
+		},
+		"color": {
+			"text": "var:preset|color|contrast-6"
+		}
+	}
+}

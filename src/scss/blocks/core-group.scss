@@ -1,0 +1,17 @@
+///
+/// Group
+///
+
+/**
+ * see also section styles
+ */
+
+/* Block Style: Spotlight
+--------------------------------------------- */
+.is-style-spotlight {
+	background-image: radial-gradient(
+		at 320px 100px,
+		var(--wp--preset--color--base) 0,
+		var(--wp--preset--color--brand-3) 70%
+	);
+}

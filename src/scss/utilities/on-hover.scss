@@ -1,0 +1,104 @@
+///
+/// Utilities: On Hover
+///
+
+@use "sass:color";
+
+/**
+ * Shadows
+ * ============================================================== */
+
+.on-hover-shadow-x-small {
+	transition: box-shadow 200ms linear;
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--x-small);
+	}
+}
+
+.on-hover-shadow-small {
+	transition: box-shadow 200ms linear;
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--small);
+	}
+}
+
+.on-hover-shadow-medium {
+	transition: box-shadow 200ms linear;
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--medium);
+	}
+}
+
+.on-hover-shadow-large {
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--large);
+	}
+}
+
+.on-hover-shadow-x-large {
+	transition: box-shadow 200ms linear;
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--x-large);
+	}
+}
+
+.on-hover-shadow-xx-large {
+	transition: box-shadow 200ms linear;
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--xx-large);
+	}
+}
+
+/**
+ * Shine Effect
+ *
+ * inspired by https://codepen.io/jackdomleo7/pen/XWmzeNb
+ * ============================================================== */
+
+.on-hover-shine {
+	position: relative;
+	overflow: hidden;
+	cursor: auto;
+
+	&::before {
+		background: linear-gradient(
+			to right,
+			color.scale(#fff, $alpha: -100%) 0%,
+			color.scale(#fff, $alpha: -70%) 100%
+		);
+		content: "";
+		display: block;
+		height: 100%;
+		left: -100%;
+		position: absolute;
+		top: 0;
+		transform: skewX(-25deg);
+		width: 50%;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	&:hover,
+	&:focus {
+		&::before {
+			animation: shine 0.85s;
+		}
+	}
+
+	@keyframes shine {
+		100% {
+			left: 125%;
+		}
+	}
+}
+
+/**
+ * Scale Effect
+ * ============================================================== */
+.on-hover-scale {
+	transition: transform 0.2s linear;
+	transform-origin: bottom;
+	&:hover {
+		transform: scale(1.02);
+	}
+}

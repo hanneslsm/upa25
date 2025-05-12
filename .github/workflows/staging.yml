@@ -1,0 +1,34 @@
+name: 👨‍💻 Staging Deploy
+
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        ref: main
+
+    - name: 🔨 Build Project
+      run: |
+        npm install
+        npm run build
+
+    - name: 📂 FTP Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.STAGING_FTP_HOST }}
+        username: ${{ secrets.STAGING_FTP_USER }}
+        password: ${{ secrets.STAGING_FTP_PASSWORD }}
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/src/**

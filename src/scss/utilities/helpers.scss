@@ -1,0 +1,188 @@
+/**
+ * Helper classes
+ * @version 0.2.0
+ */
+@use "../base/variables" as *;
+
+/* Helpers
+--------------------------------------------- */
+/* Overflow */
+.overflow-hidden {
+	overflow: hidden;
+}
+.overflow-clip {
+	overflow: initial;
+	overflow: clip;
+}
+/* Flex */
+.flex-row {
+	flex-direction: row;
+}
+.flex-column {
+	flex-direction: column;
+}
+.shrink-0 {
+	flex-shrink: 0;
+}
+.shrink-1 {
+	flex-shrink: 1;
+}
+
+/* Positions */
+.position-absolute {
+	position: absolute;
+}
+.position-relative {
+	position: relative;
+}
+
+/* z-index */
+.z--1 {
+	z-index: 1000;
+}
+.z-1000 {
+	z-index: 1000;
+}
+.z-2000 {
+	z-index: 2000;
+}
+.z-3000 {
+	z-index: 3000;
+}
+.z-4000 {
+	z-index: 4000;
+}
+.z-5000 {
+	z-index: 5000;
+}
+.z-6000 {
+	z-index: 6000;
+}
+.z-7000 {
+	z-index: 7000;
+}
+.z-8000 {
+	z-index: 8000;
+}
+.z-9000 {
+	z-index: 9000;
+}
+.z-9999 {
+	z-index: 9999;
+}
+
+/* Top */
+.top-10 {
+	top: var(--wp--preset--spacing--10) !important;
+}
+.top-20 {
+	top: var(--wp--preset--spacing--20) !important;
+}
+.top-30 {
+	top: var(--wp--preset--spacing--30) !important;
+}
+.top-40 {
+	top: var(--wp--preset--spacing--40) !important;
+}
+.top-50 {
+	top: var(--wp--preset--spacing--50) !important;
+}
+.top-60 {
+	top: var(--wp--preset--spacing--60) !important;
+}
+.top-60 {
+	top: var(--wp--preset--spacing--70) !important;
+}
+
+/* Blur */
+.blur-5 {
+	backdrop-filter: blur(5px);
+}
+
+/* Text */
+.nowrap {
+	white-space: nowrap;
+}
+
+.no-underlines {
+	text-decoration: none;
+	a {
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: none;
+	}
+}
+
+/* Height */
+.has-no-max-height {
+	max-height: none !important;
+}
+
+/* Rotate */
+.rotate-plus-2 {
+	transform: rotate(2deg);
+}
+.rotate-plus-3 {
+	transform: rotate(3deg);
+}
+
+.rotate-minus-2 {
+	transform: rotate(-2deg);
+}
+.rotate-minus-3 {
+	transform: rotate(-3deg);
+}
+
+/* Responsive
+--------------------------------------------- */
+
+@mixin responsive-styles($breakpoint, $prefix) {
+	@media screen and (max-width: $breakpoint) {
+		.#{$prefix}-reverse-order {
+			flex-direction: column-reverse;
+		}
+
+		.#{$prefix}-flex-column {
+			flex-direction: column !important;
+			align-items: flex-start;
+		}
+
+		.#{$prefix}-flex-row {
+			flex-direction: row !important;
+		}
+
+		.#{$prefix}-grid-row {
+			grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+		}
+
+		.#{$prefix}-min-height-100svh {
+			min-height: 100svh;
+		}
+
+		.#{$prefix}-left {
+			justify-content: flex-start !important;
+			text-align: left;
+		}
+
+		.#{$prefix}-center {
+			justify-content: center !important;
+			text-align: center;
+		}
+
+		.#{$prefix}-right {
+			justify-content: flex-end !important;
+			text-align: right;
+		}
+
+		@for $i from 1 through 6 {
+			.#{$prefix}-grid-order-#{$i} {
+				order: #{$i};
+			}
+		}
+	}
+}
+
+@include responsive-styles($mobile, "on-mobile");
+@include responsive-styles($medium, "on-medium");
+@include responsive-styles($large, "on-large");

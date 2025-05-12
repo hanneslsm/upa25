@@ -1,0 +1,67 @@
+///
+/// Forms & Input Fields
+///
+
+.form {
+	label {
+		margin-top: 24px;
+		font-size: var(--wp--preset--font-size--small);
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="tel"],
+	input[type="number"],
+	input[type="password"],
+	input[type="search"],
+	input[type="url"] {
+		border-radius: 8px;
+		font-size: 1rem;
+		line-height: 1.5;
+		border: 1px solid var(--wp--preset--color--base-5);
+		padding: var(--wp--preset--spacing--10);
+		max-width: stretch; /* https://github.com/hanneslsm/bittnerkrull25/issues/61 */
+	}
+	textarea {
+		font-size: 1rem;
+		border-radius: 8px;
+		border: 1px solid var(--wp--preset--color--base-5);
+		padding: var(--wp--preset--spacing--10);
+		max-width: stretch; /* https://github.com/hanneslsm/bittnerkrull25/issues/61 */
+	}
+	select {
+		border-radius: 8px;
+		font-size: 1rem;
+		line-height: 1.5;
+		border: 1px solid var(--wp--preset--color--base-5);
+		padding: var(--wp--preset--spacing--10);
+	}
+
+	/**
+   * Button
+   */
+	input[type="submit"] {
+		background-color: var(--wp--preset--color--brand-3);
+		color: var(--wp--preset--color--base);
+		padding: 12px 24px;
+		border: none;
+		font-size: 1rem;
+		font-family: var(--wp--preset--font-family--open-sans);
+		border-radius: 8px;
+		transition: all 100ms ease-in-out;
+		box-shadow: var(--wp--preset--shadow--small);
+
+		&:hover {
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--brand-3) 92%,
+				transparent
+			);
+			cursor: pointer;
+			box-shadow: var(--wp--preset--shadow--medium);
+		}
+		&:active {
+			scale: (0.98);
+		}
+	}
+}

@@ -1,0 +1,40 @@
+///
+/// Image
+///
+
+/* Block Style: Screenshot
+--------------------------------------------- */
+.wp-block-image.is-style-screenshot {
+	img {
+		outline: 1px solid var(--wp--preset--color--base-4);
+	}
+
+	/* remove styles on lightbox */
+	.lightbox-image-container & {
+		img {
+			outline: none;
+			box-shadow: none;
+			border: none;
+		}
+	}
+}
+
+/* Block Style: Picture Frame
+--------------------------------------------- */
+.wp-block-image.is-style-picture-frame {
+	transition: all 0.2s ease-in-out;
+	img {
+		overflow: none;
+		outline: 1px solid var(--wp--preset--color--base-3);
+		outline-offset: -1px;
+		box-shadow: var(--wp--preset--shadow--small);
+		border: 0.6em solid var(--wp--preset--color--base);
+		transition: all 0.2s ease-in-out;
+	}
+	&:hover img {
+		box-shadow: var(--wp--preset--shadow--medium);
+	}
+	&:hover {
+		transform: rotate(-2deg) !important;
+	}
+}

@@ -1,0 +1,16 @@
+///
+/// File
+///
+
+/* General: File Button Styling
+--------------------------------------------- */
+.wp-block-file__button:is(a):focus,
+.wp-block-file__button:is(a):hover,
+.wp-block-file__button:is(a):visited {
+	opacity: 1;
+	text-decoration: none;
+	box-shadow: var(--wp--preset--shadow--medium);
+}
+:where(.wp-block-file__button):is(a):active {
+	scale: (0.98);
+}

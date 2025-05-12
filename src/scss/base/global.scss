@@ -1,0 +1,20 @@
+///
+/// Global Defaults
+///
+
+/* Smooth transitions between pages */
+@view-transition {
+	navigation: auto;
+}
+
+/* Smooth scroll */
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-variation-settings: "slnt" 0; /* Bug Fix: Variable font is displayed italic */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-smooth: never;
+}

@@ -1,0 +1,14 @@
+///
+/// Global Elements
+///
+
+/* Button
+--------------------------------------------- */
+.wp-element-button:hover {
+	background-color: color-mix(
+		in srgb,
+		var(--wp--preset--color--brand-2) 95%,
+		transparent
+	);
+	opacity: 1;
+}

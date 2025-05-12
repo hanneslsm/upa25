@@ -3,7 +3,6 @@
  * upa25 Dashboard Widget
  *
  * @package upa25
- * @since 0.1.0
  * @version 1.2.0
  */
 

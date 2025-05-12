@@ -4,7 +4,6 @@
  * Patterns Setup
  *
  * @package upa25
- * @since 0.7
  */
 
 

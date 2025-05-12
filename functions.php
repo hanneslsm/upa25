@@ -4,7 +4,6 @@
  * upa25 functions and definitions
  *
  * @package upa25
- * @since 0.1
  */
 
 

@@ -4,7 +4,6 @@
  * Remove default css. Use only for development!
  *
  * @package upa25
- * @since 0.1.0
  * @link https://github.com/WordPress/gutenberg/issues/36834#issuecomment-1769802551
  * @author https://github.com/bd-viget
  */

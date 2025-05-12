@@ -3,7 +3,6 @@
  * Enqueue frontend and editor styles.
  *
  * @package upa25
- * @since 0.1.0
  */
 
 /**

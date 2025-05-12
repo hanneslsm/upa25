@@ -4,7 +4,6 @@
  * Setup
  *
  * @package upa25
- * @since 0.1.0
  * @link https://developer.wordpress.org/themes/block-themes/block-theme-setup/
  */
 

@@ -1,8 +1,8 @@
 == upa25 ==
 
 Contributors: hanneslsm, Studio Leismann
-Requires at least: 6.0
-Tested up to: 6.6
+Requires at least: 6.6
+Tested up to: 6.8.1
 Requires PHP: 5.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -10,14 +10,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-upa25 is a custom the for StudioLeismann.com
-Created by hanneslsm in Sevilla and Berlin
+upa25 is a custom the for Unique Pole Art https://poledance-darmstadt.de
 
-== Greetings ==
-
-Howdy a8c!
-Also, hey mom!
-And hello world!
 
 == Changelog ==
 
@@ -25,7 +19,7 @@ see https://github.com/hanneslsm/upa25/releases
 
 == Copyright ==
 
-upa25 WordPress Theme, (C) 2024 hanneslsm, Studio Leismann
+upa25 WordPress Theme, (C) 2025 hanneslsm, Studio Leismann
 upa25 is distributed under the terms of the GNU GPL.
 
 This program is free software: you can redistribute it and/or modify
@@ -40,5 +34,5 @@ GNU General Public License for more details.
 
 == Build Process ==
 
-Dieses Theme benutzt wp-scripts als build process.
-Siehe package.json
+This theme uses wp-scripts as build process.
+See package.json

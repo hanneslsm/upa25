@@ -630,17 +630,22 @@
 		{
 			"area": "header",
 			"name": "header",
-			"title": "Header (default)"
+			"title": "Header"
 		},
 		{
 			"area": "footer",
 			"name": "footer",
-			"title": "Footer (default)"
+			"title": "Footer"
 		},
 		{
 			"area": "footer",
 			"name": "footer-centered",
 			"title": "Footer Centered"
+		},
+		{
+			"area": "footer",
+			"name": "footer-left",
+			"title": "Footer Left"
 		}
 	],
 	"version": 3,

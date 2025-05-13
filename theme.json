@@ -101,7 +101,7 @@
 					"slug": "brand-3"
 				},
 				{
-					"color": "#FBEFF3",
+					"color": "#F7BED2",
 					"name": "Brand 4",
 					"slug": "brand-4"
 				},
@@ -340,11 +340,11 @@
 	"styles": {
 		"blocks": {
 			"core/button": {
-				"border": {
-					"radius": "8px"
-				},
 				"color": {
 					"background": "var(--wp--preset--color--brand-3)"
+				},
+				"border": {
+					"radius": "999px"
 				},
 				"shadow": "var(--wp--preset--shadow--small)",
 				"typography": {
@@ -371,7 +371,6 @@
 			"core/code": {
 				"border": {
 					"color": "var(--wp--preset--color--base-4)",
-					"radius": "8px",
 					"style": "solid",
 					"width": "1px"
 				},
@@ -385,11 +384,6 @@
 						"right": "var(--wp--preset--spacing--20)",
 						"top": "var(--wp--preset--spacing--20)"
 					}
-				}
-			},
-			"core/image": {
-				"border": {
-					"radius": "8px"
 				}
 			},
 			"core/navigation-link": {
@@ -415,11 +409,6 @@
 							}
 						}
 					}
-				}
-			},
-			"core/post-featured-image": {
-				"border": {
-					"radius": "8px"
 				}
 			},
 			"core/post-terms": {
@@ -492,9 +481,6 @@
 				}
 			},
 			"core/quote": {
-				"border": {
-					"radius": "8px"
-				},
 				"color": {
 					"background": "var(--wp--preset--color--base-2)"
 				},
@@ -541,9 +527,6 @@
 		},
 		"elements": {
 			"button": {
-				"border": {
-					"radius": "8px"
-				},
 				"color": {
 					"background": "var(--wp--preset--color--brand-3)",
 					"text": "var(--wp--preset--color--base)"

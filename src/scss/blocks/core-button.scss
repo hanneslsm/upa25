@@ -24,7 +24,7 @@
 	&:not(.has-background):hover {
 		background-color: color-mix(
 			in srgb,
-			var(--wp--preset--color--brand-2) 95%,
+			var(--wp--preset--color--brand) 90%,
 			transparent
 		);
 	}

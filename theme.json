@@ -344,7 +344,7 @@
 					"radius": "8px"
 				},
 				"color": {
-					"background": "var(--wp--preset--color--brand-2)"
+					"background": "var(--wp--preset--color--brand)"
 				},
 				"shadow": "var(--wp--preset--shadow--small)",
 				"typography": {

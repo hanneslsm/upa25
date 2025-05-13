@@ -344,7 +344,7 @@
 					"radius": "8px"
 				},
 				"color": {
-					"background": "var(--wp--preset--color--brand-3)"
+					"background": "var(--wp--preset--color--brand-2)"
 				},
 				"shadow": "var(--wp--preset--shadow--small)",
 				"typography": {
@@ -353,8 +353,12 @@
 				"variations": {
 					"outline": {
 						"border": {
-							"color": "currentColor",
+							"color": "var(--wp--preset--color--brand-2)",
 							"width": "1px"
+						},
+						"color": {
+							"background": "var(--wp--preset--color--base)",
+							"text": "var(--wp--preset--color--brand)"
 						}
 					}
 				}

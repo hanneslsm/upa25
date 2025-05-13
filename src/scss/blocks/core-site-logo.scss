@@ -1,0 +1,11 @@
+///
+/// Site Logo
+///
+
+.wp-block-site-logo a img {
+	transition: transform 0.3s ease;
+
+	&:hover {
+		transform: scale(1.05);
+	}
+}

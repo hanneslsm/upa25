@@ -10,7 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-upa25 is a custom the for Unique Pole Art https://poledance-darmstadt.de
+upa25 is a custom theme for Unique Pole Art https://poledance-darmstadt.de
 
 
 == Changelog ==

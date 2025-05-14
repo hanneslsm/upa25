@@ -3,10 +3,10 @@
  */
 const path = require( 'path' );
 const { merge } = require( 'webpack-merge' );
-const CopyWebpackPlugin    = require( 'copy-webpack-plugin' );
-const ImageMinimizerPlugin = require( 'image-minimizer-webpack-plugin' );
+const CopyWebpackPlugin      = require( 'copy-webpack-plugin' );
+const ImageMinimizerPlugin   = require( 'image-minimizer-webpack-plugin' );
 
-const common = require( './webpack.common' );
+const common = require( './webpack.common.js' );
 
 module.exports = merge( common, {
 	mode: 'production',
@@ -26,10 +26,7 @@ module.exports = merge( common, {
 			minimizer: {
 				implementation: ImageMinimizerPlugin.sharpMinify,
 				options: {
-					resize: {
-						width: 2560,
-						withoutEnlargement: true,
-					},
+					resize: { width: 2560, withoutEnlargement: true },
 					encodeOptions: {
 						jpeg: { quality: 50 },
 						png:  { quality: 50 },

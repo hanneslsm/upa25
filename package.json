@@ -3,8 +3,8 @@
 	"version": "0.1.0",
 	"main": "index.js",
 	"scripts": {
-		"start": "wp-scripts start --config webpack.config.js --env development ",
-		"build": "wp-scripts build --config webpack.config.js --env production",
+		"start": "wp-scripts start --webpack-config webpack.dev.js",
+		"build": "wp-scripts build --webpack-config webpack.prod.js",
 		"lint:css": "wp-scripts lint-style 'src/scss/*'",
 		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",
 		"lint:js": "wp-scripts lint-js 'src/js/*'",
@@ -21,7 +21,7 @@
 		"!.editorconfig",
 		"!.gitignore",
 		"!package.json",
-		"!webpack.config.js"
+		"!webpack.common.js"
 	],
 	"author": "hanneslsm",
 	"license": "GPL-2.0",

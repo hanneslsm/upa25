@@ -41,3 +41,6 @@ dist/
 maps/
 .autohidefiles
 .vscode
+
+
+src/images/ignore/

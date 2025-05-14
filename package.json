@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "wp-scripts start --webpack-config webpack.dev.js",
-		"build": "wp-scripts build --webpack-config webpack.prod.js",
+    	"build": "wp-scripts build --webpack-config webpack.prod.js",
 		"lint:css": "wp-scripts lint-style 'src/scss/*'",
 		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",
 		"lint:js": "wp-scripts lint-js 'src/js/*'",

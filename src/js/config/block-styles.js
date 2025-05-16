@@ -24,8 +24,10 @@ const blockStyles = [
 	},
 	{
 		block: 'core/cover',
-		styles: [ { name: 'blurred', label: 'Blurred' },
-		 { name: 'cards', label: 'Cards' } ],
+		styles: [
+			{ name: 'blurred', label: 'Blurred' },
+			{ name: 'cards', label: 'Cards' },
+		],
 	},
 	{
 		block: 'core/image',

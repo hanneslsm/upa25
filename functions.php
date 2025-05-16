@@ -10,6 +10,9 @@
 // Setup
 require get_template_directory() . '/inc/setup.php';
 
+// Block Style Variations
+require get_template_directory() . '/inc/block-styles.php';
+
 // Patterns Setup
 require get_template_directory() . '/inc/block-patterns.php';
 

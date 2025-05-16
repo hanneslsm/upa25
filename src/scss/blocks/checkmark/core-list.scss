@@ -1,0 +1,14 @@
+///
+/// List
+///
+
+/* Block Style: Checkmark
+--------------------------------------------- */
+.wp-block-list.is-style-checkmark {
+	list-style-type: "\2713";
+	padding-inline-start: 3ch;
+
+	& li {
+		padding-inline-start: 1ch;
+	}
+}

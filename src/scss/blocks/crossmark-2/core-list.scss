@@ -1,0 +1,29 @@
+///
+/// List
+///
+
+
+/* Block Style: Crossmark 2 Red
+--------------------------------------------- */
+.wp-block-list.is-style-crossmark-2 {
+	padding: 0;
+	& li {
+		position: relative;
+		padding-left: 30px;
+		list-style: none;
+		margin-block-end: var(--wp--preset--spacing--10);
+	}
+	& li:after {
+		position: absolute;
+		left: 0;
+		top: 0.25em;
+		width: 2ch;
+		height: 2ch;
+		color: #e73d00;
+		text-align: center;
+		background-color: var(--wp--preset--color--base-3);
+		line-height: 1.2;
+		content: "\2717";
+		border-radius: 50%;
+	}
+}

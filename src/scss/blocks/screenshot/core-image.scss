@@ -1,0 +1,20 @@
+///
+/// Image
+///
+
+/* Block Style: Screenshot
+--------------------------------------------- */
+.wp-block-image.is-style-screenshot {
+	img {
+		outline: 1px solid var(--wp--preset--color--base-4);
+	}
+
+	/* remove styles on lightbox */
+	.lightbox-image-container & {
+		img {
+			outline: none;
+			box-shadow: none;
+			border: none;
+		}
+	}
+}

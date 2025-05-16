@@ -1,0 +1,20 @@
+///
+/// Button
+///
+
+/* Block Style: Brand
+--------------------------------------------- */
+.wp-block-button.is-style-brand {
+	> .wp-block-button__link {
+		color: var(--wp--preset--color--brand-5);
+		background-color: var(--wp--preset--color--brand-3);
+
+		&:hover {
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--brand-3) 92%,
+				transparent
+			);
+		}
+	}
+}

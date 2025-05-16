@@ -1,0 +1,44 @@
+///
+/// Button
+///
+
+
+/* Block Style: Fill
+--------------------------------------------- */
+.wp-block-button:not([class*="is-style-"]) > .wp-block-button__link,
+.wp-block-button.is-style-fill > .wp-block-button__link {
+	/* Hover effect for buttons without a background */
+	&:not(.has-background):hover {
+		background-color: color-mix(
+			in srgb,
+			var(--wp--preset--color--brand-3) 90%,
+			transparent
+		);
+	}
+
+	&.has-background:hover {
+		background-image: linear-gradient(
+			rgba(0, 0, 0, 0.2),
+			rgba(0, 0, 0, 0.2)
+		);
+		background-blend-mode: overlay;
+	}
+
+	/* Section Styles
+	--------------------------------------------- */
+
+	/* [Brand-3]  */
+	.is-style-section-brand-3 & {
+		&:not(.has-background):hover {
+			background-color: var(--wp--preset--color--base-3);
+			color: var(--wp--preset--color--contrast-2);
+		}
+	}
+
+	/* [Contrast-2] */
+	.is-style-section-contrast-2 & {
+		&:not(.has-background):hover {
+			background-color: var(--wp--preset--color--base-3);
+		}
+	}
+}

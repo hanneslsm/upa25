@@ -633,6 +633,11 @@
 			"area": "footer",
 			"name": "footer-left",
 			"title": "Footer Left"
+		},
+		{
+			"area": "footer",
+			"name": "footer-wide",
+			"title": "Footer Wide"
 		}
 	],
 	"version": 3,

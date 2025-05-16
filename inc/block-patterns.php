@@ -31,11 +31,15 @@ add_filter('should_load_remote_block_patterns', '__return_false');
  */
 
 
-add_action( 'init', 'upa25_register_pattern_categories' );
+add_action( 'init', 'upa25_register_pattern_categories', 0 );
 
 function upa25_register_pattern_categories() {
-	register_block_pattern_category( 'upa25/content', array(
-		'label'       => __( 'Content', 'upa25' ),
-		'description' => __( 'Generic content layouts.', 'upa25' )
-	) );
+    register_block_pattern_category( 'upa25/content', [
+        'label'       => __( 'Content', 'upa25' ),
+        'description' => __( 'Generic content layouts.', 'upa25' ),
+    ] );
+    register_block_pattern_category( 'upa25/cards', [
+        'label'       => __( 'Cards', 'upa25' ),
+        'description' => __( 'Generic card layouts.', 'upa25' ),
+    ] );
 }

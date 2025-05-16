@@ -6,8 +6,6 @@
 import './config/block-styles.js';
 import './config/block-variations.js';
 
-/* Import Utilities */
-import './utilities/on-stuck.js';
 
 /* Import Scripts */
 import './custom/sticker.js';

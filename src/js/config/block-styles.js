@@ -19,10 +19,6 @@ const blockStyles = [
 		styles: [ { name: 'scale-effect', label: 'Scale Effect' } ],
 	},
 	{
-		block: 'core/group',
-		styles: [ { name: 'spotlight', label: 'Spotlight' } ],
-	},
-	{
 		block: 'core/cover',
 		styles: [
 			{ name: 'blurred', label: 'Blurred' },

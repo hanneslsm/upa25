@@ -2,15 +2,14 @@
  * upa25 Webpack configuration
  *
  * @package upa25
- * @version 2.0.0
+ * @version 2.1.0
  *
+ * 2.1.0: Add support for automatic block-style entries and recursive block SCSS
  * 2.0.0: Add support for webp images
  * 1.0.0: Initial version
  */
 
-/**
- * External dependencies
- */
+/** External dependencies */
 const path = require("path");
 const fs = require("fs");
 const { merge } = require("webpack-merge");
@@ -18,19 +17,13 @@ const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const sharp = require("sharp");
 
-/**
- * WordPress dependencies
- */
+/** WordPress dependencies */
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 
-/**
- * Read version from package.json
- */
+/** Read version from package.json */
 const packageJson = require("./package.json");
 
-/**
- * Utility: get SCSS files in a directory
- */
+/** Utility: find all SCSS files in a directory */
 function getScssFiles(dir) {
 	return fs.existsSync(dir)
 		? fs
@@ -40,41 +33,91 @@ function getScssFiles(dir) {
 		: [];
 }
 
+/** Utility: recursively get block entries */
+function getRecursiveBlockEntries(rootDir, outputDir) {
+	if (!fs.existsSync(rootDir)) return {};
+	return fs
+		.readdirSync(rootDir, { withFileTypes: true })
+		.reduce((entries, dirent) => {
+			const fullPath = path.join(rootDir, dirent.name);
+			if (dirent.isDirectory()) {
+				Object.assign(
+					entries,
+					getRecursiveBlockEntries(fullPath, `${outputDir}/${dirent.name}`),
+				);
+			} else if (dirent.isFile() && dirent.name.endsWith(".scss")) {
+				const name = dirent.name.replace(/\.scss$/, "");
+				entries[`${outputDir}/${name}`] = fullPath;
+			}
+			return entries;
+		}, {});
+}
+
+/** Utility: get styled block variation entries */
+function getStyleBlockEntries(rootDir, outputDir) {
+	if (!fs.existsSync(rootDir)) return {};
+	return fs
+		.readdirSync(rootDir)
+		.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
+		.reduce((entries, styleName) => {
+			const dir = path.join(rootDir, styleName);
+			fs.readdirSync(dir)
+				.filter((f) => f.endsWith(".scss"))
+				.forEach((f) => {
+					const name = f.replace(/\.scss$/, "");
+					entries[`${outputDir}/${styleName}/${name}`] = path.resolve(dir, f);
+				});
+			return entries;
+		}, {});
+}
+
 module.exports = (env) => {
 	const isProd = process.env.NODE_ENV === "production";
 	const mode = isProd ? "production" : "development";
 
-	// SCSS entries
-	const blockDir = path.resolve(__dirname, "src/scss/blocks");
-	const blockStyles = fs.existsSync(blockDir)
-		? fs
-				.readdirSync(blockDir)
-				.filter((f) => f.endsWith(".scss"))
-				.reduce((o, f) => {
-					o[`css/blocks/${f.replace(/\.scss$/, "")}`] = path.resolve(
-						blockDir,
-						f,
-					);
-					return o;
-				}, {})
-		: {};
+	// Base SCSS entries
+	const globalEntry = {
+		"css/global": path.resolve(__dirname, "src/scss/global.scss"),
+	};
+	const screenEntry = {
+		"css/screen": path.resolve(__dirname, "src/scss/screen.scss"),
+	};
+	const editorEntry = {
+		"css/editor": path.resolve(__dirname, "src/scss/editor.scss"),
+	};
 
-	const styleBlocks = getScssFiles(
-		path.resolve(__dirname, "src/scss/styles/blocks"),
+	// JavaScript entry
+	const jsEntry = { "js/global": path.resolve(__dirname, "src/js/global.js") };
+
+	// Recursive block SCSS entries
+	const blockDir = path.resolve(__dirname, "src/scss/blocks");
+	const blockEntries = getRecursiveBlockEntries(blockDir, "css/blocks");
+
+	// Styled block variation entries
+	const styleBlocksDir = path.resolve(__dirname, "src/scss/styles/blocks");
+	const styleEntries = getStyleBlockEntries(
+		styleBlocksDir,
+		"css/styles/blocks",
 	);
-	const styleSections = getScssFiles(
+
+	// Sections styles if any
+	const sectionFiles = getScssFiles(
 		path.resolve(__dirname, "src/scss/styles/sections"),
 	);
+	const sectionEntry = sectionFiles.length
+		? { "css/styles/sections": sectionFiles }
+		: {};
 
-	const entries = {
-		"css/global": path.resolve(__dirname, "src/scss/global.scss"),
-		"css/screen": path.resolve(__dirname, "src/scss/screen.scss"),
-		"css/editor": path.resolve(__dirname, "src/scss/editor.scss"),
-		"js/global": path.resolve(__dirname, "src/js/global.js"),
-		...blockStyles,
-	};
-	if (styleBlocks.length) entries["css/styles/blocks"] = styleBlocks;
-	if (styleSections.length) entries["css/styles/sections"] = styleSections;
+	const entries = Object.assign(
+		{},
+		globalEntry,
+		screenEntry,
+		editorEntry,
+		jsEntry,
+		blockEntries,
+		styleEntries,
+		sectionEntry,
+	);
 
 	const plugins = [
 		...(defaultConfig.plugins || []),
@@ -130,7 +173,7 @@ module.exports = (env) => {
 		);
 	}
 
-	// bump theme version
+	// Bump theme version
 	plugins.push({
 		apply: (compiler) => {
 			compiler.hooks.afterEmit.tap("UpdateThemeVersionPlugin", () => {
@@ -156,7 +199,6 @@ module.exports = (env) => {
 		},
 		plugins,
 		stats: {
-
 			all: false,
 			source: true,
 			assets: true,

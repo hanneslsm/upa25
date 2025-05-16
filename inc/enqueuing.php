@@ -69,25 +69,53 @@ add_action( 'enqueue_block_editor_assets', 'upa25_enqueue_editor_styles' );
 /**
  * Enqueue individual block styles from the build/css/blocks directory.
  */
-function upa25_enqueue_block_styles() {
-	$blocks_dir   = get_theme_file_path( 'build/css/blocks/' );
-	$block_styles = glob( $blocks_dir . '*.css' );
+function upa25_register_block_styles() {
+    $blocks_dir = get_theme_file_path( 'build/css/blocks/' );
+    if ( is_dir( $blocks_dir ) ) {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator( $blocks_dir, FilesystemIterator::SKIP_DOTS )
+        );
+        foreach ( $iterator as $file ) {
+            if ( $file->isFile() && 'css' === $file->getExtension() ) {
+                // Pfad relativ zum blocks-Ordner
+                $relative = ltrim( str_replace( $blocks_dir, '', $file->getPathname() ), DIRECTORY_SEPARATOR );
+                // Verzeichnis-Name (oder "."), und Dateiname ohne .css
+                $subfolder = dirname( $relative );
+                $name      = basename( $relative, '.css' );
+                $block_name = preg_replace( '/-/', '/', $name, 1 );   // "core/cover"
+                // Handle: wenn Root (.) dann ohne Ordner, sonst mit
+                $handle = 'upa25-block-' . ( '.' === $subfolder ? $name : "{$subfolder}-{$name}" );
+                $src    = get_theme_file_uri( "build/css/blocks/{$relative}" );
+                wp_register_style( $handle, $src );
+                wp_enqueue_block_style( $block_name, [ 'handle' => $handle ] );
+            }
+        }
+    }
 
-	if ( $block_styles ) {
-		foreach ( $block_styles as $style_path ) {
-			$filename   = basename( $style_path, '.css' );
-			// Replace only the first hyphen with a slash for the block name.
-			$block_name = preg_replace( '/-/', '/', $filename, 1 );
-			$style_uri  = get_theme_file_uri( 'build/css/blocks/' . $filename . '.css' );
-
-			wp_enqueue_block_style(
-				$block_name,
-				array(
-					'handle' => 'upa25-' . $filename . '-style',
-					'src'    => $style_uri,
-				)
-			);
-		}
-	}
+    $styles_root = get_theme_file_path( 'build/css/styles/blocks/' );
+    if ( is_dir( $styles_root ) ) {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator( $styles_root, FilesystemIterator::SKIP_DOTS )
+        );
+        foreach ( $iterator as $file ) {
+            if ( $file->isFile() && 'css' === $file->getExtension() ) {
+                $relative   = ltrim( str_replace( $styles_root, '', $file->getPathname() ), DIRECTORY_SEPARATOR );
+                // Hier ist das erste Segment der Style-Name
+                $parts      = explode( DIRECTORY_SEPARATOR, $relative );
+                $style_name = array_shift( $parts );
+                $filename   = implode( DIRECTORY_SEPARATOR, $parts );
+                $name       = basename( $filename, '.css' );
+                $block_name = preg_replace( '/-/', '/', $name, 1 );
+                $handle     = "upa25-{$style_name}-{$name}";
+                $src        = get_theme_file_uri( "build/css/styles/blocks/{$relative}" );
+                wp_register_style( $handle, $src );
+                register_block_style( $block_name, [
+                    'name'         => $style_name,
+                    'label'        => ucfirst( $style_name ),
+                    'style_handle' => $handle,
+                ] );
+            }
+        }
+    }
 }
-add_action( 'init', 'upa25_enqueue_block_styles' );
+add_action( 'init', 'upa25_register_block_styles' );

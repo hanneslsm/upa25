@@ -8,18 +8,14 @@
  */
 
 
-function upa25_spacer_default_variation( $variations, $block_type ) {
+function upa25_spacer_variation( $variations, $block_type ) {
     // Only target the core/spacer block.
     if ( 'core/spacer' !== $block_type->name ) {
         return $variations;
     }
 
-    // Define the new variation.
+    // Overwrite the default variation and use a spacing preset instead.
     $variations[] = array(
-        'name'       => 'spacer-default',
-        'title'      => __( 'Spacer', 'upa25' ),
-        'description'=> __( 'Overwrite default spacer height', 'upa25' ),
-        'scope'      => array( 'inserter' ),
         'isDefault'  => true,
         'attributes' => array(
             'height' => 'var:preset|spacing|40', // Sets default height.
@@ -28,4 +24,4 @@ function upa25_spacer_default_variation( $variations, $block_type ) {
 
     return $variations;
 }
-add_filter( 'get_block_type_variations', 'upa25_spacer_default_variation', 10, 2 );
+add_filter( 'get_block_type_variations', 'upa25_spacer_variation', 10, 2 );

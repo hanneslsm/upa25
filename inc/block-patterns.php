@@ -30,8 +30,8 @@ add_filter('should_load_remote_block_patterns', '__return_false');
  * @link https://developer.wordpress.org/themes/patterns/registering-patterns/#registering-a-pattern-category
  */
 
-
-add_action( 'init', 'upa25_register_pattern_categories', 0 );
+add_action( 'init', 'upa25_register_pattern_categories', 1 );
+// add_action( 'after_setup_theme', 'upa25_register_pattern_categories', 5 );
 
 function upa25_register_pattern_categories() {
     register_block_pattern_category( 'upa25/content', [
@@ -43,3 +43,4 @@ function upa25_register_pattern_categories() {
         'description' => __( 'Generic card layouts.', 'upa25' ),
     ] );
 }
+

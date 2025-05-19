@@ -94,11 +94,8 @@ module.exports = (env) => {
 	const blockEntries = getRecursiveBlockEntries(blockDir, "css/blocks");
 
 	// Styled block variation entries
-	const styleBlocksDir = path.resolve(__dirname, "src/scss/styles/blocks");
-	const styleEntries = getStyleBlockEntries(
-		styleBlocksDir,
-		"css/styles/blocks",
-	);
+	const styleBlocksDir = path.resolve(__dirname, "src/scss/block-styles");
+	const styleEntries = getStyleBlockEntries(styleBlocksDir, "css/block-styles");
 
 	// Sections styles if any
 	const sectionFiles = getScssFiles(

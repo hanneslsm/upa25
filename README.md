@@ -19,6 +19,10 @@
 ### Patterns
 - Register category in `inc/block-patterns.php`
 
+## What if patterns do not show up?
+- Set development mode to `theme` or `all` or purge the theme cache by visiting `/wp-admin/?purge-theme-cache`
+
 
 ### Block  variations
 - Register block variations via php in `inc/block-variations.php`
+

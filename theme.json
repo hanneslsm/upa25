@@ -16,8 +16,8 @@
 			"duotone": [
 				{
 					"colors": [
-						"black",
-						"white"
+						"#000",
+						"#fff"
 					],
 					"name": "Black and white",
 					"slug": "duotone-1"

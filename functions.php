@@ -10,6 +10,9 @@
 // Setup
 require get_template_directory() . '/inc/setup.php';
 
+// Enqueue files
+require get_template_directory() . '/inc/enqueuing.php';
+
 // Block  Variations
 require get_template_directory() . '/inc/block-variations.php';
 
@@ -19,8 +22,7 @@ require get_template_directory() . '/inc/block-styles.php';
 // Patterns Setup
 require get_template_directory() . '/inc/block-patterns.php';
 
-// Enqueue files
-require get_template_directory() . '/inc/enqueuing.php';
+
 
 // Dashboard Widget
 require get_template_directory() . '/inc/dashboard-widget.php';

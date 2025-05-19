@@ -340,11 +340,11 @@
 	"styles": {
 		"blocks": {
 			"core/button": {
-				"color": {
-					"background": "var(--wp--preset--color--brand-3)"
-				},
 				"border": {
 					"radius": "999px"
+				},
+				"color": {
+					"background": "var(--wp--preset--color--brand-3)"
 				},
 				"shadow": "var(--wp--preset--shadow--small)",
 				"typography": {

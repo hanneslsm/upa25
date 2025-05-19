@@ -25,8 +25,12 @@ require get_template_directory() . '/inc/enqueuing.php';
 // Dashboard Widget
 require get_template_directory() . '/inc/dashboard-widget.php';
 
+
 /**
  * Development only!
  */
 // Remove default CSS variables
 // require get_template_directory() . '/inc/dev_remove-defaults.php';
+
+// Purge theme cache
+require get_template_directory() . '/inc/dev_purge-themes-cache.php';

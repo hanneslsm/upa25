@@ -27,6 +27,10 @@ require get_template_directory() . '/inc/block-patterns.php';
 // Dashboard Widget
 require get_template_directory() . '/inc/dashboard-widget.php';
 
+// Helpers
+require get_template_directory() . '/inc/dev_helpers.php';
+
+
 
 /**
  * Development only!

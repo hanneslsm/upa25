@@ -54,37 +54,42 @@ function upa25_enqueue_frontend_styles()
 add_action('wp_enqueue_scripts', 'upa25_enqueue_frontend_styles');
 
 
-
-
-
-
-
 /**
- * Enqueue only the CSS files for blocks and block style variations
- * that are actually used on the current page.
- *
- * Scans rendered blocks via the render_block filter and loads:
- * - Base block styles from build/css/blocks/{block}.css
- * - Style variation CSS from build/css/block-styles/{style}/{block}.css
+ * 1. Collect everything that is actually rendered.
  */
-
 add_filter('render_block', 'upa25_collect_used_blocks', 10, 2);
-function upa25_collect_used_blocks($block_content, $block)
-{
-	static $collected = [];
 
-	$block_name = $block['blockName'];
-	if (! $block_name) {
+function upa25_collect_used_blocks(string $block_content, array $block): string
+{
+	static $collected = [
+		'blocks' => [],
+		'styles' => [],
+	];
+
+	if (empty($block['blockName'])) {
 		return $block_content;
 	}
 
-	// Collect Block
-	$collected['blocks'][] = $block_name;
+	$block_name = $block['blockName'];
 
-	// Collect Style
-	if (! empty($block['attrs']['className'])) {
-		if (preg_match('/is-style-([a-z0-9\-]+)/', $block['attrs']['className'], $matches)) {
-			$collected['styles'][$block_name][] = $matches[1];
+	// Collect block names.
+	if (! in_array($block_name, $collected['blocks'], true)) {
+		$collected['blocks'][] = $block_name;
+	}
+
+	// Collect style variations.
+	if (
+		! empty($block['attrs']['className'])
+		&& preg_match('/\bis-style-([a-z0-9\-]+)\b/', $block['attrs']['className'], $m)
+	) {
+		$style_slug = $m[1];
+
+		if (! isset($collected['styles'][$block_name])) {
+			$collected['styles'][$block_name] = [];
+		}
+
+		if (! in_array($style_slug, $collected['styles'][$block_name], true)) {
+			$collected['styles'][$block_name][] = $style_slug;
 		}
 	}
 
@@ -92,44 +97,93 @@ function upa25_collect_used_blocks($block_content, $block)
 	return $block_content;
 }
 
-function upa25_enqueue_all_block_styles()
+/**
+ * 2. Enqueue the collected block‐ and style‐variation CSS
+ */
+add_action('enqueue_block_assets', 'upa25_enqueue_block_styles', 20);
+
+function upa25_enqueue_block_styles(): void
 {
-	if (empty($GLOBALS['upa25_used_blocks'])) {
+	$used = $GLOBALS['upa25_used_blocks'] ?? [];
+
+	if (empty($used['blocks'])) {
 		return;
 	}
 
-	$used = $GLOBALS['upa25_used_blocks'];
+	$base_dir    = trailingslashit(get_theme_file_path('build/css/blocks'));
+	$base_url    = trailingslashit(get_theme_file_uri('build/css/blocks'));
+	$styles_dir  = trailingslashit(get_theme_file_path('build/css/block-styles'));
+	$styles_url  = trailingslashit(get_theme_file_uri('build/css/block-styles'));
 
-	// 1. Basis-Blockstyles
-	$base_dir = trailingslashit(get_theme_file_path('build/css/blocks'));
-	$base_url = trailingslashit(get_theme_file_uri('build/css/blocks'));
-
+	// Base block styles.
 	foreach ($used['blocks'] as $block_name) {
-		$slug  = str_replace('/', '-', $block_name); // e.g. core/cover → core-cover
-		$path  = "{$base_dir}{$slug}.css";
-		$url   = "{$base_url}{$slug}.css";
-		$handle = "upa25-block-style-{$slug}";
+		$slug = str_replace('/', '-', $block_name); // core/cover → core-cover
+		$path = "{$base_dir}{$slug}.css";
 
 		if (file_exists($path)) {
-			wp_enqueue_style($handle, $url, [], filemtime($path));
+			wp_enqueue_style(
+				"upa25-block-style-{$slug}",
+				"{$base_url}{$slug}.css",
+				[],
+				filemtime($path)
+			);
 		}
 	}
 
-	// 2. Block-Style-Variations
-	$styles_dir = trailingslashit(get_theme_file_path('build/css/block-styles'));
-	$styles_url = trailingslashit(get_theme_file_uri('build/css/block-styles'));
+	// Style variations.
+	if (! empty($used['styles'])) {
+		foreach ($used['styles'] as $block_name => $variations) {
+			$block_slug = str_replace('/', '-', $block_name);
 
-	foreach ($used['styles'] as $block_name => $styles) {
-		$block_slug = str_replace('/', '-', $block_name);
-		foreach ($styles as $style_slug) {
-			$path = "{$styles_dir}{$style_slug}/{$block_slug}.css";
-			$url  = "{$styles_url}{$style_slug}/{$block_slug}.css";
-			$handle = "upa25-block-style-{$block_slug}-{$style_slug}";
+			foreach ($variations as $style_slug) {
+				$path = "{$styles_dir}{$style_slug}/{$block_slug}.css";
 
-			if (file_exists($path)) {
-				wp_enqueue_style($handle, $url, [], filemtime($path));
+				if (file_exists($path)) {
+					wp_enqueue_style(
+						"upa25-block-style-{$block_slug}-{$style_slug}",
+						"{$styles_url}{$style_slug}/{$block_slug}.css",
+						[],
+						filemtime($path)
+					);
+				}
 			}
 		}
 	}
 }
-add_action('enqueue_block_assets', 'upa25_enqueue_all_block_styles');
+/**
+ * Enqueue ALL block & variation styles into the editor
+ */
+add_action('enqueue_block_editor_assets', 'upa25_enqueue_all_block_styles_in_editor', 5);
+
+function upa25_enqueue_all_block_styles_in_editor(): void
+{
+	$dir_base   = get_theme_file_path('build/css/blocks');
+	$url_base   = get_theme_file_uri('build/css/blocks');
+	$dir_styles = get_theme_file_path('build/css/block-styles');
+	$url_styles = get_theme_file_uri('build/css/block-styles');
+
+	// 1) Base block CSS
+	foreach (glob($dir_base . '/*.css') as $file) {
+		$slug = basename($file, '.css');
+		wp_enqueue_style(
+			"upa25-block-style-{$slug}",
+			"{$url_base}/{$slug}.css",
+			[],
+			filemtime($file)
+		);
+	}
+
+	// 2) Variation CSS: build/css/block-styles/{variation}/{block-slug}.css
+	foreach (glob($dir_styles . '/*/*.css') as $file) {
+		// $file === /path/to/theme/build/css/block-styles/duotone/core-cover.css
+		$rel     = str_replace($dir_styles . '/', '', $file);          // "duotone/core-cover.css"
+		list($variation, $css_file) = explode('/', $rel, 2);        // [ "duotone", "core-cover.css" ]
+		$block   = basename($css_file, '.css');
+		wp_enqueue_style(
+			"upa25-block-style-{$block}-{$variation}",
+			"{$url_styles}/{$variation}/{$block}.css",
+			[],
+			filemtime($file)
+		);
+	}
+}

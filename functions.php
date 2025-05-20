@@ -22,21 +22,20 @@ require get_template_directory() . '/inc/block-styles.php';
 // Patterns Setup
 require get_template_directory() . '/inc/block-patterns.php';
 
-
-
 // Dashboard Widget
 require get_template_directory() . '/inc/dashboard-widget.php';
-
-// Helpers
-require get_template_directory() . '/inc/dev_helpers.php';
 
 
 
 /**
- * Development only!
+ * Development tools
  */
+
 // Remove default CSS variables
 // require get_template_directory() . '/inc/dev_remove-defaults.php';
 
 // Purge theme cache
 require get_template_directory() . '/inc/dev_purge-themes-cache.php';
+
+// Helpers
+require get_template_directory() . '/inc/dev_helpers.php';

@@ -8,11 +8,7 @@
 .wp-block-button.is-style-fill > .wp-block-button__link {
 	/* Hover effect for buttons without a background */
 	&:not(.has-background):hover {
-		background-color: color-mix(
-			in srgb,
-			var(--wp--preset--color--brand-3) 90%,
-			transparent
-		);
+		background-color: var(--wp--preset--color--brand-2);
 	}
 
 	&.has-background:hover {
@@ -29,15 +25,15 @@
 	/* [Brand-3]  */
 	.is-style-section-brand-3 & {
 		&:not(.has-background):hover {
-			background-color: var(--wp--preset--color--base-3);
-			color: var(--wp--preset--color--contrast-2);
+			background-color: var(--wp--preset--color--brand);
+			color: var(--wp--preset--color--base);
 		}
 	}
 
 	/* [Contrast-2] */
 	.is-style-section-contrast-2 & {
 		&:not(.has-background):hover {
-			background-color: var(--wp--preset--color--base-3);
+			background-color: var(--wp--preset--color--brand);
 		}
 	}
 }

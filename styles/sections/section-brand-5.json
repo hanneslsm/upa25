@@ -36,12 +36,12 @@
 			"core/button": {
 				"color": {
 					"background": "var:preset|color|brand-3",
-					"text": "var:preset|color|base-2"
+					"text": "var:preset|color|base"
 				}
 			},
 			"core/separator":{
 				"color": {
-					"background": "var:preset|color|brand-4"
+					"text": "var:preset|color|brand-4"
 				}
 			}
 		}

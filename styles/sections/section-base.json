@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"$schema": "https://schemas.wp.org/wp/6.7/theme.json",
-	"blockTypes": ["core/group", "core/column"],
+	"blockTypes": ["core/group"],
 	"slug": "section-base",
 	"title": "[Base]",
 	"styles": {

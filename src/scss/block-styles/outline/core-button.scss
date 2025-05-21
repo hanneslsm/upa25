@@ -12,4 +12,55 @@
 			transparent
 		);
 	}
+
+	/* Section Styles
+	--------------------------------------------- */
+	/* [Brand-3]  */
+	.is-style-section-brand-3 & {
+		&:not(.has-background) {
+			background-color: transparent;
+			color: currentColor;
+			border: 1px solid var(--wp--preset--color--base);
+		}
+		&:hover {
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--brand) 20%,
+				transparent
+			);
+			border: 1px solid var(--wp--preset--color--brand-5);
+		}
+	}
+
+	/* [Brand-4]  */
+	.is-style-section-brand-4 & {
+		&:not(.has-background) {
+			color: var(--wp--preset--color--brand);
+		}
+		&:hover {
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--base) 80%,
+				transparent
+			);
+			border: 1px solid var(--wp--preset--color--brand);
+		}
+	}
+
+	/* [Contrast-2]  */
+	.is-style-section-contrast-2 & {
+		&:not(.has-background) {
+			background-color: transparent;
+			color: currentColor;
+			border: 1px solid var(--wp--preset--color--brand-4);
+		}
+		&:hover {
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--base) 5%,
+				transparent
+			);
+			border: 1px solid var(--wp--preset--color--brand-3);
+		}
+	}
 }

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Title: Content-2
- * Slug: upa25/content-2
+ * Title: Content-02
+ * Slug: upa25/content-02
  * Categories: upa25/content
  * Viewport width: 1280
  * Description: Content section with image and text

@@ -527,6 +527,9 @@
 		},
 		"elements": {
 			"button": {
+				"border": {
+					"radius": "999px"
+				},
 				"color": {
 					"background": "var(--wp--preset--color--brand-3)",
 					"text": "var(--wp--preset--color--base)"

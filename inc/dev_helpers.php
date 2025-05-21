@@ -282,7 +282,7 @@ function upa25_inline_js(): string
             { group: 'settings' },
             el(
                 PanelBody,
-                { title: 'Utility classes', initialOpen: true },
+                { title: 'Utility classes', initialOpen: false },
                 el( SearchControl, {
                     value: query,
                     placeholder: 'Search classes…',

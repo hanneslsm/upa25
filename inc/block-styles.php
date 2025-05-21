@@ -9,8 +9,7 @@ function upa25_register_block_style_variations() {
 
 	$block_styles = [
 		'core/button' => [
-			[ 'name' => 'brand', 'label' => __( 'Brand', 'upa25' ) ],
-			[ 'name' => 'base',  'label' => __( 'Base',  'upa25' ) ],
+			[ 'name' => 'ghost', 'label' => __( 'Ghost', 'upa25' ) ],
 		],
 		'core/details' => [
 			[ 'name' => 'chevron', 'label' => __( 'Chevron', 'upa25' ) ],

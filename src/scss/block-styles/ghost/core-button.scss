@@ -1,0 +1,21 @@
+///
+/// Button
+///
+
+/* Block Style: Ghost
+--------------------------------------------- */
+.wp-block-button.is-style-ghost > .wp-block-button__link {
+	color: currentColor;
+	background-color: transparent;
+	border: transparent;
+	box-shadow: none;
+
+	&:hover {
+		background-color: color-mix(
+			in srgb,
+			var(--wp--preset--color--base) 40%,
+			transparent
+		);
+		text-decoration: underline;
+	}
+}

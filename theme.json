@@ -623,6 +623,11 @@
 			"title": "Header"
 		},
 		{
+			"area": "header",
+			"name": "header-fixed",
+			"title": "Header Fixed"
+		},
+		{
 			"area": "footer",
 			"name": "footer",
 			"title": "Footer"

@@ -3,4 +3,5 @@
  */
 
 /* Import Scripts */
-import './custom/sticker.js';
+import './scripts/header-fixed.js';
+import './scripts/sticker.js';

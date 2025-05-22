@@ -35,6 +35,10 @@ add_action('init', 'upa25_register_pattern_categories', 1);
 
 function upa25_register_pattern_categories()
 {
+	register_block_pattern_category('upa25/components', [
+		'label'       => __('Components', 'upa25'),
+		'description' => __('Single components for specific use.', 'upa25'),
+	]);
 	register_block_pattern_category('upa25/content', [
 		'label'       => __('Content', 'upa25'),
 		'description' => __('Generic content layouts.', 'upa25'),

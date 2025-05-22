@@ -4,7 +4,6 @@
  * Slug: upa25/footer-wide
  * Categories: footer
  * Block Types: core/template-part/footer
- * Viewport width: 1920
  */
 ?>
 <!-- wp:group {"metadata":{"categories":["footer"],"patternName":"upa25/footer-wide"},"className":"is-style-footer","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}},"color":{"gradient":"linear-gradient(180deg,rgba(245,245,245,1) 0%,rgba(255,255,255,1) 100%)"}},"layout":{"inherit":true,"type":"constrained"}} -->

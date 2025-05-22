@@ -4,7 +4,6 @@
  * Slug: upa25/header
  * Categories: header
  * Block Types: core/template-part/header
- * Viewport width: 1920
  */
 ?>
 <!-- wp:group {"className":"is-style-part-header is-style-header","style":{"border":{"bottom":{"color":"var:preset|color|base-4","width":"1px"}},"spacing":{"padding":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}},"layout":{"type":"constrained"}} -->

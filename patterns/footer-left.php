@@ -4,7 +4,6 @@
  * Slug: upa25/footer-left
  * Categories: footer
  * Block Types: core/template-part/footer
- * Viewport width: 1920
  */
 ?>
 <!-- wp:group {"className":"is-style-footer","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"inherit":true,"type":"constrained"}} -->

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Title: Content-02
+ * Title: Content-two-columns-6633-with-text-and-image
  * Slug: upa25/content-02
  * Categories: upa25/content
  * Viewport width: 1280

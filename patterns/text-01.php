@@ -2,7 +2,7 @@
 /**
  * Title: Text-01
  * Slug: upa25/text-01
- * Categories: Text
+ * Categories: text
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Section","categories":["upa25/content"],"patternName":"upa25/content-1"},"align":"full","layout":{"type":"constrained"}} -->

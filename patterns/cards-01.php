@@ -3,7 +3,7 @@
  * Title: Cards-01
  * Slug: upa25/cards-01
  * Categories: upa25/cards
- * Viewport width: 1280
+ * Viewport width: 1920
  * Description: Layout section with cards
  */
 ?>

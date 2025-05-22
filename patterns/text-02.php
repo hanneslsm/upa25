@@ -3,6 +3,7 @@
  * Title: Text-02
  * Slug: upa25/text-02
  * Categories: text
+ * Viewport width: 1920
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Section","categories":["upa25/content"],"patternName":"upa25/content-1"},"align":"full","layout":{"type":"constrained"}} -->

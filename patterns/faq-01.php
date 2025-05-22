@@ -3,7 +3,7 @@
  * Title: FAQ-01
  * Slug: upa25/faq-01
  * Categories: upa25/faq
- * Viewport width: 1280
+ * Viewport width: 1920
  * Description: FAQ section
  */
 ?>

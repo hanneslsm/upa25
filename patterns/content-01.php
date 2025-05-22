@@ -3,7 +3,7 @@
  * Title: Content-two-columns-3366-with-image-and-text
  * Slug: upa25/content-01
  * Categories: upa25/content
- * Viewport width: 1280
+ * Viewport width: 1920
  * Description: Content section with image and text
  */
 ?>

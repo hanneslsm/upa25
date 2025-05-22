@@ -4,6 +4,7 @@
  * Slug: upa25/footer
  * Categories: footer
  * Block Types: core/template-part/footer
+ * Viewport width: 1920
  */
 ?>
 <!-- wp:group {"metadata":{"categories":["footer"],"patternName":"upa25/footer-centered"},"className":"is-style-footer","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}},"color":{"gradient":"linear-gradient(180deg,rgb(251,239,243) 0%,rgb(255,255,255) 100%)"},"border":{"top":{"color":"var:preset|color|brand-4","width":"1px"},"right":[],"bottom":[],"left":[]}},"layout":{"inherit":true,"type":"constrained"}} -->

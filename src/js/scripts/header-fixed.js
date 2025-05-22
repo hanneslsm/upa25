@@ -1,43 +1,57 @@
 ///
 /// Header fixed
 ///
-document.addEventListener('DOMContentLoaded', () => {
-  const header = document.querySelector('header .is-style-header-fixed');
-  if (!header) return;
+/**
+ * Header fixed, with admin bar offset for logged-in admins
+ */
+document.addEventListener("DOMContentLoaded", () => {
+	const header = document.querySelector("header .is-style-header-fixed");
+	if (!header) {
+		return;
+	}
 
-  let lastScroll = 0;
+	const adminBar = document.getElementById("wpadminbar");
+	let headerHeight, adminBarHeight, hideThreshold;
 
-  function adjustContentOffset() {
-    const h = header.getBoundingClientRect().height;
-    document.body.style.paddingTop = h + 'px';
-    return h;
-  }
+	function adjustContentOffset() {
+		adminBarHeight = adminBar ? adminBar.offsetHeight : 0;
+		headerHeight = header.getBoundingClientRect().height;
+		hideThreshold = adminBarHeight + headerHeight;
 
-  let headerHeight = adjustContentOffset();
+		// only push content by header height, not including admin bar
+		document.body.style.paddingTop = headerHeight + "px";
+		// position header below admin bar
+		header.style.top = adminBarHeight + "px";
 
-  window.addEventListener('resize', () => {
-    headerHeight = adjustContentOffset();
-  });
+		return hideThreshold;
+	}
 
-  const isNavOpen = () =>
-    Boolean(
-      document.querySelector(
-        '.wp-block-navigation__responsive-container.is-menu-open,' +
-        '.wp-block-navigation.is-menu-open'
-      )
-    );
+	hideThreshold = adjustContentOffset();
 
-  window.addEventListener('scroll', () => {
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+	window.addEventListener("resize", () => {
+		hideThreshold = adjustContentOffset();
+	});
 
-    if (isNavOpen()) {
-      header.style.transform = 'translateY(0)';
-    } else if (scrollY > lastScroll && scrollY > headerHeight) {
-      header.style.transform = 'translateY(-100%)';
-    } else {
-      header.style.transform = 'translateY(0)';
-    }
+	const isNavOpen = () =>
+		Boolean(
+			document.querySelector(
+				".wp-block-navigation__responsive-container.is-menu-open," +
+					".wp-block-navigation.is-menu-open",
+			),
+		);
 
-    lastScroll = scrollY;
-  });
+	let lastScroll = 0;
+	window.addEventListener("scroll", () => {
+		const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+		if (isNavOpen()) {
+			header.style.transform = "translateY(0)";
+		} else if (scrollY > lastScroll && scrollY > hideThreshold) {
+			header.style.transform = "translateY(-100%)";
+		} else {
+			header.style.transform = "translateY(0)";
+		}
+
+		lastScroll = scrollY;
+	});
 });

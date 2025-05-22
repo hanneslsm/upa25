@@ -7,15 +7,15 @@
  * Description: FAQ section
  */
 ?>
-<!-- wp:group {"metadata":{"name":"Section"},"align":"full","className":"is-style-default","layout":{"type":"constrained"}} -->
+<!-- wp:group {"metadata":{"name":"Section","categories":["upa25/faq"],"patternName":"upa25/faq-01"},"align":"full","className":"is-style-default","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull is-style-default"><!-- wp:group {"align":"wide","layout":{"type":"default"}} -->
 <div class="wp-block-group alignwide"><!-- wp:spacer {"height":"var:preset|spacing|40"} -->
 <div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
 <!-- /wp:spacer -->
 
-<!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column {"verticalAlignment":"center","width":"","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}}} -->
-<div class="wp-block-column is-vertically-aligned-center" style="padding-top:var(--wp--preset--spacing--40);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)"><!-- wp:heading -->
+<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|50"}}}} -->
+<div class="wp-block-columns"><!-- wp:column {"verticalAlignment":"center","width":""} -->
+<div class="wp-block-column is-vertically-aligned-center"><!-- wp:heading -->
 <h2 class="wp-block-heading"><?php esc_html_e('Place your medium headline here.', 'upa25');?></h2>
 <!-- /wp:heading -->
 

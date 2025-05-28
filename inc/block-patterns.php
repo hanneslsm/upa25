@@ -51,4 +51,8 @@ function upa25_register_pattern_categories()
 		'label'       => __('FAQ', 'upa25'),
 		'description' => __('Layout for the FAQ Section.', 'upa25'),
 	]);
+		register_block_pattern_category('upa25/columns', [
+		'label'       => __('Columns', 'upa25'),
+		'description' => __('Layout with columns.', 'upa25'),
+	]);
 }

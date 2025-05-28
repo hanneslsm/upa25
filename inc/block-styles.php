@@ -19,7 +19,7 @@ function upa25_register_block_style_variations() {
 		],
 		'core/cover' => [
 			[ 'name' => 'blurred', 'label' => __( 'Blurred', 'upa25' ) ],
-			[ 'name' => 'cards',   'label' => __( 'Cards',   'upa25' ) ],
+			[ 'name' => 'card--interactive',   'label' => __( 'Card (Interactive)',   'upa25' ) ],
 		],
 		'core/image' => [
 			[ 'name' => 'picture-frame', 'label' => __( 'Picture Frame', 'upa25' ) ],

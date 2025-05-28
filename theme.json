@@ -176,17 +176,17 @@
 				},
 				{
 					"name": "large",
-					"size": "1.25rem",
+					"size": "2.25rem",
 					"slug": "30"
 				},
 				{
 					"name": "x-large",
-					"size": "2rem",
+					"size": "3rem",
 					"slug": "40"
 				},
 				{
 					"name": "xx-large",
-					"size": "4rem",
+					"size": "5rem",
 					"slug": "50"
 				},
 				{
@@ -600,7 +600,7 @@
 			}
 		},
 		"spacing": {
-			"blockGap": "var(--wp--preset--spacing--30)",
+			"blockGap": "var(--wp--preset--spacing--20)",
 			"padding": {
 				"bottom": "0px",
 				"left": "var(--wp--preset--spacing--20)",

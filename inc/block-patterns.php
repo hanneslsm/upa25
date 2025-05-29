@@ -35,13 +35,13 @@ add_action('init', 'upa25_register_pattern_categories', 1);
 
 function upa25_register_pattern_categories()
 {
+	register_block_pattern_category('upa25/layout-a', [
+		'label'       => __('Layout A', 'upa25'),
+		'description' => __('Layouts with wide heading and content', 'upa25'),
+	]);
 	register_block_pattern_category('upa25/components', [
 		'label'       => __('Components', 'upa25'),
 		'description' => __('Single components for specific use.', 'upa25'),
-	]);
-	register_block_pattern_category('upa25/content', [
-		'label'       => __('Content', 'upa25'),
-		'description' => __('Generic content layouts.', 'upa25'),
 	]);
 	register_block_pattern_category('upa25/cards', [
 		'label'       => __('Cards', 'upa25'),
@@ -51,11 +51,7 @@ function upa25_register_pattern_categories()
 		'label'       => __('FAQ', 'upa25'),
 		'description' => __('Layout for the FAQ Section.', 'upa25'),
 	]);
-		register_block_pattern_category('upa25/columns', [
-		'label'       => __('Columns', 'upa25'),
-		'description' => __('Layout with columns.', 'upa25'),
-	]);
-			register_block_pattern_category('upa25/heros', [
+	register_block_pattern_category('upa25/heros', [
 		'label'       => __('Heros', 'upa25'),
 		'description' => __('Layouts for the homepage above the fold.', 'upa25'),
 	]);

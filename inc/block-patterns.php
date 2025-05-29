@@ -39,6 +39,14 @@ function upa25_register_pattern_categories()
 		'label'       => __('Layout A', 'upa25'),
 		'description' => __('Layouts with wide heading and content', 'upa25'),
 	]);
+	register_block_pattern_category('upa25/layout-b', [
+		'label'       => __('Layout B (Two Colums)', 'upa25'),
+		'description' => __('Two Column Layouts with heading and content aligned on top', 'upa25'),
+	]);
+	register_block_pattern_category('upa25/layout-c', [
+		'label'       => __('Layout C (Two Colums)', 'upa25'),
+		'description' => __('Two Column Layouts with heading and content center aligned', 'upa25'),
+	]);
 	register_block_pattern_category('upa25/components', [
 		'label'       => __('Components', 'upa25'),
 		'description' => __('Single components for specific use.', 'upa25'),

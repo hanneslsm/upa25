@@ -55,4 +55,8 @@ function upa25_register_pattern_categories()
 		'label'       => __('Columns', 'upa25'),
 		'description' => __('Layout with columns.', 'upa25'),
 	]);
+			register_block_pattern_category('upa25/heros', [
+		'label'       => __('Heros', 'upa25'),
+		'description' => __('Layouts for the homepage above the fold.', 'upa25'),
+	]);
 }

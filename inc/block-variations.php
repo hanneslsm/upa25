@@ -8,7 +8,7 @@
  */
 
 
-function upa25_spacer_variation( $variations, $block_type ) {
+function upa25_block_variation( $variations, $block_type ) {
     // Only target the core/spacer block.
     if ( 'core/spacer' !== $block_type->name ) {
         return $variations;
@@ -24,4 +24,4 @@ function upa25_spacer_variation( $variations, $block_type ) {
 
     return $variations;
 }
-add_filter( 'get_block_type_variations', 'upa25_spacer_variation', 10, 2 );
+add_filter( 'get_block_type_variations', 'upa25_block_variation', 10, 2 );

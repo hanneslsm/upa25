@@ -21,11 +21,10 @@
 	}
 }
 
-
 /* Bug fix */
-  @media (max-width: $medium){
-	.wp-block-navigation__responsive-container.is-menu-open{
-			min-height:100vh;
-			z-index:9999;
+@media (max-width: $medium) {
+	.wp-block-navigation__responsive-container.is-menu-open {
+		min-height: 100vh;
+		z-index: 9999;
 	}
 }

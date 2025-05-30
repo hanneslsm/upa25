@@ -2,11 +2,11 @@
 /// Tempalte-part: Header
 ///
 
-header.wp-block-template-part{
+header.wp-block-template-part {
 	a {
 		color: inherit;
 		text-decoration: none;
-		&:hover{
+		&:hover {
 			text-decoration: underline;
 		}
 	}

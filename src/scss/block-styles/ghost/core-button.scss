@@ -19,39 +19,38 @@
 		text-decoration: underline;
 	}
 
-
-		/* Section Styles
+	/* Section Styles
 	--------------------------------------------- */
 	/* [Brand-3]  */
 	.is-style-section-brand-3 & {
 		&:not(.has-background):hover {
-		background-color: color-mix(
-			in srgb,
-			var(--wp--preset--color--brand) 20%,
-			transparent
-		);
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--brand) 20%,
+				transparent
+			);
 		}
 	}
 
-		/* [Brand-4]  */
+	/* [Brand-4]  */
 	.is-style-section-brand-4 & {
 		&:not(.has-background):hover {
-		background-color: color-mix(
-			in srgb,
-			var(--wp--preset--color--brand) 5%,
-			transparent
-		);
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--brand) 5%,
+				transparent
+			);
 		}
 	}
 
-		/* [Contrast-2]  */
+	/* [Contrast-2]  */
 	.is-style-section-contrast-2 & {
 		&:not(.has-background):hover {
-		background-color: color-mix(
-			in srgb,
-			var(--wp--preset--color--base) 5%,
-			transparent
-		);
+			background-color: color-mix(
+				in srgb,
+				var(--wp--preset--color--base) 5%,
+				transparent
+			);
 		}
 	}
 }

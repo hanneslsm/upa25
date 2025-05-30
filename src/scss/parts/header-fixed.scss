@@ -2,7 +2,6 @@
 ///  Header Fixed
 ///
 
-
 header .is-style-header-fixed {
 	z-index: 9999;
 	position: fixed;
@@ -12,4 +11,3 @@ header .is-style-header-fixed {
 	transition: transform 0.3s ease-in-out;
 	transform: translateY(0);
 }
-

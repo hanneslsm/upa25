@@ -1,8 +1,8 @@
 # upa25 Block Theme
 
 This repository contains the **upa25** WordPress block theme used on
-[Unique Pole Art](https://poledance-darmstadt.de). Besides the regular theme
-files it ships a small build system and a set of utilities that extend the block
+[Unique Pole Art](https://poledance-darmstadt.de). It ships with the regular theme
+files, a small build system and a other developer tools of utilities that extend the block
 editor.
 
 ## Getting Started
@@ -42,7 +42,7 @@ Additional commands:
 - **inc/** – PHP files loaded from `functions.php`:
   - `setup.php` – theme setup and editor styles.
   - `enqueuing.php` – loads scripts and styles and only enqueues CSS for blocks that appear on the page.
-  - `block-variations.php` – example block variations.
+  - `block-variations.php` – registers custom block variations.
   - `block-styles.php` – registers custom style variations for core blocks.
   - `block-patterns.php` – registers pattern categories and disables remote patterns.
   - `dashboard-widget.php` – adds a dashboard widget with theme and server information.

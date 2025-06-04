@@ -1,5 +1,7 @@
 # upa25 Block Theme
 
+![Theme screenshot](screenshot.png)
+
 This repository contains the **upa25** WordPress block theme used on
 [Unique Pole Art](https://poledance-darmstadt.de). It ships with the regular theme
 files, a small build system and a other developer tools of utilities that extend the block
@@ -42,9 +44,37 @@ Additional commands:
 - **inc/** – PHP files loaded from `functions.php`:
   - `setup.php` – theme setup and editor styles.
   - `enqueuing.php` – loads scripts and styles and only enqueues CSS for blocks that appear on the page.
-  - `block-variations.php` – registers custom block variations.
-  - `block-styles.php` – registers custom style variations for core blocks.
-  - `block-patterns.php` – registers pattern categories and disables remote patterns.
+ - **Block style variations** – Extra styles such as `ghost` buttons or `picture-frame` images are registered in `inc/block-styles.php` and compiled from `src/scss/block-styles/`.
+ - **Pattern management** – Core patterns are disabled and custom categories are registered (`inc/block-patterns.php`).
+ - **Front‑end scripts** – `src/js/scripts/` includes behaviours like a fixed header (`header-fixed.js`) and draggable stickers (`sticker.js`).
+## Extending the Theme
+
+### Block Style Variations
+
+Register new block styles in `inc/block-styles.php`. Each variation gets its own
+folder inside `src/scss/blocks` with a file named after the block and prefixed by
+`core-`. For example, the indicator style for the paragraph block lives at
+`src/scss/blocks/indicator/core-paragraph.scss`.
+
+### Template Parts
+
+`upa25` ships with multiple template parts such as `footer-wide` and
+`footer-centered`. To add another part:
+
+1. Create an HTML file in the `parts/` folder and reference a pattern from it.
+2. Add the corresponding pattern file inside `patterns/`.
+3. Register the part in `theme.json`.
+
+### Patterns
+
+Custom pattern categories are registered in `inc/block-patterns.php`. If a
+pattern does not show up, set `WP_DEVELOPMENT_MODE` to `theme` or `all`, or purge
+the cache via `/wp-admin/?purge-theme-cache`.
+
+### Block Variations
+
+Additional block variations are loaded from `inc/block-variations.php`.
+
   - `dashboard-widget.php` – adds a dashboard widget with theme and server information.
   - `dev_*` files – development helpers such as purging the pattern cache and removing default palettes.
 - **parts/** – Template parts (headers, footers, etc.).

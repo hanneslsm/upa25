@@ -8,7 +8,10 @@
  */
 ?>
 <!-- wp:cover {"url":"<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/placeholders/placeholder-image-7.webp","dimRatio":50,"overlayColor":"brand-5","isUserOverlayColor":true,"minHeight":55,"minHeightUnit":"dvh","tagName":"section","sizeSlug":"large","align":"full","layout":{"type":"constrained"}} -->
-<section class="wp-block-cover alignfull" style="min-height:55dvh"><img class="wp-block-cover__image-background size-large" alt="" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/placeholders/placeholder-image-7.webp" data-object-fit="cover"/><span aria-hidden="true" class="wp-block-cover__background has-brand-5-background-color has-background-dim-50 has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:heading {"textAlign":"center","level":1} -->
+<section class="wp-block-cover alignfull" style="min-height:55dvh"><img class="wp-block-cover__image-background size-large" alt="" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/placeholders/placeholder-image-7.webp" data-object-fit="cover"/><span aria-hidden="true" class="wp-block-cover__background has-brand-5-background-color has-background-dim-50 has-background-dim"></span><div class="wp-block-cover__inner-container"><!-- wp:spacer {"height":"var:preset|spacing|40"} -->
+<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer -->
+<!-- wp:heading {"textAlign":"center","level":1} -->
 <h1 class="wp-block-heading has-text-align-center"><?php esc_html_e('Stay up to date', 'upa25'); ?></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph {"align":"center"} -->
@@ -16,5 +19,8 @@
 <!-- /wp:paragraph -->
 <!-- wp:paragraph {"align":"center"} -->
 <p class="has-text-align-center"><em><?php esc_html_e('Newsletter form goes here', 'upa25'); ?></em></p>
-<!-- /wp:paragraph --></div></section>
+<!-- /wp:paragraph -->
+<!-- wp:spacer {"height":"var:preset|spacing|40"} -->
+<div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
+<!-- /wp:spacer --></div></section>
 <!-- /wp:cover -->

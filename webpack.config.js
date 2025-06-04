@@ -189,15 +189,20 @@ module.exports = (env) => {
 	return merge(defaultConfig, {
 		mode,
 		entry: entries,
-		output: {
-			path: path.resolve(__dirname, "build"),
-			filename: "[name].js",
-			assetModuleFilename: "images/[path][name][ext]",
-		},
-		plugins,
-		stats: {
-			all: false,
-			source: true,
+                output: {
+                        path: path.resolve(__dirname, "build"),
+                        filename: "[name].js",
+                        assetModuleFilename: "images/[path][name][ext]",
+                },
+                plugins,
+                // Disable performance hints to avoid asset size warnings during
+                // the build process.
+                performance: {
+                        hints: false,
+                },
+                stats: {
+                        all: false,
+                        source: true,
 			assets: true,
 			errorsCount: true,
 			errors: true,

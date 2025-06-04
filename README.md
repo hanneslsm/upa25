@@ -3,8 +3,8 @@
 ![Theme screenshot](screenshot.png)
 
 This repository contains the **upa25** WordPress block theme used on
-[Unique Pole Art](https://poledance-darmstadt.de). It ships with the regular theme
-files, a small build system and a other developer tools of utilities that extend the block
+files, it includes a small build system and a set of utilities that extend the
+block editor.
 editor.
 
 ## Getting Started

@@ -2,8 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 const { parse } = require('@wordpress/block-serialization-default-parser');
-const { getBlockType, unstable__bootstrapServerSideBlockDefinitions } = require('@wordpress/blocks');
+let getBlockType, unstable__bootstrapServerSideBlockDefinitions;
+try {
+  ({ getBlockType, unstable__bootstrapServerSideBlockDefinitions } = require('@wordpress/blocks'));
+} catch (e) {
+  console.error("Missing '@wordpress/blocks'. Run `npm install` first.");
+  process.exit(1);
+}
 const blockJsonFiles = glob.sync(path.join(__dirname, '../node_modules/@wordpress/block-library/src/**/block.json'));
+if (!blockJsonFiles.length) {
+  console.error("Missing '@wordpress/block-library'. Run `npm install` first.");
+  process.exit(1);
+}
 const definitions = {};
 for (const json of blockJsonFiles) {
   const meta = JSON.parse(fs.readFileSync(json, 'utf8'));

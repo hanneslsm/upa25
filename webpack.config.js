@@ -2,8 +2,9 @@
  * upa25 Webpack configuration
  *
  * @package upa25
- * @version 2.1.0
+ * @version 2.1.1
  *
+*  2.1.1: Disable performance hints
  * 2.1.0: Add support for automatic block-style entries and recursive block SCSS
  * 2.0.0: Add support for webp images
  * 1.0.0: Initial version

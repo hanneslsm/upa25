@@ -36,7 +36,6 @@ Additional commands:
 - `npm run lint:css` – run Stylelint over the SCSS sources.
 - `npm run lint:js` – run ESLint on the JavaScript sources.
 - `npm run zip` – create a distributable `upa25.zip` in the repository root.
-- `npm run test:patterns` – validate that block pattern markup parses correctly.
 
 ## Repository Structure
 

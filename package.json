@@ -7,12 +7,11 @@
 		"build": "wp-scripts build --config webpack.config.js --env production",
 		"lint:css": "wp-scripts lint-style 'src/scss/*'",
 		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",
-                "lint:js": "wp-scripts lint-js 'src/js/*'",
-                "format": "wp-scripts format 'src/**/*.{js,jsx,json,ts,tsx,css,scss,php}' '!src/fonts/**'",
-                "zip": "wp-scripts plugin-zip",
-                "packages-update": "wp-scripts packages-update",
-                "test:patterns": "node scripts/validate-patterns.js"
-        },
+		"lint:js": "wp-scripts lint-js 'src/js/*'",
+		"format": "wp-scripts format 'src/**/*.{js,jsx,json,ts,tsx,css,scss,php}' '!src/fonts/**'",
+		"zip": "wp-scripts plugin-zip",
+		"packages-update": "wp-scripts packages-update"
+	},
 	"files": [
 		"/*",
 		"!/upa25",
@@ -28,7 +27,6 @@
 	"license": "GPL-2.0",
 	"description": "",
 	"devDependencies": {
-		"@wordpress/block-serialization-default-parser": "^5.25.0",
 		"@wordpress/scripts": "^30.11.0",
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.0",

@@ -1,6 +1,6 @@
 /**
  * Helper classes
- * @version 0.3.1
+ * @version 1.0.0
  */
 @use "../base/variables" as *;
 
@@ -11,119 +11,85 @@
  * Title: Overflow
  * Description: Overflow classes for hiding content
  **/
-.overflow-hidden {
+.with-overflow-hidden {
 	overflow: hidden;
 }
-.overflow-clip {
+.with-overflow-clip {
 	overflow: initial;
 	overflow: clip;
-}
-/**
- * Title: Flex
- **/
-.flex-row {
-	flex-direction: row;
-}
-.flex-column {
-	flex-direction: column;
-}
-.shrink-0 {
-	flex-shrink: 0;
-}
-.shrink-1 {
-	flex-shrink: 1;
-}
-
-/**
- * Title: Positions
- **/
-.position-absolute {
-	position: absolute;
-}
-.position-relative {
-	position: relative;
-}
-.position-sticky {
-	position: sticky;
 }
 
 /**
  * Title: z-index
  **/
-.z--1 {
+.with-z--1 {
+	z-index: -1;
+}
+.with-z-1000 {
 	z-index: 1000;
 }
-.z-1000 {
-	z-index: 1000;
-}
-.z-2000 {
+.with-z-2000 {
 	z-index: 2000;
 }
-.z-3000 {
+.with-z-3000 {
 	z-index: 3000;
 }
-.z-4000 {
+.with-z-4000 {
 	z-index: 4000;
 }
-.z-5000 {
+.with-z-5000 {
 	z-index: 5000;
 }
-.z-6000 {
+.with-z-6000 {
 	z-index: 6000;
 }
-.z-7000 {
+.with-z-7000 {
 	z-index: 7000;
 }
-.z-8000 {
+.with-z-8000 {
 	z-index: 8000;
 }
-.z-9000 {
+.with-z-9000 {
 	z-index: 9000;
 }
-.z-9999 {
+.with-z-9999 {
 	z-index: 9999;
 }
 
 /**
  * Title: Top
  **/
-.top-10 {
+.with-top-10 {
 	top: var(--wp--preset--spacing--10) !important;
 }
-.top-20 {
+.with-top-20 {
 	top: var(--wp--preset--spacing--20) !important;
 }
-.top-30 {
+.with-top-30 {
 	top: var(--wp--preset--spacing--30) !important;
 }
-.top-40 {
+.with-top-40 {
 	top: var(--wp--preset--spacing--40) !important;
 }
-.top-50 {
+.with-top-50 {
 	top: var(--wp--preset--spacing--50) !important;
 }
-.top-60 {
+.with-top-60 {
 	top: var(--wp--preset--spacing--60) !important;
 }
-.top-60 {
+.with-top-70 {
 	top: var(--wp--preset--spacing--70) !important;
 }
 
-/**
- * Title: Blur
- **/
-.blur-5 {
-	backdrop-filter: blur(5px);
-}
 
 /**
  * Title: Text
  **/
-.nowrap {
+.with-nowrap {
 	white-space: nowrap;
 }
 
-.no-underlines {
+.with-text-decoration-none {
 	text-decoration: none;
 	a {
 		text-decoration: none;
@@ -136,24 +102,24 @@
 /**
  * Title: Height
  **/
-.has-no-max-height {
+.with-max-height-none {
 	max-height: none !important;
 }
 
 /**
  * Title: Rotate
  **/
-.rotate-plus-2 {
+.with-rotate-plus-2 {
 	transform: rotate(2deg);
 }
-.rotate-plus-3 {
+.with-rotate-plus-3 {
 	transform: rotate(3deg);
 }
 
-.rotate-minus-2 {
+.with-rotate-minus-2 {
 	transform: rotate(-2deg);
 }
-.rotate-minus-3 {
+.with-rotate-minus-3 {
 	transform: rotate(-3deg);
 }
 
@@ -162,50 +128,28 @@
 
 @mixin responsive-styles($breakpoint, $prefix) {
 	@media screen and (max-width: $breakpoint) {
-		.#{$prefix}-reverse-order {
+		.#{$prefix}-with-reverse-order {
 			flex-direction: column-reverse;
-		}
-
-		.#{$prefix}-flex-column {
-			flex-direction: column !important;
-			align-items: flex-start;
-		}
-
-		.#{$prefix}-flex-row {
-			flex-direction: row !important;
-		}
-
-		.#{$prefix}-grid-row {
-			grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-		}
-
-		.#{$prefix}-min-height-100svh {
-			min-height: 100svh;
 		}
 
 		/**
  		* Title: Alignment
  		**/
-		.#{$prefix}-left {
+		.#{$prefix}-with-alignment-left {
 			justify-content: flex-start !important;
 			text-align: left;
 		}
 
-		.#{$prefix}-center {
+		.#{$prefix}-with-alignment-center {
 			justify-content: center !important;
 			text-align: center;
 		}
 
-		.#{$prefix}-right {
+		.#{$prefix}-with-alignment-right {
 			justify-content: flex-end !important;
 			text-align: right;
 		}
 
-		@for $i from 1 through 6 {
-			.#{$prefix}-grid-order-#{$i} {
-				order: #{$i};
-			}
-		}
 	}
 }
 

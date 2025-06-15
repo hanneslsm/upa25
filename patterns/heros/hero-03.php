@@ -34,8 +34,8 @@
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 
-<!-- wp:columns {"className":"on-mobile-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-<div class="wp-block-columns on-mobile-reverse-order"><!-- wp:column {"verticalAlignment":"bottom","width":"33.33%"} -->
+<!-- wp:columns {"className":"on-mobile-with-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+<div class="wp-block-columns on-mobile-with-reverse-order"><!-- wp:column {"verticalAlignment":"bottom","width":"33.33%"} -->
 <div class="wp-block-column is-vertically-aligned-bottom" style="flex-basis:33.33%"><!-- wp:paragraph -->
 <p><?php /* Translators: 1. is a 'br' HTML element */
 echo sprintf( esc_html__( 'Donec augue arcu, sollicitudin et nulla et, %1$sporttitor imperdiet elit. ', 'upa25' ), '<br>' ); ?></p>

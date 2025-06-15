@@ -28,8 +28,8 @@
 <!-- /wp:column -->
 
 <!-- wp:column {"verticalAlignment":"stretch","width":"50%"} -->
-<div class="wp-block-column is-vertically-aligned-stretch" style="flex-basis:50%"><!-- wp:group {"className":"top-40","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"default"}} -->
-<div class="wp-block-group top-40"><!-- wp:heading -->
+<div class="wp-block-column is-vertically-aligned-stretch" style="flex-basis:50%"><!-- wp:group {"className":"with-top-40","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"default"}} -->
+<div class="wp-block-group with-top-40"><!-- wp:heading -->
 <h2 class="wp-block-heading"><?php esc_html_e('This section is sticky.', 'upa25');?></h2>
 <!-- /wp:heading -->
 

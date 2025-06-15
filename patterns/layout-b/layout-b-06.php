@@ -12,8 +12,8 @@
 <div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
 <!-- /wp:spacer -->
 
-<!-- wp:columns {"className":"on-medium-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-<div class="wp-block-columns on-medium-reverse-order"><!-- wp:column {"verticalAlignment":"top","width":"66.66%"} -->
+<!-- wp:columns {"className":"on-medium-with-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+<div class="wp-block-columns on-medium-with-reverse-order"><!-- wp:column {"verticalAlignment":"top","width":"66.66%"} -->
 <div class="wp-block-column is-vertically-aligned-top" style="flex-basis:66.66%"><!-- wp:heading {"level":3} -->
 <h3 class="wp-block-heading"><?php esc_html_e('Place another headline here', 'upa25');?></h3>
 <!-- /wp:heading -->

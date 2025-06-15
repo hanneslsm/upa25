@@ -34,8 +34,8 @@
 <div style="height:var(--wp--preset--spacing--40)" aria-hidden="true" class="wp-block-spacer"></div>
 <!-- /wp:spacer -->
 
-<!-- wp:group {"align":"full","className":"top-40","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"constrained","justifyContent":"left"}} -->
-<div class="wp-block-group alignfull top-40"><!-- wp:heading -->
+<!-- wp:group {"align":"full","className":"with-top-40","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"constrained","justifyContent":"left"}} -->
+<div class="wp-block-group alignfull with-top-40"><!-- wp:heading -->
 <h2 class="wp-block-heading"><?php esc_html_e('This section is sticky.', 'upa25');?></h2>
 <!-- /wp:heading -->
 

@@ -20,8 +20,8 @@
 <h2 class="wp-block-heading"><?php esc_html_e('Place your medium headline here.', 'upa25');?></h2>
 <!-- /wp:heading -->
 
-<!-- wp:columns {"className":"on-medium-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-<div class="wp-block-columns on-medium-reverse-order"><!-- wp:column {"width":"50%","className":""} -->
+<!-- wp:columns {"className":"on-medium-with-reverse-order","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+<div class="wp-block-columns on-medium-with-reverse-order"><!-- wp:column {"width":"50%","className":""} -->
 <div class="wp-block-column" style="flex-basis:50%"><!-- wp:image {"sizeSlug":"large","linkDestination":"none","className":""} -->
 <figure class="wp-block-image size-large"><img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/placeholders/placeholder-image-1.webp" alt=""/></figure>
 <!-- /wp:image --></div>

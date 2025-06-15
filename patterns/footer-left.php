@@ -18,8 +18,8 @@
 <!-- /wp:column -->
 
 <!-- wp:column -->
-<div class="wp-block-column"><!-- wp:paragraph {"align":"right","className":"on-medium-left"} -->
-<p class="has-text-align-right on-medium-left"><?php /* Translators: 1. is the start of a 'em' HTML element, 2. is the end of a 'em' HTML element, 3. is a 'br' HTML element, 4. is a 'br' HTML element */
+<div class="wp-block-column"><!-- wp:paragraph {"align":"right","className":"on-medium-with-alignment-left"} -->
+<p class="has-text-align-right on-medium-with-alignment-left"><?php /* Translators: 1. is the start of a 'em' HTML element, 2. is the end of a 'em' HTML element, 3. is a 'br' HTML element, 4. is a 'br' HTML element */
 echo sprintf( esc_html__( '%1$sYour Name%2$s%3$sYour address%4$sContact info', 'upa25' ), '<em>', '</em>', '<br>', '<br>' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>

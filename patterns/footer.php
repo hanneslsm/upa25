@@ -34,8 +34,8 @@ echo sprintf( esc_html__( 'Design & Umsetzung von %1$sStudio Leismann%2$s', 'up
 <!-- /wp:column -->
 
 <!-- wp:column -->
-<div class="wp-block-column"><!-- wp:paragraph {"align":"right","className":"on-medium-left"} -->
-<p class="has-text-align-right on-medium-left"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element, 3. is a 'br' HTML element, 4. is a 'br' HTML element, 5. is a 'br' HTML element, 6. is a 'br' HTML element */
+<div class="wp-block-column"><!-- wp:paragraph {"align":"right","className":"on-medium-with-alignment-left"} -->
+<p class="has-text-align-right on-medium-with-alignment-left"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element, 3. is a 'br' HTML element, 4. is a 'br' HTML element, 5. is a 'br' HTML element, 6. is a 'br' HTML element */
 echo sprintf( esc_html__( '%1$sUnique Pole Art%2$s%3$sAm Kavalleriesand 47%4$s64295 Darmstadt%5$sinfo@poledance-darmstadt.de%6$sT: 0157 76 42 61 41', 'upa25' ), '<strong>', '</strong>', '<br>', '<br>', '<br>', '<br>' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:column --></div>

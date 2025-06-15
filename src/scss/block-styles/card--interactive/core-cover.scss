@@ -108,7 +108,7 @@
         }
 }
 
-@media (max-width: $mobile) {
+@media (max-width: $medium) {
         /* Disable hover effects and show all content on small screens */
         .is-style-card--interactive,
         .is-style-card--interactive:focus-within,

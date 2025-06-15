@@ -99,11 +99,44 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.is-style-card--interactive *,
-	.is-style-card--interactive *::after,
-	.is-style-card--interactive *::before {
-		opacity: 1 !important;
-		transition: none !important;
-		visibility: visible !important;
-	}
+        .is-style-card--interactive *,
+        .is-style-card--interactive *::after,
+        .is-style-card--interactive *::before {
+                opacity: 1 !important;
+                transition: none !important;
+                visibility: visible !important;
+        }
+}
+
+@media (max-width: $mobile) {
+        /* Disable hover effects and show all content on small screens */
+        .is-style-card--interactive,
+        .is-style-card--interactive:focus-within,
+        .is-style-card--interactive:hover {
+                box-shadow: var(--wp--preset--shadow--medium);
+        }
+
+        .is-style-card--interactive :where(.wp-block-cover__image-background) {
+                filter: saturate(200%) brightness(40%);
+                transform: none;
+                transition: none;
+        }
+
+        .is-style-card--interactive :where(.is-vertical) .wp-block-group:first-of-type {
+                opacity: 1;
+                transform: none;
+                transition: none;
+        }
+
+        .is-style-card--interactive :where(.is-vertical) .wp-block-group:first-of-type + .wp-block-group p {
+                max-height: 100%;
+                opacity: 1;
+                transition: none;
+        }
+
+        .is-style-card--interactive *,
+        .is-style-card--interactive *::after,
+        .is-style-card--interactive *::before {
+                transition: none !important;
+        }
 }

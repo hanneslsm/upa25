@@ -11,47 +11,19 @@
  * Title: Overflow
  * Description: Overflow classes for hiding content
  **/
-.overflow-hidden {
+.with-overflow-hidden {
 	overflow: hidden;
 }
-.overflow-clip {
+.with-overflow-clip {
 	overflow: initial;
 	overflow: clip;
-}
-/**
- * Title: Flex
- **/
-.flex-row {
-	flex-direction: row;
-}
-.flex-column {
-	flex-direction: column;
-}
-.shrink-0 {
-	flex-shrink: 0;
-}
-.shrink-1 {
-	flex-shrink: 1;
-}
-
-/**
- * Title: Positions
- **/
-.position-absolute {
-	position: absolute;
-}
-.position-relative {
-	position: relative;
-}
-.position-sticky {
-	position: sticky;
 }
 
 /**
  * Title: z-index
  **/
 .z--1 {
-	z-index: 1000;
+	z-index: -1;
 }
 .z-1000 {
 	z-index: 1000;
@@ -87,25 +59,25 @@
 /**
  * Title: Top
  **/
-.top-10 {
+.with-top-10 {
 	top: var(--wp--preset--spacing--10) !important;
 }
-.top-20 {
+.with-top-20 {
 	top: var(--wp--preset--spacing--20) !important;
 }
-.top-30 {
+.with-top-30 {
 	top: var(--wp--preset--spacing--30) !important;
 }
-.top-40 {
+.with-top-40 {
 	top: var(--wp--preset--spacing--40) !important;
 }
-.top-50 {
+.with-top-50 {
 	top: var(--wp--preset--spacing--50) !important;
 }
-.top-60 {
+.with-top-60 {
 	top: var(--wp--preset--spacing--60) !important;
 }
-.top-60 {
+.with-top-60 {
 	top: var(--wp--preset--spacing--70) !important;
 }
 

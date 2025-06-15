@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: Layout-C-02
- * Slug: upa25/layout-c-02
+ * Title: Layout-C-2
+ * Slug: upa25/layout-c-2
  * Categories: upa25/layout-c
  * Viewport width: 1920
  */

@@ -121,8 +121,26 @@
                 transform: none;
                 transition: none;
         }
+        .is-style-card--interactive:not(.has-child-selected):focus-within
+                :where(.wp-block-cover__image-background),
+        .is-style-card--interactive:not(.has-child-selected):hover
+                :where(.wp-block-cover__image-background) {
+                filter: saturate(200%) brightness(40%);
+                transform: none;
+                transition: none;
+        }
 
         .is-style-card--interactive :where(.is-vertical) .wp-block-group:first-of-type {
+                opacity: 1;
+                transform: none;
+                transition: none;
+        }
+        .is-style-card--interactive:focus-within
+                :where(.is-vertical)
+                .wp-block-group:first-of-type,
+        .is-style-card--interactive:hover
+                :where(.is-vertical)
+                .wp-block-group:first-of-type {
                 opacity: 1;
                 transform: none;
                 transition: none;
@@ -131,6 +149,22 @@
         .is-style-card--interactive :where(.is-vertical) .wp-block-group:first-of-type + .wp-block-group p {
                 max-height: 100%;
                 opacity: 1;
+                overflow: visible;
+                transition: none;
+        }
+        .is-style-card--interactive:focus-within
+                :where(.is-vertical)
+                .wp-block-group:first-of-type
+                + .wp-block-group
+                p,
+        .is-style-card--interactive:hover
+                :where(.is-vertical)
+                .wp-block-group:first-of-type
+                + .wp-block-group
+                p {
+                max-height: 100%;
+                opacity: 1;
+                overflow: visible;
                 transition: none;
         }
 

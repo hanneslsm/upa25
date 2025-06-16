@@ -10,13 +10,12 @@ strong {
 	line-height: 1.3;
 }
 
-
 /**
  *  @link https://github.com/WordPress/gutenberg/issues/53146
  */
 p[style*="text-decoration:none"] * {
-  text-decoration: none;
-  &:hover {
-	text-decoration: underline;
-  }
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
 }

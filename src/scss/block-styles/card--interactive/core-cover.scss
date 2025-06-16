@@ -25,7 +25,7 @@
 		:where(.wp-block-heading) {
 			a {
 				&::after {
-					content: '';
+					content: "";
 					inset: 0;
 					position: absolute;
 					z-index: 10;
@@ -103,7 +103,6 @@
 	}
 }
 
-
 @media (prefers-reduced-motion: reduce) {
 	.is-style-card--interactive *,
 	.is-style-card--interactive *::after,
@@ -114,40 +113,37 @@
 	}
 }
 
-
-
-
 @media (max-width: $medium) {
-  .is-style-card--interactive {
-    /* Disable hover/focus box-shadow change */
-    &:focus-within,
-    &:hover {
-      box-shadow: var(--wp--preset--shadow--medium);
-    }
+	.is-style-card--interactive {
+		/* Disable hover/focus box-shadow change */
+		&:focus-within,
+		&:hover {
+			box-shadow: var(--wp--preset--shadow--medium);
+		}
 
-    /* Cover image static */
-    :where(.wp-block-cover__image-background) {
-      filter: saturate(100%) brightness(100%);
-      transform: scale(1);
-      transition: none !important;
-    }
+		/* Cover image static */
+		:where(.wp-block-cover__image-background) {
+			filter: saturate(100%) brightness(100%);
+			transform: scale(1);
+			transition: none !important;
+		}
 
-    /* Label area always visible */
-    :where(.is-vertical) {
-      .wp-block-group:first-of-type {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
+		/* Label area always visible */
+		:where(.is-vertical) {
+			.wp-block-group:first-of-type {
+				opacity: 1;
+				transform: none;
+				transition: none;
+			}
 
-      /* Content always visible */
-      .wp-block-group:first-of-type + .wp-block-group {
-        p {
-          max-height: none !important;
-          opacity: 1 !important;
-          transition: none;
-        }
-      }
-    }
-  }
+			/* Content always visible */
+			.wp-block-group:first-of-type + .wp-block-group {
+				p {
+					max-height: none !important;
+					opacity: 1 !important;
+					transition: none;
+				}
+			}
+		}
+	}
 }

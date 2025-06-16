@@ -10,93 +10,99 @@
 .is-style-card--interactive {
 	position: relative;
 	box-shadow: var(--wp--preset--shadow--medium);
-}
 
-.is-style-card--interactive:focus-within,
-.is-style-card--interactive:hover {
-	box-shadow: var(--wp--preset--shadow--large);
-}
+	&:focus-within,
+	&:hover {
+		box-shadow: var(--wp--preset--shadow--large);
+	}
 
-.is-style-card--interactive
 	:where(.wp-block-group.wp-block-group-is-layout-constrained) {
-	position: static;
-}
+		position: static;
+	}
 
-/* Make whole card clickable */
-.is-style-card--interactive:not(.has-child-selected)
-	:where(.wp-block-heading)
-	a:after {
-	content: "";
-	inset: 0;
-	position: absolute;
-	z-index: 10;
-}
+	/* Make whole card clickable */
+	&:not(.has-child-selected) {
+		:where(.wp-block-heading) {
+			a {
+				&::after {
+					content: '';
+					inset: 0;
+					position: absolute;
+					z-index: 10;
+				}
+			}
+		}
+	}
 
-/* Animate the Cover block image */
-.is-style-card--interactive :where(.wp-block-cover__image-background) {
-	filter: saturate(100%) brightness(100%);
-	transform: scale(1);
-	transition: all 0.35s ease;
-}
-
-.is-style-card--interactive:not(.has-child-selected):focus-within
-	:where(.wp-block-cover__image-background),
-.is-style-card--interactive:not(.has-child-selected):hover
+	/* Animate the Cover block image */
 	:where(.wp-block-cover__image-background) {
-	filter: saturate(200%) brightness(40%);
-	transform: scale(1.15);
+		filter: saturate(100%) brightness(100%);
+		transform: scale(1);
+		transition: all 0.35s ease;
+	}
+
+	&:not(.has-child-selected) {
+		&:focus-within,
+		&:hover {
+			:where(.wp-block-cover__image-background) {
+				filter: saturate(200%) brightness(40%);
+				transform: scale(1.15);
+			}
+		}
+	}
+
+	/* Animate label area */
+	:where(.is-vertical) {
+		display: flex;
+
+		.wp-block-group:first-of-type {
+			opacity: 0;
+			transform: scale(0.95) translateX(-1rem);
+			transform-origin: center right;
+			transition: all 0.25s ease-in-out;
+			transition-delay: 0.2s;
+		}
+	}
+
+	&:focus-within,
+	&:hover {
+		:where(.is-vertical) {
+			.wp-block-group:first-of-type {
+				opacity: 1;
+				transform: scale(1) translateX(0);
+			}
+		}
+	}
+
+	/* Animate content area */
+	&:not(.has-child-selected) {
+		:where(.is-vertical) {
+			.wp-block-group:first-of-type + .wp-block-group {
+				p {
+					max-height: 0;
+					opacity: 0;
+					overflow: hidden;
+					transition:
+						max-height 0.35s cubic-bezier(0.19, 1, 0.22, 1),
+						opacity 0.6s ease;
+				}
+			}
+		}
+	}
+
+	&:focus-within,
+	&:hover {
+		:where(.is-vertical) {
+			.wp-block-group:first-of-type + .wp-block-group {
+				p {
+					max-height: 100%;
+					opacity: 1;
+				}
+			}
+		}
+	}
 }
 
-/* Animate label area */
-.is-style-card--interactive :where(.is-vertical) .wp-block-group:first-of-type {
-	opacity: 0;
-	transform: scale(0.95) translateX(-1rem);
-	transform-origin: center right;
-	transition: all 0.25s ease-in-out;
-	transition-delay: 0.2s;
-}
-
-.is-style-card--interactive:focus-within
-	:where(.is-vertical)
-	.wp-block-group:first-of-type,
-.is-style-card--interactive:hover
-	:where(.is-vertical)
-	.wp-block-group:first-of-type {
-	opacity: 1;
-	transform: scale(1) translateX(0);
-}
-
-/* Animate content area */
-.is-style-card--interactive:not(.has-child-selected)
-	:where(.is-vertical)
-	.wp-block-group:first-of-type
-	+ .wp-block-group
-	p {
-	max-height: 0;
-	opacity: 0;
-	overflow: hidden;
-	transition:
-		max-height 0.35s cubic-bezier(0.19, 1, 0.22, 1),
-		opacity 0.6s ease;
-}
-
-.is-style-card--interactive:focus-within
-	:where(.is-vertical)
-	.wp-block-group:first-of-type
-	+ .wp-block-group
-	p,
-.is-style-card--interactive:hover
-	:where(.is-vertical)
-	.wp-block-group:first-of-type
-	+ .wp-block-group
-	p {
-	max-height: 100%;
-	opacity: 1;
-}
-
-.is-style-card--interactive :where(.is-vertical) {
-	display: flex;
-}
 
 @media (prefers-reduced-motion: reduce) {
 	.is-style-card--interactive *,
@@ -106,4 +112,42 @@
 		transition: none !important;
 		visibility: visible !important;
 	}
+}
+
+
+
+
+@media (max-width: $medium) {
+  .is-style-card--interactive {
+    /* Disable hover/focus box-shadow change */
+    &:focus-within,
+    &:hover {
+      box-shadow: var(--wp--preset--shadow--medium);
+    }
+
+    /* Cover image static */
+    :where(.wp-block-cover__image-background) {
+      filter: saturate(100%) brightness(100%);
+      transform: scale(1);
+      transition: none !important;
+    }
+
+    /* Label area always visible */
+    :where(.is-vertical) {
+      .wp-block-group:first-of-type {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      /* Content always visible */
+      .wp-block-group:first-of-type + .wp-block-group {
+        p {
+          max-height: none !important;
+          opacity: 1 !important;
+          transition: none;
+        }
+      }
+    }
+  }
 }

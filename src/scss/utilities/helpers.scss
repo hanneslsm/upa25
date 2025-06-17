@@ -124,33 +124,47 @@
 
 /* Responsive
 --------------------------------------------- */
+// One single mixin generates all breakpoint-specific utility classes.
+// $mode accepts either min or max to switch between `min-width` and `max-width`.
+@mixin responsive-styles($breakpoint, $prefix, $mode: max) {
+	@media screen and (#{ $mode }-width: $breakpoint) {
+		/**
+ 		* Title: Display
+ 		**/
+		.#{$prefix}-display-none {
+			display: none;
+			opacity: 0;
+		}
 
-@mixin responsive-styles($breakpoint, $prefix) {
-	@media screen and (max-width: $breakpoint) {
-		.#{$prefix}-with-reverse-order {
+		/**
+ 		* Title: Order
+ 		**/
+		.#{$prefix}-reverse-order {
 			flex-direction: column-reverse;
 		}
 
 		/**
  		* Title: Alignment
  		**/
-		.#{$prefix}-with-alignment-left {
+		.#{$prefix}-alignment-left {
 			justify-content: flex-start !important;
 			text-align: left;
 		}
-
-		.#{$prefix}-with-alignment-center {
+		.#{$prefix}-alignment-center {
 			justify-content: center !important;
 			text-align: center;
 		}
-
-		.#{$prefix}-with-alignment-right {
+		.#{$prefix}-alignment-right {
 			justify-content: flex-end !important;
 			text-align: right;
 		}
 	}
 }
 
-@include responsive-styles($mobile, "on-mobile");
-@include responsive-styles($medium, "on-medium");
-@include responsive-styles($large, "on-large");
+// Responsive styles for each breakpoint
+@include responsive-styles($large, with-min-large, min);
+@include responsive-styles($large, with-max-large, max);
+// @include responsive-styles($large, with-large, min);
+@include responsive-styles($medium, with-max-medium, max);
+//@include responsive-styles($medium, with-medium, min);
+@include responsive-styles($mobile, with-mobile, max);

@@ -7,7 +7,7 @@
  *               – “with-” becomes “…” in labels.
  *               – Horizontally-scrollable tab bar with extra bottom padding.
  *               – Blue dot after the main title and every tab that owns ≥ 1 active class.
- * Version:      2.2.0
+ * Version:      2.3.0
  * Requires at least: WP 6.3, PHP 8.1
  */
 

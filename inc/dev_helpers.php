@@ -40,129 +40,146 @@ add_action(
 );
 
 /* -------------------------------------------------------------------------
- * helpers.scss  →  ITEMS
+ * helpers.scss → ITEMS
  * ---------------------------------------------------------------------- */
+/**
+ * Parse helpers.scss and return the flat ITEM list the panel needs.
+ * - “Default” tab = all helpers defined outside the responsive mixin.
+ * - Every uncommented  @include responsive-styles(...)  becomes a tab.
+ * - Inside each tab, the 3 mixin sections (Display / Order / Alignment)
+ *   appear in the order they occur in the SCSS, each followed by its own
+ *   classes.
+ */
 function collect_items(): array {
-    $src = get_theme_file_path( 'src/scss/utilities/helpers.scss' );
-    if ( ! is_readable( $src ) ) {
-        return [];
-    }
+	$src = get_theme_file_path( 'src/scss/utilities/helpers.scss' );
+	if ( ! is_readable( $src ) ) {
+		return [];
+	}
 
-    $lines        = file( $src );
-    $items        = [];                 // default-tab content
-    $mixinHeads   = [];                 // array keyed by heading label (order kept)
-    $suffixes     = [];
-    $breakpoints  = [];
+	$lines         = file( $src );
+	$defaultItems  = [];
+	$breakpoints   = [];                 // with-mobile → mobile
+	$sections      = [];                 // label → [ 'desc'=>, 'suffixes'=>[] ]
+	$sectionOrder  = [];                 // preserve definition order
+	$curSection    = null;
 
-    $inDoc       = false;
-    $docT        = $docD = null;
-    $insideMixin = false;
-    $braceDepth  = 0;
+	$inDoc       = false;
+	$docT        = $docD = null;
+	$insideMixin = false;
+	$braceDepth  = 0;
 
-    $flush_doc = static function (
-        bool    $inMixin,
-        array  &$items,
-        array  &$mixinHeads,
-        ?string &$t,
-        ?string &$d
-    ): void {
-        if ( $t === null && $d === null ) {
-            return;
-        }
-        $label = trim( $t ?? '' );
-        $h     = [ 'type' => 'heading', 'label' => $label, 'desc' => trim( $d ?? '' ) ];
+	$flush_doc = static function () use (
+		&$inDoc, &$docT, &$docD, &$insideMixin,
+		&$defaultItems, &$sections, &$sectionOrder, &$curSection
+	): void {
+		if ( $docT === null && $docD === null ) {
+			return;
+		}
+		if ( $insideMixin ) {
+			$label = trim( $docT ?? '' );
+			if ( $label !== '' ) {
+				$sections[ $label ] = [
+					'desc'     => trim( $docD ?? '' ),
+					'suffixes' => [],
+				];
+				$sectionOrder[] = $label;
+				$curSection = $label;
+			}
+		} else {
+			$defaultItems[] = [
+				'type'  => 'heading',
+				'label' => trim( $docT ?? '' ),
+				'desc'  => trim( $docD ?? '' ),
+			];
+		}
+		$docT = $docD = null;
+	};
 
-        if ( $inMixin ) {
-            // keep first occurrence only, preserve order
-            if ( ! isset( $mixinHeads[ $label ] ) ) {
-                $mixinHeads[ $label ] = $h;
-            }
-        } else {
-            $items[] = $h;
-        }
-        $t = $d = null;
-    };
+	foreach ( $lines as $raw ) {
+		$line = ltrim( $raw );
 
-    foreach ( $lines as $line ) {
-        $trim = ltrim( $line );
+		/* skip fully commented-out lines -------------------------------- */
+		if ( str_starts_with( $line, '//' ) ) {
+			continue;
+		}
 
-        if ( str_starts_with( $trim, '//' ) ) {
-            continue;                               // skip full-line comments
-        }
+		/* enter / leave mixin ------------------------------------------- */
+		if ( preg_match( '/@mixin\s+responsive-styles\(/', $line ) ) {
+			$insideMixin = true;
+			$braceDepth  = substr_count( $line, '{' ) - substr_count( $line, '}' );
+		} elseif ( $insideMixin ) {
+			$braceDepth += substr_count( $line, '{' ) - substr_count( $line, '}' );
+			if ( $braceDepth <= 0 ) {
+				$insideMixin = false;
+				$curSection  = null;
+			}
+		}
 
-        // are we inside the mixin?
-        if ( preg_match( '/@mixin\s+responsive-styles\(/', $trim ) ) {
-            $insideMixin = true;
-            $braceDepth  = substr_count( $trim, '{' ) - substr_count( $trim, '}' );
-        } elseif ( $insideMixin ) {
-            $braceDepth += substr_count( $trim, '{' ) - substr_count( $trim, '}' );
-            if ( $braceDepth <= 0 ) {
-                $insideMixin = false;
-            }
-        }
+		/* doc-block capture --------------------------------------------- */
+		if ( ! $inDoc && str_starts_with( $line, '/**' ) ) {
+			$inDoc = true;
+			$docT = $docD = null;
+			continue;
+		}
+		if ( $inDoc ) {
+			if ( preg_match( '/\*\s*Title:\s*(.+)/', $line, $m ) ) {
+				$docT = $m[1];
+			} elseif ( preg_match( '/\*\s*Description:\s*(.+)/', $line, $m ) ) {
+				$docD = $m[1];
+			} elseif ( str_contains( $line, '*/' ) ) {
+				$inDoc = false;
+			}
+			continue;
+		}
 
-        // doc-block capture
-        if ( ! $inDoc && str_starts_with( $trim, '/**' ) ) {
-            $inDoc = true;
-            $docT = $docD = null;
-            continue;
-        }
-        if ( $inDoc ) {
-            if ( preg_match( '/\*\s*Title:\s*(.+)/', $trim, $m ) ) {
-                $docT = $m[1];
-            } elseif ( preg_match( '/\*\s*Description:\s*(.+)/', $trim, $m ) ) {
-                $docD = $m[1];
-            } elseif ( str_contains( $trim, '*/' ) ) {
-                $inDoc = false;
-            }
-            continue;
-        }
+		/* breakpoint include (only if not commented-out) ----------------- */
+		if ( preg_match( '/@include\s+responsive-styles\([^,]+,\s*"?(with-[\w-]+)"?/', $line, $m ) ) {
+			$prefix               = $m[1];
+			$breakpoints[$prefix] = str_replace( 'with-', '', $prefix );
+			continue;
+		}
 
-        // uncommented @include → breakpoint
-        if ( preg_match( '/@include\s+responsive-styles\([^,]+,\s*"?(with-[\w-]+)"?/', $trim, $m ) ) {
-            $prefix               = $m[1];
-            $breakpoints[$prefix] = str_replace( 'with-', '', $prefix );
-            continue;
-        }
+		/* flush a heading just before its first selector ----------------- */
+		if ( str_contains( $line, '.' ) ) {
+			$flush_doc();
+		}
 
-        // flush heading before first selector
-        if ( str_contains( $trim, '.' ) ) {
-            $flush_doc( $insideMixin, $items, $mixinHeads, $docT, $docD );
-        }
+		/* suffixes inside the mixin ------------------------------------- */
+		if ( $insideMixin && $curSection && preg_match( '/\.#\{\$prefix}-([\w-]+)/', $line, $m ) ) {
+			$sections[ $curSection ]['suffixes'][] = $m[1];
+			continue;
+		}
 
-        // suffixes in mixin
-        if ( $insideMixin && preg_match( '/\.#\{\$prefix}-([\w-]+)/', $trim, $m ) ) {
-            $suffixes[] = $m[1];
-            continue;
-        }
+		/* plain helpers (default tab) ----------------------------------- */
+		if ( ! $insideMixin && preg_match_all( '/\.([\w-]+)/', $line, $m ) ) {
+			foreach ( $m[1] as $cls ) {
+				if ( ! ctype_digit( $cls ) ) {
+					$defaultItems[] = [ 'type' => 'class', 'name' => $cls ];
+				}
+			}
+		}
+	}
+	$flush_doc(); // in case file ends inside a doc-block
 
-        // default helpers outside mixin
-        if ( ! $insideMixin && preg_match_all( '/\.([\w-]+)/', $trim, $m ) ) {
-            foreach ( $m[1] as $cls ) {
-                if ( ! ctype_digit( $cls ) ) {
-                    $items[] = [ 'type' => 'class', 'name' => $cls ];
-                }
-            }
-        }
-    }
-    $flush_doc( $insideMixin, $items, $mixinHeads, $docT, $docD );
+	/* assemble ITEM list ------------------------------------------------- */
+	$items = $defaultItems;
 
-    $suffixes   = array_unique( $suffixes );
-    $mixinHeads = array_values( $mixinHeads );      // ordered, de-duped headings
+	foreach ( $breakpoints as $prefix => $label ) {
+		$items[] = [ 'type' => 'heading', 'label' => $label, 'prefix' => $prefix, 'bp' => true ];
 
-    /* breakpoint tabs ---------------------------------------------------- */
-    foreach ( $breakpoints as $prefix => $label ) {
-        $items[] = [ 'type' => 'heading', 'label' => $label, 'prefix' => $prefix, 'bp' => true ];
-        foreach ( $mixinHeads as $h ) {
-            $items[] = $h;                           // Display / Order / Alignment in order
-        }
-        foreach ( $suffixes as $s ) {
-            $items[] = [ 'type' => 'class', 'name' => "{$prefix}-{$s}" ];
-        }
-    }
+		foreach ( $sectionOrder as $lbl ) {
+			$meta = $sections[ $lbl ];
+			$items[] = [ 'type' => 'heading', 'label' => $lbl, 'desc' => $meta['desc'] ];
 
-    return $items;
+			foreach ( $meta['suffixes'] as $suf ) {
+				$items[] = [ 'type' => 'class', 'name' => "{$prefix}-{$suf}" ];
+			}
+		}
+	}
+
+	return $items;
 }
+
 
 /* -------------------------------------------------------------------------
  * React (inline)

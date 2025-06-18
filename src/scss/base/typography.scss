@@ -13,7 +13,7 @@ strong {
 /**
  *  @link https://github.com/WordPress/gutenberg/issues/53146
  */
-p[style*="text-decoration:none"] * {
+*[style*="text-decoration:none"] * {
 	text-decoration: none;
 	&:hover {
 		text-decoration: underline;

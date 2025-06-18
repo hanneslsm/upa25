@@ -1,208 +1,167 @@
 <?php
-
 /**
- * Enqueue frontend and editor styles.
+ * Asset loading for the upa25 theme
  *
- * @package upa25
+ *  ── WHAT THIS FILE DOES ──────────────────────────────────────────────
+ *  • Global CSS/JS → everywhere (editor + frontend).
+ *  • Screen CSS    → frontend only.
+ *  • Editor-canvas CSS (editor.css) → **editor iframe only**, never the frontend.
+ *  • Per-block & style-variation CSS → loaded on the frontend *only if the
+ *    corresponding block (or variation) is present in the rendered page*.
+ *
+ *  ── FOLDER STRUCTURE EXPECTED ────────────────────────────────────────
+ *  build/
+ *  ├── css
+ *  │   ├── global.css
+ *  │   ├── screen.css
+ *  │   ├── editor.css
+ *  │   ├── blocks/          ← core-cover.css, core-button.css, …
+ *  │   └── block-styles/    ← outline/core-button.css, blurred/core-cover.css
+ *  └── js
+ *      └── global.js
  */
 
+defined( 'ABSPATH' ) || exit;
+
+/* ---------------------------------------------------------------------
+ *  GLOBAL ASSETS  (frontend + editor)
+ * ------------------------------------------------------------------ */
+
 /**
- * Enqueue global CSS and JavaScript for both the frontend and editor.
+ * Enqueue global CSS/JS (shared).
  */
-function upa25_enqueue_scripts()
-{
-	// Enqueue the global CSS.
-	$global_style_path   = get_template_directory_uri() . '/build/css/global.css';
-	$global_style_asset  = require get_template_directory() . '/build/css/global.asset.php';
+function upa25_enqueue_global_assets(): void {
+	$css_uri   = get_template_directory_uri() . '/build/css/global.css';
+	$css_meta  = require get_template_directory() . '/build/css/global.asset.php';
+
+	$js_uri    = get_template_directory_uri() . '/build/js/global.js';
+	$js_meta   = require get_template_directory() . '/build/js/global.asset.php';
 
 	wp_enqueue_style(
 		'upa25-global-style',
-		$global_style_path,
-		$global_style_asset['dependencies'],
-		$global_style_asset['version']
+		$css_uri,
+		$css_meta['dependencies'],
+		$css_meta['version']
 	);
-
-	// Enqueue the global JavaScript.
-	$global_script_path   = get_template_directory_uri() . '/build/js/global.js';
-	$global_script_asset  = require get_template_directory() . '/build/js/global.asset.php';
 
 	wp_enqueue_script(
 		'upa25-global-script',
-		$global_script_path,
-		$global_script_asset['dependencies'],
-		$global_script_asset['version'],
+		$js_uri,
+		$js_meta['dependencies'],
+		$js_meta['version'],
 		true
 	);
 }
-add_action('enqueue_block_assets', 'upa25_enqueue_scripts');
+add_action( 'enqueue_block_assets', 'upa25_enqueue_global_assets' ); // recomm. hook :contentReference[oaicite:0]{index=0}
+
+/* ---------------------------------------------------------------------
+ *  FRONTEND-ONLY ASSETS
+ * ------------------------------------------------------------------ */
 
 /**
- * Enqueue the screen CSS for the frontend.
+ * Screen-only CSS.
  */
-function upa25_enqueue_frontend_styles()
-{
-	$screen_style_path   = get_template_directory_uri() . '/build/css/screen.css';
-	$screen_style_asset  = require get_template_directory() . '/build/css/screen.asset.php';
+function upa25_enqueue_screen_css(): void {
+	$uri  = get_template_directory_uri() . '/build/css/screen.css';
+	$meta = require get_template_directory() . '/build/css/screen.asset.php';
 
 	wp_enqueue_style(
 		'upa25-screen-style',
-		$screen_style_path,
-		$screen_style_asset['dependencies'],
-		$screen_style_asset['version']
+		$uri,
+		$meta['dependencies'],
+		$meta['version']
 	);
 }
-add_action('wp_enqueue_scripts', 'upa25_enqueue_frontend_styles');
+add_action( 'wp_enqueue_scripts', 'upa25_enqueue_screen_css' );
+
+/* ---------------------------------------------------------------------
+ *  EDITOR-CANVAS-ONLY ASSETS  (editor iframe, not frontend)
+ * ------------------------------------------------------------------ */
 
 /**
- * Enqueue the editor CSS for the block editor.
+ * Load editor.css *inside* the block-editor iframe with the correct hook.
+ * Using `enqueue_block_assets` + `is_admin()` avoids the
+ * “was added to the iframe incorrectly” warning introduced in WP 6.3 + 6.5. :contentReference[oaicite:1]{index=1}
  */
-function studio25_enqueue_editor_styles() {
-	$editor_style_path   = get_template_directory_uri() . '/build/css/editor.css';
-	$editor_style_asset  = require get_template_directory() . '/build/css/editor.asset.php';
+function upa25_enqueue_editor_canvas_css(): void {
+	if ( ! is_admin() ) {
+		return; // avoid the public site
+	}
+
+	$path = get_template_directory() . '/build/css/editor.css';
+	$uri  = get_template_directory_uri() . '/build/css/editor.css';
 
 	wp_enqueue_style(
-		'studio25-editor-style',
-		$editor_style_path,
-		$editor_style_asset['dependencies'],
-		$editor_style_asset['version']
+		'upa25-editor-style',
+		$uri,
+		array(),
+		filemtime( $path )
 	);
 }
-add_action( 'enqueue_block_editor_assets', 'studio25_enqueue_editor_styles' );
+add_action( 'enqueue_block_assets', 'upa25_enqueue_editor_canvas_css', 5 );
 
-
-
-
-
-/**
- * 1. Collect everything that is actually rendered.
- */
-add_filter('render_block', 'upa25_collect_used_blocks', 10, 2);
-
-function upa25_collect_used_blocks(string $block_content, array $block): string
-{
-	static $collected = [
-		'blocks' => [],
-		'styles' => [],
-	];
-
-	if (empty($block['blockName'])) {
-		return $block_content;
-	}
-
-	$block_name = $block['blockName'];
-
-	// Collect block names.
-	if (! in_array($block_name, $collected['blocks'], true)) {
-		$collected['blocks'][] = $block_name;
-	}
-
-	// Collect style variations.
-	if (
-		! empty($block['attrs']['className'])
-		&& preg_match('/\bis-style-([a-z0-9\-]+)\b/', $block['attrs']['className'], $m)
-	) {
-		$style_slug = $m[1];
-
-		if (! isset($collected['styles'][$block_name])) {
-			$collected['styles'][$block_name] = [];
-		}
-
-		if (! in_array($style_slug, $collected['styles'][$block_name], true)) {
-			$collected['styles'][$block_name][] = $style_slug;
-		}
-	}
-
-	$GLOBALS['upa25_used_blocks'] = $collected;
-	return $block_content;
-}
+/* ---------------------------------------------------------------------
+ *  PER-BLOCK & VARIATION STYLES  (conditional loading)
+ * ------------------------------------------------------------------ */
 
 /**
- * 2. Enqueue the collected block‐ and style‐variation CSS
+ * Register per-block CSS (always in editor, conditional on frontend)
+ * and style-variation CSS (ditto).
  */
-add_action('enqueue_block_assets', 'upa25_enqueue_block_styles', 20);
+function upa25_register_block_styles(): void {
 
-function upa25_enqueue_block_styles(): void
-{
-	$used = $GLOBALS['upa25_used_blocks'] ?? [];
+	/* -------- base block CSS ---------------------------------------- */
+	$dir_blocks = trailingslashit( get_theme_file_path( 'build/css/blocks' ) );
+	$url_blocks = trailingslashit( get_theme_file_uri( 'build/css/blocks' ) );
 
-	if (empty($used['blocks'])) {
-		return;
-	}
+	foreach ( glob( $dir_blocks . '*.css' ) as $file ) {
+		$slug       = basename( $file, '.css' );      // core-button
+		$block_name = str_replace( '-', '/', $slug ); // core/button
+		$handle     = "upa25-{$slug}-style";
 
-	$base_dir    = trailingslashit(get_theme_file_path('build/css/blocks'));
-	$base_url    = trailingslashit(get_theme_file_uri('build/css/blocks'));
-	$styles_dir  = trailingslashit(get_theme_file_path('build/css/block-styles'));
-	$styles_url  = trailingslashit(get_theme_file_uri('build/css/block-styles'));
+		wp_register_style(
+			$handle,
+			$url_blocks . $slug . '.css',
+			array(),
+			filemtime( $file )
+		);
 
-	// Base block styles.
-	foreach ($used['blocks'] as $block_name) {
-		$slug = str_replace('/', '-', $block_name); // core/cover → core-cover
-		$path = "{$base_dir}{$slug}.css";
-
-		if (file_exists($path)) {
-			wp_enqueue_style(
-				"upa25-block-style-{$slug}",
-				"{$base_url}{$slug}.css",
-				[],
-				filemtime($path)
-			);
-		}
-	}
-
-	// Style variations.
-	if (! empty($used['styles'])) {
-		foreach ($used['styles'] as $block_name => $variations) {
-			$block_slug = str_replace('/', '-', $block_name);
-
-			foreach ($variations as $style_slug) {
-				$path = "{$styles_dir}{$style_slug}/{$block_slug}.css";
-
-				if (file_exists($path)) {
-					wp_enqueue_style(
-						"upa25-block-style-{$block_slug}-{$style_slug}",
-						"{$styles_url}{$style_slug}/{$block_slug}.css",
-						[],
-						filemtime($path)
-					);
-				}
-			}
-		}
-	}
-}
-/**
- * Enqueue ALL block & variation styles into the editor
- */
-add_action('enqueue_block_editor_assets', 'upa25_enqueue_all_block_styles_in_editor', 5);
-
-function upa25_enqueue_all_block_styles_in_editor(): void
-{
-	$dir_base   = get_theme_file_path('build/css/blocks');
-	$url_base   = get_theme_file_uri('build/css/blocks');
-	$dir_styles = get_theme_file_path('build/css/block-styles');
-	$url_styles = get_theme_file_uri('build/css/block-styles');
-
-	// 1) Base block CSS
-	foreach (glob($dir_base . '/*.css') as $file) {
-		$slug = basename($file, '.css');
-		wp_enqueue_style(
-			"upa25-block-style-{$slug}",
-			"{$url_base}/{$slug}.css",
-			[],
-			filemtime($file)
+		wp_enqueue_block_style(
+			$block_name,
+			array(
+				'handle' => $handle,
+			)
 		);
 	}
 
-	// 2) Variation CSS: build/css/block-styles/{variation}/{block-slug}.css
-	foreach (glob($dir_styles . '/*/*.css') as $file) {
-		// $file === /path/to/theme/build/css/block-styles/duotone/core-cover.css
-		$rel     = str_replace($dir_styles . '/', '', $file);          // "duotone/core-cover.css"
-		list($variation, $css_file) = explode('/', $rel, 2);        // [ "duotone", "core-cover.css" ]
-		$block   = basename($css_file, '.css');
-		wp_enqueue_style(
-			"upa25-block-style-{$block}-{$variation}",
-			"{$url_styles}/{$variation}/{$block}.css",
-			[],
-			filemtime($file)
+	/* -------- style-variation CSS ----------------------------------- */
+	$dir_vars = trailingslashit( get_theme_file_path( 'build/css/block-styles' ) );
+	$url_vars = trailingslashit( get_theme_file_uri( 'build/css/block-styles' ) );
+
+	foreach ( glob( $dir_vars . '*/*.css' ) as $file ) {
+		$rel          = str_replace( $dir_vars, '', $file );      // outline/core-button.css
+		[ $variation, $css_file ] = explode( '/', $rel, 2 );
+
+		$block_slug = basename( $css_file, '.css' );              // core-button
+		$block_name = str_replace( '-', '/', $block_slug );
+		$style_slug = sanitize_title( $variation );
+		$handle     = "upa25-{$block_slug}-{$style_slug}-style";
+
+		wp_register_style(
+			$handle,
+			"{$url_vars}{$variation}/{$block_slug}.css",
+			array(),
+			filemtime( $file )
+		);
+
+		register_block_style(
+			$block_name,
+			array(
+				'name'         => $style_slug,
+				'label'        => ucwords( str_replace( '-', ' ', $style_slug ) ),
+				'style_handle' => $handle,
+			)
 		);
 	}
 }
+add_action( 'init', 'upa25_register_block_styles' );

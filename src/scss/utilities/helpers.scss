@@ -122,6 +122,14 @@
 	transform: rotate(-3deg);
 }
 
+/**
+ * Title: Display
+ **/
+.display-none-when-empty:empty {
+			display: none;
+			opacity: 0;
+		}
+
 /* Responsive
 --------------------------------------------- */
 // One single mixin generates all breakpoint-specific utility classes.
@@ -132,6 +140,10 @@
  		* Title: Display
  		**/
 		.#{$prefix}-display-none {
+			display: none;
+			opacity: 0;
+		}
+		.#{$prefix}-display-none-when-empty:empty {
 			display: none;
 			opacity: 0;
 		}

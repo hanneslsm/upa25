@@ -170,39 +170,46 @@ function upa25_enqueue_block_styles(): void
 	}
 }
 /**
- * Enqueue ALL block & variation styles into the editor
+ * Enqueue ALL block & variation styles into every block-based editor,
+ * including the Site Editor.
  */
-add_action('enqueue_block_editor_assets', 'upa25_enqueue_all_block_styles_in_editor', 5);
+function upa25_enqueue_all_block_styles_in_editor(): void {
+	// Skip the public frontend.
+	if ( ! is_admin() ) {
+		return;
+	}
 
-function upa25_enqueue_all_block_styles_in_editor(): void
-{
-	$dir_base   = get_theme_file_path('build/css/blocks');
-	$url_base   = get_theme_file_uri('build/css/blocks');
-	$dir_styles = get_theme_file_path('build/css/block-styles');
-	$url_styles = get_theme_file_uri('build/css/block-styles');
+	$dir_base   = get_theme_file_path( 'build/css/blocks' );
+	$url_base   = get_theme_file_uri( 'build/css/blocks' );
+	$dir_styles = get_theme_file_path( 'build/css/block-styles' );
+	$url_styles = get_theme_file_uri( 'build/css/block-styles' );
 
-	// 1) Base block CSS
-	foreach (glob($dir_base . '/*.css') as $file) {
-		$slug = basename($file, '.css');
+	// 1) Base block CSS.
+	foreach ( glob( $dir_base . '/*.css' ) as $file ) {
+		$slug = basename( $file, '.css' );
 		wp_enqueue_style(
 			"upa25-block-style-{$slug}",
 			"{$url_base}/{$slug}.css",
 			[],
-			filemtime($file)
+			filemtime( $file )
 		);
 	}
 
 	// 2) Variation CSS: build/css/block-styles/{variation}/{block-slug}.css
-	foreach (glob($dir_styles . '/*/*.css') as $file) {
-		// $file === /path/to/theme/build/css/block-styles/duotone/core-cover.css
-		$rel     = str_replace($dir_styles . '/', '', $file);          // "duotone/core-cover.css"
-		list($variation, $css_file) = explode('/', $rel, 2);        // [ "duotone", "core-cover.css" ]
-		$block   = basename($css_file, '.css');
+	foreach ( glob( $dir_styles . '/*/*.css' ) as $file ) {
+		$rel               = str_replace( $dir_styles . '/', '', $file ); // "duotone/core-cover.css"
+		list( $variation, $css_file ) = explode( '/', $rel, 2 );          // [ "duotone", "core-cover.css" ]
+		$block             = basename( $css_file, '.css' );
 		wp_enqueue_style(
 			"upa25-block-style-{$block}-{$variation}",
 			"{$url_styles}/{$variation}/{$block}.css",
 			[],
-			filemtime($file)
+			filemtime( $file )
 		);
 	}
 }
+
+// Page/post editors.
+add_action( 'enqueue_block_editor_assets', 'upa25_enqueue_all_block_styles_in_editor', 5 );
+// Site Editor (template & template-part editing).
+add_action( 'enqueue_block_assets',       'upa25_enqueue_all_block_styles_in_editor', 5 );

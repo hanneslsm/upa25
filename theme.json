@@ -15,7 +15,10 @@
 			"defaultPalette": false,
 			"duotone": [
 				{
-					"colors": ["#000", "#fff"],
+					"colors": [
+						"#000",
+						"#fff"
+					],
 					"name": "Black and white",
 					"slug": "duotone-1"
 				}
@@ -192,7 +195,14 @@
 					"slug": "60"
 				}
 			],
-			"units": ["%", "px", "em", "rem", "dvh", "dvw"]
+			"units": [
+				"%",
+				"px",
+				"em",
+				"rem",
+				"dvh",
+				"dvw"
+			]
 		},
 		"typography": {
 			"defaultFontSizes": false,
@@ -249,25 +259,33 @@
 							"fontFamily": "Lato",
 							"fontStyle": "normal",
 							"fontWeight": "400",
-							"src": ["file:./assets/fonts/lato/lato-400-normal.woff2"]
+							"src": [
+								"file:./assets/fonts/lato/lato-400-normal.woff2"
+							]
 						},
 						{
 							"fontFamily": "Lato",
 							"fontStyle": "normal",
 							"fontWeight": "700",
-							"src": ["file:./assets/fonts/lato/lato-700-normal.woff2"]
+							"src": [
+								"file:./assets/fonts/lato/lato-700-normal.woff2"
+							]
 						},
 						{
 							"fontFamily": "Lato",
 							"fontStyle": "italic",
 							"fontWeight": "400",
-							"src": ["file:./assets/fonts/lato/lato-400-italic.woff2"]
+							"src": [
+								"file:./assets/fonts/lato/lato-400-italic.woff2"
+							]
 						},
 						{
 							"fontFamily": "Lato",
 							"fontStyle": "italic",
 							"fontWeight": "700",
-							"src": ["file:./assets/fonts/lato/lato-700-italic.woff2"]
+							"src": [
+								"file:./assets/fonts/lato/lato-700-italic.woff2"
+							]
 						}
 					],
 					"fontFamily": "Lato, sans-serif",
@@ -606,5 +624,5 @@
 		}
 	],
 	"version": 3,
-	"$schema": "https://schemas.wp.org/wp/6.8/theme.json"
+	"$schema": "https://schemas.wp.org/trunk/theme.json"
 }

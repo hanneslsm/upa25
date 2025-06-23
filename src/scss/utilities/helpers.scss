@@ -125,10 +125,15 @@
 /**
  * Title: Display
  **/
-.display-none-when-empty:empty {
-			display: none;
-			opacity: 0;
-		}
+
+.with-display-none {
+	display: none;
+	opacity: 0;
+}
+.with-display-none-when-empty:empty {
+	display: none;
+	opacity: 0;
+}
 
 /* Responsive
 --------------------------------------------- */
@@ -136,6 +141,15 @@
 // $mode accepts either min or max to switch between `min-width` and `max-width`.
 @mixin responsive-styles($breakpoint, $prefix, $mode: max) {
 	@media screen and (#{ $mode }-width: $breakpoint) {
+
+
+		/**
+ 		* Title: Dev Tools
+ 		**/
+		.#{$prefix}-border-red {
+			border: 1px solid red !important;
+		}
+
 		/**
  		* Title: Display
  		**/
@@ -174,9 +188,8 @@
 }
 
 // Responsive styles for each breakpoint
-@include responsive-styles($large, with-min-large, min);
+@include responsive-styles($large, with-large, min);
 @include responsive-styles($large, with-max-large, max);
-// @include responsive-styles($large, with-large, min);
 @include responsive-styles($medium, with-max-medium, max);
-//@include responsive-styles($medium, with-medium, min);
+@include responsive-styles($medium, with-medium, min);
 @include responsive-styles($mobile, with-mobile, max);

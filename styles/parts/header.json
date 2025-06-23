@@ -9,7 +9,7 @@
 		"elements": {
 			"link":{
 				"color": {
-					"text": "var:preset|color|contrast-3"
+					"text": "var:preset|color|brand-3"
 				},
 				"typography": {
 					"textDecoration": "none"

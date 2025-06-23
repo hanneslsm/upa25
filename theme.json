@@ -510,20 +510,6 @@
 						":hover": {
 							"typography": {
 								"textDecoration": "underline"
-							},
-							"color": {
-								"background": "var(--wp--preset--color--base-2)"
-							}
-						},
-						"border": {
-							"radius": "8px"
-						},
-						"spacing": {
-							"padding": {
-								"top": "var(--wp--preset--spacing--10)",
-								"bottom": "var(--wp--preset--spacing--10)",
-								"left": "var(--wp--preset--spacing--10)",
-								"right": "var(--wp--preset--spacing--10)"
 							}
 						}
 					}

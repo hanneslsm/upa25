@@ -529,8 +529,7 @@
 				"color": {
 					"background": "var(--wp--preset--color--brand-3)",
 					"text": "var(--wp--preset--color--base)"
-				},
-				"shadow": "var(--wp--preset--shadow--small)"
+				}
 			},
 			"caption": {
 				"color": {

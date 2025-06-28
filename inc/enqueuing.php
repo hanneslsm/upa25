@@ -54,24 +54,11 @@ function upa25_enqueue_frontend_styles()
 add_action('wp_enqueue_scripts', 'upa25_enqueue_frontend_styles');
 
 /**
- * Enqueue the editor CSS for the block editor.
+ * Remove the upa25_enqueue_editor_styles function and its add_action, and replace with add_editor_style for block editor CSS
  */
-function studio25_enqueue_editor_styles() {
-	$editor_style_path   = get_template_directory_uri() . '/build/css/editor.css';
-	$editor_style_asset  = require get_template_directory() . '/build/css/editor.asset.php';
-
-	wp_enqueue_style(
-		'studio25-editor-style',
-		$editor_style_path,
-		$editor_style_asset['dependencies'],
-		$editor_style_asset['version']
-	);
-}
-add_action( 'enqueue_block_editor_assets', 'studio25_enqueue_editor_styles' );
-
-
-
-
+add_action( 'after_setup_theme', function() {
+	add_editor_style( 'build/css/editor.css' );
+} );
 
 /**
  * 1. Collect everything that is actually rendered.

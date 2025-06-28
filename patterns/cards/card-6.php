@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: Card-06
- * Slug: upa25/card-06
+ * Title: Card-6
+ * Slug: upa25/card-6
  * Categories: upa25/cards
  * Viewport width: 1920
  * Description: Layout section with cards

@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: component-reviews-02
- * Slug: upa25/component-reviews-02
+ * Title: component-reviews-2
+ * Slug: upa25/component-reviews-2
  * Categories: upa25/components
  * Viewport width: 320
  */

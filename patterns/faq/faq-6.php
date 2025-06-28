@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: FAQ-04
- * Slug: upa25/faq-04
+ * Title: FAQ-6
+ * Slug: upa25/faq-6
  * Categories: upa25/faq
  * Viewport width: 1920
  * Description: FAQ section
@@ -15,7 +15,15 @@
 
 <!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|30"}}}} -->
 <div class="wp-block-columns"><!-- wp:column {"verticalAlignment":"top","width":"66.66%"} -->
-<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:66.66%"><!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"default"}} -->
+<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:66.66%"><!-- wp:heading -->
+<h2 class="wp-block-heading"><?php esc_html_e('Place your FAQ section headline here.', 'upa25');?></h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><?php esc_html_e('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'upa25');?></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"default"}} -->
 <div class="wp-block-group"><!-- wp:details {"className":"is-style-chevron"} -->
 <details class="wp-block-details is-style-chevron"><summary>Consectetur adipiscing elit?</summary><!-- wp:paragraph -->
 <p><?php esc_html_e('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'upa25');?></p>
@@ -55,13 +63,9 @@
 <!-- /wp:column -->
 
 <!-- wp:column {"verticalAlignment":"top","width":"33.33%"} -->
-<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:33.33%"><!-- wp:heading -->
-<h2 class="wp-block-heading"><?php esc_html_e('FAQs', 'upa25');?></h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p><?php esc_html_e('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'upa25');?></p>
-<!-- /wp:paragraph --></div>
+<div class="wp-block-column is-vertically-aligned-top" style="flex-basis:33.33%"><!-- wp:image {"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/placeholders/placeholder-image-2.webp" alt=""/></figure>
+<!-- /wp:image --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 

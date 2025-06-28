@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: Layout-A-06
- * Slug: upa25/layout-a-06
+ * Title: Layout-A-8
+ * Slug: upa25/layout-a-8
  * Categories: upa25/layout-a
  * Viewport width: 1920
  */
@@ -30,10 +30,10 @@
 <!-- /wp:spacer --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"layout":{"type":"grid","minimumColumnWidth":"24rem"}} -->
+<!-- wp:group {"align":"wide","style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"grid","minimumColumnWidth":"28rem"}} -->
 <div class="wp-block-group alignwide"><!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sCurabitur Blandit Fringilla Sapien Eu.%2$s', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 
@@ -43,8 +43,8 @@ echo sprintf( esc_html__( '%1$sCurabitur Blandit Fringilla Sapien Eu.%2$s', 'upa
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sSuspendisse Potenti Curabitur Tempus.%2$s', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 
@@ -54,8 +54,8 @@ echo sprintf( esc_html__( '%1$sSuspendisse Potenti Curabitur Tempus.%2$s', 'upa2
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sNunc Volutpat Ligula Dapibus Sem.%2$s', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 
@@ -65,8 +65,8 @@ echo sprintf( esc_html__( '%1$sNunc Volutpat Ligula Dapibus Sem.%2$s', 'upa25' )
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sPellentesque Vitae Odio Euismod Magna.%2$s', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 
@@ -76,8 +76,8 @@ echo sprintf( esc_html__( '%1$sPellentesque Vitae Odio Euismod Magna.%2$s', 'upa
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sEum fuga porro vel natus%2$s.', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 
@@ -87,8 +87,8 @@ echo sprintf( esc_html__( '%1$sEum fuga porro vel natus%2$s.', 'upa25' ), '<stro
 <!-- /wp:group -->
 
 <!-- wp:group {"layout":{"type":"default"}} -->
-<div class="wp-block-group"><!-- wp:paragraph -->
-<p><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
+<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"large"} -->
+<p class="has-large-font-size"><?php /* Translators: 1. is the start of a 'strong' HTML element, 2. is the end of a 'strong' HTML element */
 echo sprintf( esc_html__( '%1$sEt amet optio id minima maxime.%2$s', 'upa25' ), '<strong>', '</strong>' ); ?></p>
 <!-- /wp:paragraph -->
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: sticky-02
- * Slug: upa25/sticky-02
+ * Title: sticky-2
+ * Slug: upa25/sticky-2
  * Categories: upa25/sticky
 * Viewport width: 1920
  */

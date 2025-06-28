@@ -1,7 +1,7 @@
 <?php
 /**
  * Title: Layout-B
- * Slug: upa25/layout-b-1
+ * Slug: upa25/layout-b
  * Categories: upa25/layout-b
  * Viewport width: 1920
  */

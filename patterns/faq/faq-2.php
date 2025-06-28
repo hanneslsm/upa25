@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: FAQ-02
- * Slug: upa25/faq-02
+ * Title: FAQ-2
+ * Slug: upa25/faq-2
  * Categories: upa25/faq
  * Viewport width: 1920
  * Description: FAQ section

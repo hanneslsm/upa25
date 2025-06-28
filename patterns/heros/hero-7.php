@@ -1,8 +1,8 @@
 
 <?php
 /**
- * Title: Hero-07
- * Slug: upa25/hero-07
+ * Title: Hero-7
+ * Slug: upa25/hero-7
  * Categories: upa25/heros
  * Viewport width: 1920
  * Description: Hero section with background image, two columns, headline, text, and button.

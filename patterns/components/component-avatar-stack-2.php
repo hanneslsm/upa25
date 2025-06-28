@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: component-avatar-stack-02
- * Slug: upa25/component-avatar-stack-02
+ * Title: component-avatar-stack-2
+ * Slug: upa25/component-avatar-stack-2
  * Categories: upa25/components
  * Viewport width: 320
  */

@@ -10,6 +10,9 @@
 // Setup
 require get_template_directory() . '/inc/setup.php';
 
+// Woocommerce Setup
+require get_template_directory() . '/inc/woo-remove-patterns.php';
+
 // Enqueue files
 require get_template_directory() . '/inc/enqueuing.php';
 
@@ -24,6 +27,10 @@ require get_template_directory() . '/inc/block-patterns.php';
 
 // Dashboard Widget
 require get_template_directory() . '/inc/dashboard-widget.php';
+
+
+
+
 
 
 

@@ -1,10 +1,12 @@
 /**
- * upa25 Webpack configuration
+ * withkit Webpack configuration
  *
- * @package upa25
- * @version 2.1.1
+ * @package withkit
+ * @version 2.2.0
  *
-*  2.1.1: Disable performance hints
+ * 2.2.0: Auto-detect block JS and style entries; general cleanup for easier block registration
+ * 2.1.2: Add support for cleaning and copying SVGs to build folder
+ * 2.1.1: Disable performance hints
  * 2.1.0: Add support for automatic block-style entries and recursive block SCSS
  * 2.0.0: Add support for webp images
  * 1.0.0: Initial version
@@ -17,6 +19,7 @@ const { merge } = require("webpack-merge");
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const sharp = require("sharp");
+const { optimize } = require("svgo");
 
 /** WordPress dependencies */
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
@@ -76,7 +79,6 @@ module.exports = (env) => {
 	const isProd = process.env.NODE_ENV === "production";
 	const mode = isProd ? "production" : "development";
 
-	// Base SCSS entries
 	const globalEntry = {
 		"css/global": path.resolve(__dirname, "src/scss/global.scss"),
 	};
@@ -86,19 +88,53 @@ module.exports = (env) => {
 	const editorEntry = {
 		"css/editor": path.resolve(__dirname, "src/scss/editor.scss"),
 	};
+	const jsBaseEntry = {
+		"js/global": path.resolve(__dirname, "src/js/global.js"),
+	};
 
-	// JavaScript entry
-	const jsEntry = { "js/global": path.resolve(__dirname, "src/js/global.js") };
+	// Automatically gather block JS (index.js & view.js) and style.scss (style-index) files
+	const blocksRootDir = path.resolve(__dirname, "src/blocks");
 
-	// Recursive block SCSS entries
+	function getBlockJsEntries(rootDir, outputDir = "js/blocks") {
+		if (!fs.existsSync(rootDir)) return {};
+		return fs
+			.readdirSync(rootDir)
+			.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
+			.reduce((entries, blockName) => {
+				const dir = path.join(rootDir, blockName);
+				["index", "view"].forEach((file) => {
+					const filePath = path.join(dir, `${file}.js`);
+					if (fs.existsSync(filePath)) {
+						entries[`${outputDir}/${blockName}/${file}`] = filePath;
+					}
+				});
+				return entries;
+			}, {});
+	}
+
+	function getBlockStyleIndexEntries(rootDir, outputDir = "css/blocks") {
+		if (!fs.existsSync(rootDir)) return {};
+		return fs
+			.readdirSync(rootDir)
+			.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
+			.reduce((entries, blockName) => {
+				const stylePath = path.join(rootDir, blockName, "style.scss");
+				if (fs.existsSync(stylePath)) {
+					entries[`${outputDir}/${blockName}/style-index`] = stylePath;
+				}
+				return entries;
+			}, {});
+	}
+
+	const blockJsEntries = getBlockJsEntries(blocksRootDir);
+	const blockStyleIndexEntries = getBlockStyleIndexEntries(blocksRootDir);
+
 	const blockDir = path.resolve(__dirname, "src/scss/blocks");
 	const blockEntries = getRecursiveBlockEntries(blockDir, "css/blocks");
 
-	// Styled block variation entries
 	const styleBlocksDir = path.resolve(__dirname, "src/scss/block-styles");
 	const styleEntries = getStyleBlockEntries(styleBlocksDir, "css/block-styles");
 
-	// Sections styles if any
 	const sectionFiles = getScssFiles(
 		path.resolve(__dirname, "src/scss/styles/sections"),
 	);
@@ -111,7 +147,9 @@ module.exports = (env) => {
 		globalEntry,
 		screenEntry,
 		editorEntry,
-		jsEntry,
+		jsBaseEntry,
+		blockJsEntries,
+		blockStyleIndexEntries,
 		blockEntries,
 		styleEntries,
 		sectionEntry,
@@ -148,7 +186,7 @@ module.exports = (env) => {
 								case ".avif":
 									return img.avif({ quality: 50 }).toBuffer();
 								case ".webp":
-									return img.webp({ quality: 50 }).toBuffer();
+									return img.webp({ quality: 70 }).toBuffer();
 								default:
 									return content;
 							}
@@ -166,12 +204,34 @@ module.exports = (env) => {
 								.toBuffer();
 						},
 					},
+					{
+						from: "**/*.svg",
+						context: path.resolve(__dirname, "src/svg"),
+						to: "svg/[path][name][ext]",
+						noErrorOnMissing: true,
+						transform: async (content) => {
+							const result = optimize(content.toString(), {
+								multipass: true,
+								plugins: [
+									"removeDimensions",
+									{
+										name: "removeViewBox",
+										active: true,
+									},
+									"removeTitle",
+									"removeDesc",
+									"removeUselessDefs",
+									"removeXMLNS",
+								],
+							});
+							return Buffer.from(result.data);
+						},
+					},
 				],
 			}),
 		);
 	}
 
-	// Bump theme version
 	plugins.push({
 		apply: (compiler) => {
 			compiler.hooks.afterEmit.tap("UpdateThemeVersionPlugin", () => {
@@ -190,20 +250,29 @@ module.exports = (env) => {
 	return merge(defaultConfig, {
 		mode,
 		entry: entries,
-                output: {
-                        path: path.resolve(__dirname, "build"),
-                        filename: "[name].js",
-                        assetModuleFilename: "images/[path][name][ext]",
-                },
-                plugins,
-                // Disable performance hints to avoid asset size warnings during
-                // the build process.
-                performance: {
-                        hints: false,
-                },
-                stats: {
-                        all: false,
-                        source: true,
+		output: {
+			path: path.resolve(__dirname, "build"),
+			filename: "[name].js",
+			assetModuleFilename: "images/[path][name][ext]",
+		},
+		module: {
+			rules: [
+				{
+					test: /\.svg$/i,
+					type: "asset/resource",
+					generator: {
+						filename: "images/[path][name][ext]",
+					},
+				},
+			],
+		},
+		plugins,
+		performance: {
+			hints: false,
+		},
+		stats: {
+			all: false,
+			source: true,
 			assets: true,
 			errorsCount: true,
 			errors: true,

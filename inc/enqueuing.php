@@ -3,20 +3,21 @@
 /**
  * Enqueue frontend and editor styles.
  *
- * @package upa25
+ * @package withkit
+ * @version 1.0.0
  */
 
 /**
  * Enqueue global CSS and JavaScript for both the frontend and editor.
  */
-function upa25_enqueue_scripts()
+function withkit_enqueue_scripts()
 {
 	// Enqueue the global CSS.
 	$global_style_path   = get_template_directory_uri() . '/build/css/global.css';
 	$global_style_asset  = require get_template_directory() . '/build/css/global.asset.php';
 
 	wp_enqueue_style(
-		'upa25-global-style',
+		'withkit-global-style',
 		$global_style_path,
 		$global_style_asset['dependencies'],
 		$global_style_asset['version']
@@ -27,34 +28,34 @@ function upa25_enqueue_scripts()
 	$global_script_asset  = require get_template_directory() . '/build/js/global.asset.php';
 
 	wp_enqueue_script(
-		'upa25-global-script',
+		'withkit-global-script',
 		$global_script_path,
 		$global_script_asset['dependencies'],
 		$global_script_asset['version'],
 		true
 	);
 }
-add_action('enqueue_block_assets', 'upa25_enqueue_scripts');
+add_action('enqueue_block_assets', 'withkit_enqueue_scripts');
 
 /**
  * Enqueue the screen CSS for the frontend.
  */
-function upa25_enqueue_frontend_styles()
+function withkit_enqueue_frontend_styles()
 {
 	$screen_style_path   = get_template_directory_uri() . '/build/css/screen.css';
 	$screen_style_asset  = require get_template_directory() . '/build/css/screen.asset.php';
 
 	wp_enqueue_style(
-		'upa25-screen-style',
+		'withkit-screen-style',
 		$screen_style_path,
 		$screen_style_asset['dependencies'],
 		$screen_style_asset['version']
 	);
 }
-add_action('wp_enqueue_scripts', 'upa25_enqueue_frontend_styles');
+add_action('wp_enqueue_scripts', 'withkit_enqueue_frontend_styles');
 
 /**
- * Remove the upa25_enqueue_editor_styles function and its add_action, and replace with add_editor_style for block editor CSS
+ * Remove the withkit_enqueue_editor_styles function and its add_action, and replace with add_editor_style for block editor CSS
  */
 add_action( 'after_setup_theme', function() {
 	add_editor_style( 'build/css/editor.css' );
@@ -63,9 +64,9 @@ add_action( 'after_setup_theme', function() {
 /**
  * 1. Collect everything that is actually rendered.
  */
-add_filter('render_block', 'upa25_collect_used_blocks', 10, 2);
+add_filter('render_block', 'withkit_collect_used_blocks', 10, 2);
 
-function upa25_collect_used_blocks(string $block_content, array $block): string
+function withkit_collect_used_blocks(string $block_content, array $block): string
 {
 	static $collected = [
 		'blocks' => [],
@@ -99,18 +100,18 @@ function upa25_collect_used_blocks(string $block_content, array $block): string
 		}
 	}
 
-	$GLOBALS['upa25_used_blocks'] = $collected;
+	$GLOBALS['withkit_used_blocks'] = $collected;
 	return $block_content;
 }
 
 /**
  * 2. Enqueue the collected block‐ and style‐variation CSS
  */
-add_action('enqueue_block_assets', 'upa25_enqueue_block_styles', 20);
+add_action('enqueue_block_assets', 'withkit_enqueue_block_styles', 20);
 
-function upa25_enqueue_block_styles(): void
+function withkit_enqueue_block_styles(): void
 {
-	$used = $GLOBALS['upa25_used_blocks'] ?? [];
+	$used = $GLOBALS['withkit_used_blocks'] ?? [];
 
 	if (empty($used['blocks'])) {
 		return;
@@ -128,7 +129,7 @@ function upa25_enqueue_block_styles(): void
 
 		if (file_exists($path)) {
 			wp_enqueue_style(
-				"upa25-block-style-{$slug}",
+				"withkit-block-style-{$slug}",
 				"{$base_url}{$slug}.css",
 				[],
 				filemtime($path)
@@ -146,7 +147,7 @@ function upa25_enqueue_block_styles(): void
 
 				if (file_exists($path)) {
 					wp_enqueue_style(
-						"upa25-block-style-{$block_slug}-{$style_slug}",
+						"withkit-block-style-{$block_slug}-{$style_slug}",
 						"{$styles_url}{$style_slug}/{$block_slug}.css",
 						[],
 						filemtime($path)
@@ -160,7 +161,7 @@ function upa25_enqueue_block_styles(): void
  * Enqueue ALL block & variation styles into every block-based editor,
  * including the Site Editor.
  */
-function upa25_enqueue_all_block_styles_in_editor(): void {
+function withkit_enqueue_all_block_styles_in_editor(): void {
 	// Skip the public frontend.
 	if ( ! is_admin() ) {
 		return;
@@ -175,7 +176,7 @@ function upa25_enqueue_all_block_styles_in_editor(): void {
 	foreach ( glob( $dir_base . '/*.css' ) as $file ) {
 		$slug = basename( $file, '.css' );
 		wp_enqueue_style(
-			"upa25-block-style-{$slug}",
+			"withkit-block-style-{$slug}",
 			"{$url_base}/{$slug}.css",
 			[],
 			filemtime( $file )
@@ -188,7 +189,7 @@ function upa25_enqueue_all_block_styles_in_editor(): void {
 		list( $variation, $css_file ) = explode( '/', $rel, 2 );          // [ "duotone", "core-cover.css" ]
 		$block             = basename( $css_file, '.css' );
 		wp_enqueue_style(
-			"upa25-block-style-{$block}-{$variation}",
+			"withkit-block-style-{$block}-{$variation}",
 			"{$url_styles}/{$variation}/{$block}.css",
 			[],
 			filemtime( $file )
@@ -197,6 +198,6 @@ function upa25_enqueue_all_block_styles_in_editor(): void {
 }
 
 // Page/post editors.
-add_action( 'enqueue_block_editor_assets', 'upa25_enqueue_all_block_styles_in_editor', 5 );
+add_action( 'enqueue_block_editor_assets', 'withkit_enqueue_all_block_styles_in_editor', 5 );
 // Site Editor (template & template-part editing).
-add_action( 'enqueue_block_assets',       'upa25_enqueue_all_block_styles_in_editor', 5 );
+add_action( 'enqueue_block_assets',       'withkit_enqueue_all_block_styles_in_editor', 5 );

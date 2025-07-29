@@ -32,8 +32,7 @@ function upa25_register_block_style_variations() {
 		],
 		'core/paragraph' => [
 			[ 'name' => 'indicator', 'label' => __( 'Indicator', 'upa25' ) ],
-			[ 'name' => 'overline',  'label' => __( 'Overline',  'upa25' ) ],
-			[ 'name' => 'checkmark', 'label' => __( 'Checkmark', 'upa25' ) ],
+			[ 'name' => 'overline',  'label' => __( 'Overline',  'upa25' ) ]
 		],
 	];
 

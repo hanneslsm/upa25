@@ -45,4 +45,4 @@ require get_template_directory() . '/inc/dashboard-widget.php';
 require get_template_directory() . '/inc/dev_purge-themes-cache.php';
 
 // Helpers
-require get_template_directory() . '/inc/dev_helpers.php';
+require get_template_directory() . '/inc/withkit-utils.php';

@@ -1,6 +1,6 @@
 /**
- * Helper classes
- * @version 1.0.0
+ * WithKit Helper classes
+ * @version 1.0.1
  */
 @use "../base/variables" as *;
 
@@ -190,6 +190,6 @@
 // Responsive styles for each breakpoint
 @include responsive-styles($large, with-large, min);
 @include responsive-styles($large, with-max-large, max);
-@include responsive-styles($medium, with-max-medium, max);
 @include responsive-styles($medium, with-medium, min);
+@include responsive-styles($medium, with-max-medium, max);
 @include responsive-styles($mobile, with-mobile, max);

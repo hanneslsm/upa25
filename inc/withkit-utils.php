@@ -1,19 +1,20 @@
 <?php
 /**
- * Plugin Name:  UPA25 Utility Classes Panel
+ * Plugin Name:  withkit Utility Classes Panel
  * Description:  Gutenberg-Inspector panel for helper classes.
  *               – “Default” tab for global helpers.
  *               – One tab per uncommented @include line (with-mobile, with-medium …).
  *               – “with-” becomes “…” in labels.
  *               – Horizontally-scrollable tab bar with extra bottom padding.
  *               – Blue dot after the main title and every tab that owns ≥ 1 active class.
- * Version:      2.3.0
  * Requires at least: WP 6.3, PHP 8.1
+ *
+ * @version 2.3.0
  */
 
 declare(strict_types=1);
 
-namespace UPA25;
+namespace withkit;
 
 /* -------------------------------------------------------------------------
  * Assets
@@ -22,20 +23,20 @@ add_action(
 	'enqueue_block_editor_assets',
 	static function (): void {
 		wp_register_script(
-			'upa25-class-panel',
+			'withkit-class-panel',
 			'',
 			[ 'wp-block-editor', 'wp-components', 'wp-data', 'wp-element', 'wp-hooks' ],
 			null,
 			true
 		);
-		wp_enqueue_script( 'upa25-class-panel' );
+		wp_enqueue_script( 'withkit-class-panel' );
 
 		wp_add_inline_script(
-			'upa25-class-panel',
-			'window.UPA25_ITEMS = ' . wp_json_encode( collect_items(), JSON_THROW_ON_ERROR ),
+			'withkit-class-panel',
+			'window.withkit_ITEMS = ' . wp_json_encode( collect_items(), JSON_THROW_ON_ERROR ),
 			'before'
 		);
-		wp_add_inline_script( 'upa25-class-panel', inline_js(), 'after' );
+		wp_add_inline_script( 'withkit-class-panel', inline_js(), 'after' );
 	}
 );
 
@@ -51,7 +52,7 @@ add_action(
  *   classes.
  */
 function collect_items(): array {
-	$src = get_theme_file_path( 'src/scss/utilities/helpers.scss' );
+	$src = get_theme_file_path( 'src/scss/utilities/withkit-helpers.scss' );
 	if ( ! is_readable( $src ) ) {
 		return [];
 	}
@@ -195,19 +196,19 @@ function inline_js(): string {
 	const { useSelect, useDispatch } = wp.data;
 	const { addFilter } = wp.hooks;
 
-	const ITEMS = Array.isArray( window.UPA25_ITEMS ) ? window.UPA25_ITEMS : [];
+	const ITEMS = Array.isArray( window.withkit_ITEMS ) ? window.withkit_ITEMS : [];
 
 	/* one-time CSS ------------------------------------------------------- */
-	if ( ! document.getElementById( 'upa25-style' ) ) {
+	if ( ! document.getElementById( 'withkit-style' ) ) {
 		const s = document.createElement( 'style' );
-		s.id = 'upa25-style';
+		s.id = 'withkit-style';
 		s.textContent = `
-			.upa25-tabs .components-tab-panel__tabs{
+			.withkit-tabs .components-tab-panel__tabs{
 				display:flex;flex-wrap:nowrap;gap:4px;
 				overflow-x:auto;scrollbar-width:thin;margin-bottom:14px;
 			}
-			.upa25-tabs .components-tab-panel__tabs::-webkit-scrollbar{height:6px}
-			.upa25-tabs .components-tab-panel__tabs button{
+			.withkit-tabs .components-tab-panel__tabs::-webkit-scrollbar{height:6px}
+			.withkit-tabs .components-tab-panel__tabs button{
 				white-space:nowrap;word-break:keep-all;
 			}`;
 		document.head.appendChild( s );
@@ -237,7 +238,7 @@ function inline_js(): string {
 			key: uniq,
 			label: title,
 			help:  desc || null,
-			className: 'upa25-section-label',
+			className: 'withkit-section-label',
 			__nextHasNoMarginBottom: true,
 		});
 
@@ -308,14 +309,14 @@ function inline_js(): string {
 					onChange:setQ,
 					__nextHasNoMarginBottom:true,
 				}),
-				el(TabPanel,{className:'upa25-tabs',tabs},renderTab)
+				el(TabPanel,{className:'withkit-tabs',tabs},renderTab)
 			)
 		);
 	};
 
 	/* HOC --------------------------------------------------------------- */
 	addFilter(
-		'editor.BlockEdit','upa25/utility-panel',
+		'editor.BlockEdit','withkit/utility-panel',
 		BlockEdit => props =>
 			props.clientId
 				? el(Fragment,null,el(BlockEdit,props),el(ClassPanel,{clientId:props.clientId}))

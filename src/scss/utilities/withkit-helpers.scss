@@ -1,6 +1,6 @@
 /**
  * WithKit Helper classes
- * @version 1.0.1
+ * @version 1.1.0
  */
 @use "../base/variables" as *;
 
@@ -128,11 +128,9 @@
 
 .with-display-none {
 	display: none;
-	opacity: 0;
 }
 .with-display-none-when-empty:empty {
 	display: none;
-	opacity: 0;
 }
 
 /* Responsive
@@ -160,6 +158,9 @@
 		.#{$prefix}-display-none-when-empty:empty {
 			display: none;
 			opacity: 0;
+		}
+		.#{$prefix}-display-flex {
+			display: flex;
 		}
 
 		/**

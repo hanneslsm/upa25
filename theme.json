@@ -642,6 +642,18 @@
 			"title": "Footer Wide"
 		}
 	],
+	"customTemplates": [
+		{
+			"name": "page-without-title",
+			"postTypes": ["page"],
+			"title": "Seite: Ohne Titel"
+		},
+		{
+			"name": "page-with-featured-image",
+			"postTypes": ["page"],
+			"title": "Seite: Mit Beitragsbild"
+		}
+	],
 	"version": 3,
 	"$schema": "https://schemas.wp.org/trunk/theme.json"
 }

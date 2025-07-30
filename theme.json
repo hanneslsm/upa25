@@ -20,7 +20,7 @@
 				"page"
 			],
 			"title": "Seite: Mit Titel & Spacing"
-		}
+		},
 		{
 			"name": "page-with-featured-image",
 			"postTypes": [

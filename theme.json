@@ -1,4 +1,34 @@
 {
+	"customTemplates": [
+		{
+			"name": "page-without-title",
+			"postTypes": [
+				"page"
+			],
+			"title": "Seite: Ohne Titel"
+		},
+		{
+			"name": "page-with-title",
+			"postTypes": [
+				"page"
+			],
+			"title": "Seite: Mit Titel"
+		},
+		{
+			"name": "page-with-title-and-spacing",
+			"postTypes": [
+				"page"
+			],
+			"title": "Seite: Mit Titel & Spacing"
+		}
+		{
+			"name": "page-with-featured-image",
+			"postTypes": [
+				"page"
+			],
+			"title": "Seite: Mit Beitragsbild"
+		}
+	],
 	"settings": {
 		"appearanceTools": true,
 		"blocks": {
@@ -640,23 +670,6 @@
 			"area": "footer",
 			"name": "footer-wide",
 			"title": "Footer Wide"
-		}
-	],
-	"customTemplates": [
-		{
-			"name": "page-without-title",
-			"postTypes": ["page"],
-			"title": "Seite: Ohne Titel"
-		},
-				{
-			"name": "page-with-title",
-			"postTypes": ["page"],
-			"title": "Seite: Mit Titel"
-		},
-		{
-			"name": "page-with-featured-image",
-			"postTypes": ["page"],
-			"title": "Seite: Mit Beitragsbild"
 		}
 	],
 	"version": 3,

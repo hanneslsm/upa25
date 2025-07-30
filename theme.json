@@ -8,13 +8,6 @@
 			"title": "Seite: Ohne Titel"
 		},
 		{
-			"name": "page-with-title",
-			"postTypes": [
-				"page"
-			],
-			"title": "Seite: Mit Titel"
-		},
-		{
 			"name": "page-with-title-and-spacing",
 			"postTypes": [
 				"page"

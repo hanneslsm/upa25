@@ -648,6 +648,11 @@
 			"postTypes": ["page"],
 			"title": "Seite: Ohne Titel"
 		},
+				{
+			"name": "page-with-title",
+			"postTypes": ["page"],
+			"title": "Seite: Mit Titel"
+		},
 		{
 			"name": "page-with-featured-image",
 			"postTypes": ["page"],

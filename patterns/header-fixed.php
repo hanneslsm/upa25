@@ -10,6 +10,6 @@
 <div class="wp-block-group is-style-header-fixed is-style-section-base" style="border-bottom-color:var(--wp--preset--color--base-4);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20)"><!-- wp:group {"align":"wide","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 <div class="wp-block-group alignwide"><!-- wp:site-logo {"width":60,"shouldSyncIcon":false} /-->
 
-<!-- wp:navigation {"layout":{"type":"flex","justifyContent":"right"}} /--></div>
+<!-- wp:navigation {"metadata":{"ignoredHookedBlocks":["woocommerce/customer-account","woocommerce/mini-cart"]},"layout":{"type":"flex","justifyContent":"right"}} /--></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->

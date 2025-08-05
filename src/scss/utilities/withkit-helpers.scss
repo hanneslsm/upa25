@@ -139,8 +139,6 @@
 // $mode accepts either min or max to switch between `min-width` and `max-width`.
 @mixin responsive-styles($breakpoint, $prefix, $mode: max) {
 	@media screen and (#{ $mode }-width: $breakpoint) {
-
-
 		/**
  		* Title: Dev Tools
  		**/

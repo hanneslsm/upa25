@@ -1,7 +1,7 @@
 <?php
 /**
- * Title: home
- * Slug: upa25/home
+ * Title: category
+ * Slug: upa25/category
  * Inserter: no
  */
 ?>
@@ -11,9 +11,7 @@
 
 <!-- wp:group {"align":"wide","className":"is-style-section-brand-5","style":{"spacing":{"padding":{"bottom":"var:preset|spacing|40","top":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignwide is-style-section-brand-5" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--40)"><!-- wp:group {"align":"wide","layout":{"type":"default"}} -->
-<div class="wp-block-group alignwide"><!-- wp:heading {"level":1} -->
-<h1 class="wp-block-heading"><?php esc_html_e('Neuigkeiten', 'upa25');?></h1>
-<!-- /wp:heading --></div>
+<div class="wp-block-group alignwide"><!-- wp:query-title {"type":"archive","showPrefix":false} /--></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
@@ -25,18 +23,20 @@
 <!-- /wp:spacer -->
 
 <!-- wp:query {"queryId":0,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"exclude","inherit":true,"parents":[],"format":[]},"layout":{"type":"default"}} -->
-<div class="wp-block-query"><!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
-<!-- wp:group {"className":"is-style-section-base","style":{"border":{"width":"1px"},"shadow":"var:preset|shadow|small","spacing":{"blockGap":"0"}},"borderColor":"brand-4","layout":{"type":"default"}} -->
-<div class="wp-block-group is-style-section-base has-border-color has-brand-4-border-color" style="border-width:1px;box-shadow:var(--wp--preset--shadow--small)"><!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/2","width":"100%","height":"100%","style":{"layout":{"selfStretch":"fit","flexSize":null}}} /-->
-
-<!-- wp:group {"style":{"spacing":{"padding":{"right":"var:preset|spacing|20","left":"var:preset|spacing|20","top":"var:preset|spacing|20","bottom":"var:preset|spacing|20"}}},"layout":{"type":"default"}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--20);padding-right:var(--wp--preset--spacing--20);padding-bottom:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20)"><!-- wp:post-terms {"term":"category"} /-->
+<div class="wp-block-query"><!-- wp:post-template {"layout":{"type":"default","columnCount":1}} -->
+<!-- wp:columns {"className":"is-style-section-base","style":{"border":{"width":"1px"},"shadow":"var:preset|shadow|small"},"borderColor":"brand-4"} -->
+<div class="wp-block-columns is-style-section-base has-border-color has-brand-4-border-color" style="border-width:1px;box-shadow:var(--wp--preset--shadow--small)"><!-- wp:column {"verticalAlignment":"center","width":"","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|30","right":"var:preset|spacing|30"}}}} -->
+<div class="wp-block-column is-vertically-aligned-center" style="padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--30)"><!-- wp:post-terms {"term":"category"} /-->
 
 <!-- wp:post-title {"level":3,"isLink":true,"style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast-3"}}},"typography":{"textDecoration":"none"}},"textColor":"contrast-3","fontSize":"xx-large"} /-->
 
-<!-- wp:post-excerpt {"moreText":"Mehr erfahren…","excerptLength":100} /--></div>
-<!-- /wp:group --></div>
-<!-- /wp:group -->
+<!-- wp:post-excerpt {"showMoreOnNewLine":false,"excerptLength":100} /--></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"33.33%","className":"with-display-none-when-empty"} -->
+<div class="wp-block-column with-display-none-when-empty" style="flex-basis:33.33%"><!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/2","width":"100%","height":"100%","style":{"layout":{"selfStretch":"fit","flexSize":null}}} /--></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
 <!-- /wp:post-template -->
 
 <!-- wp:query-no-results -->
@@ -46,7 +46,7 @@ echo sprintf( esc_html__( '%1$sKeine Blogbeiträge gefunden.%2$s', 'upa25' ), '<
 <!-- /wp:paragraph -->
 <!-- /wp:query-no-results -->
 
-<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<!-- wp:query-pagination {"paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->
 <!-- wp:query-pagination-previous /-->
 
 <!-- wp:query-pagination-numbers /-->

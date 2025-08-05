@@ -8,7 +8,17 @@
 <!-- /wp:group -->
 
 <!-- wp:group {"tagName":"main","metadata":{"name":"Main"},"layout":{"type":"default"}} -->
-<main class="wp-block-group"><!-- wp:post-content {"align":"wide","style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} /-->
+<main class="wp-block-group"><!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--30);padding-bottom:var(--wp--preset--spacing--30)"><!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|30"}}}} -->
+<div class="wp-block-columns alignwide"><!-- wp:column {"width":"50%","className":"with-display-none-when-empty"} -->
+<div class="wp-block-column with-display-none-when-empty" style="flex-basis:50%"><!-- wp:post-featured-image /--></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"100%","layout":{"type":"constrained"}} -->
+<div class="wp-block-column" style="flex-basis:100%"><!-- wp:post-content {"align":"wide","layout":{"type":"constrained"}} /--></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
 
 <!-- wp:group {"tagName":"section","metadata":{"categories":["upa25/cards"],"patternName":"upa25/card-6","name":"Card-6"},"align":"full","className":"is-style-section-brand-5","backgroundColor":"brand-6","layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull is-style-section-brand-5 has-brand-6-background-color has-background"><!-- wp:group {"align":"wide","layout":{"type":"default"}} -->

@@ -608,11 +608,11 @@
 			"link": {
 				":hover": {
 					"color": {
-						"text": "var(--wp--preset--color--brand)"
+						"text": "var(--wp--preset--color--brand-3)"
 					}
 				},
 				"color": {
-					"text": "var(--wp--preset--color--brand-3)"
+					"text": "var(--wp--preset--color--brand-2)"
 				}
 			}
 		},

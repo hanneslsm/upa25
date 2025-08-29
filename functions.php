@@ -31,6 +31,9 @@ require get_template_directory() . '/inc/dashboard-widget.php';
 // Helpers
 require get_template_directory() . '/inc/gdpr-remove-emojis.php';
 
+// Woocommerce Disable Marketing
+require get_template_directory() . '/inc/woo-disable-marketing.php';
+
 
 
 

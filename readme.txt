@@ -35,4 +35,4 @@ GNU General Public License for more details.
 == Build Process ==
 
 This theme uses wp-scripts as build process.
-See package.json
+See package.json and readme.

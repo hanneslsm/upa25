@@ -2,7 +2,7 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 3.5.2
+ * @version 3.5.3
  * @docs docs/webpack.md
  */
 
@@ -362,7 +362,7 @@ function devPlugins({ proxy, host, port }) {
   if (!proxy || !BrowserSyncPlugin) return [];
   return [
     new BrowserSyncPlugin(
-      { host, port, proxy, files: ['**/*.php', 'build/**/*.css', 'build/**/*.js'], open: false, injectChanges: true },
+      { host, port, proxy, files: ['theme.json','**/*.php', 'build/**/*.css', 'build/**/*.js'], open: false, injectChanges: true },
       { reload: false }
     ),
   ];

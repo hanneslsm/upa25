@@ -1,6 +1,6 @@
 <!---
  * @package hxi25
- * @version 3.5.2
+ * @version 3.5.3
 -->
 
 ## Webpack Build
@@ -127,6 +127,7 @@ Webpack's filesystem cache is stored in `.webpack-cache`. Touching `webpack.conf
 | `PROLOOKS_COPY_IMAGES_IN_PROD` | `true` | Toggle for the Sharp/SVGO copy routine in production builds. |
 
 ### Changelog
+* 3.5.3 - Add watching `theme.json`
 * 3.5.2 – Allow missing sections directory with `noErrorOnMissing: true` in CopyWebpackPlugin.
 * 3.5.1 – Fix core-group gradient enqueuing path from `build/editor/` to `build/blocks/` and add editor-specific gradient styles for proper display in block editor.
 * 3.5.0 – Consolidate all block-related files into `build/blocks/` folder: custom blocks and core block enhancements now output to the same directory for cleaner organization and better scalability.

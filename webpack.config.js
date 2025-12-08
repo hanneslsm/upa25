@@ -382,6 +382,15 @@ function prodPlugins() {
   ];
 }
 
+// Check if any custom blocks exist (directories with block.json)
+function hasCustomBlocks() {
+  if (!isDir(PATHS.blocksJs)) return false;
+  return fs.readdirSync(PATHS.blocksJs).some((name) => {
+    const blockDir = path.join(PATHS.blocksJs, name);
+    return isCustomBlock(blockDir);
+  });
+}
+
 // Additional entries for global assets, core block customizations, and parts/sections.
 // Custom blocks are handled by wp-scripts default entry() function.
 function makeAdditionalEntries() {
@@ -408,7 +417,8 @@ module.exports = () => {
     mode: isProd ? 'production' : 'development',
     entry: {
       // Include default block entries from wp-scripts (handles custom blocks with block.json)
-      ...scriptConfig.entry(),
+      // Only call if custom blocks exist to avoid "No entry file discovered" error
+      ...(hasCustomBlocks() ? scriptConfig.entry() : {}),
       // Add our additional entries
       ...makeAdditionalEntries(),
     },

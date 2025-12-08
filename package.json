@@ -3,7 +3,7 @@
 	"version": "0.2.0",
 	"main": "index.js",
 	"scripts": {
-		"start": "wp-scripts start --config webpack.config.js --env development ",
+		"start": "PROLOOKS_BS_PROXY=http://uniquepoleart.local wp-scripts start --config webpack.config.js",
 		"build": "wp-scripts build --config webpack.config.js --env production",
 		"lint:css": "wp-scripts lint-style 'src/scss/*'",
 		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",

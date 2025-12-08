@@ -1,284 +1,467 @@
 /**
- * withkit Webpack configuration
+ * ProLooks webpack configuration.
  *
- * @package withkit
- * @version 2.2.0
- *
- * 2.2.0: Auto-detect block JS and style entries; general cleanup for easier block registration
- * 2.1.2: Add support for cleaning and copying SVGs to build folder
- * 2.1.1: Disable performance hints
- * 2.1.0: Add support for automatic block-style entries and recursive block SCSS
- * 2.0.0: Add support for webp images
- * 1.0.0: Initial version
+ * @package ProLooks
+ * @version 3.5.2
+ * @docs docs/webpack.md
  */
 
-/** External dependencies */
-const path = require("path");
-const fs = require("fs");
-const { merge } = require("webpack-merge");
-const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const sharp = require("sharp");
-const { optimize } = require("svgo");
-
-/** WordPress dependencies */
-const defaultConfig = require("@wordpress/scripts/config/webpack.config");
-
-/** Read version from package.json */
-const packageJson = require("./package.json");
-
-/** Utility: find all SCSS files in a directory */
-function getScssFiles(dir) {
-	return fs.existsSync(dir)
-		? fs
-				.readdirSync(dir)
-				.filter((f) => f.endsWith(".scss"))
-				.map((f) => path.resolve(dir, f))
-		: [];
+// Core dependencies
+const path = require('path');
+const fs = require('fs');
+const { merge } = require('webpack-merge');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const sharp = require('sharp');
+const { optimize } = require('svgo');
+// Optional BrowserSync plugin (only available when installed)
+let BrowserSyncPlugin = null;
+try {
+  BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+} catch (error) {
+  BrowserSyncPlugin = null;
 }
 
-/** Utility: recursively get block entries */
-function getRecursiveBlockEntries(rootDir, outputDir) {
-	if (!fs.existsSync(rootDir)) return {};
-	return fs
-		.readdirSync(rootDir, { withFileTypes: true })
-		.reduce((entries, dirent) => {
-			const fullPath = path.join(rootDir, dirent.name);
-			if (dirent.isDirectory()) {
-				Object.assign(
-					entries,
-					getRecursiveBlockEntries(fullPath, `${outputDir}/${dirent.name}`),
-				);
-			} else if (dirent.isFile() && dirent.name.endsWith(".scss")) {
-				const name = dirent.name.replace(/\.scss$/, "");
-				entries[`${outputDir}/${name}`] = fullPath;
-			}
-			return entries;
-		}, {});
+// WordPress default webpack configuration (array with scriptConfig and moduleConfig)
+const defaultConfigs = require('@wordpress/scripts/config/webpack.config');
+const [scriptConfig, moduleConfig] = Array.isArray(defaultConfigs)
+  ? defaultConfigs
+  : [defaultConfigs, null];
+
+// Used to sync the theme header version after each build
+const packageJson = require('./package.json');
+
+// Environment-driven toggles
+const CONFIG = {
+  IMG_MAX_WIDTH: Number(process.env.PROLOOKS_IMG_MAX_WIDTH || 2560),
+  QUALITY_JPEG: Number(process.env.PROLOOKS_QUALITY_JPEG || 50),
+  QUALITY_PNG: Number(process.env.PROLOOKS_QUALITY_PNG || 50),
+  QUALITY_AVIF: Number(process.env.PROLOOKS_QUALITY_AVIF || 50),
+  QUALITY_WEBP: Number(process.env.PROLOOKS_QUALITY_WEBP || 70),
+  QUALITY_WEBP_CONVERT: Number(process.env.PROLOOKS_QUALITY_WEBP_CONVERT || 60),
+  BS_PROXY: process.env.PROLOOKS_BS_PROXY || '',
+  BS_HOST: process.env.PROLOOKS_BS_HOST || 'localhost',
+  BS_PORT: Number(process.env.PROLOOKS_BS_PORT || 3000),
+  COPY_IMAGES_IN_PROD: (process.env.PROLOOKS_COPY_IMAGES_IN_PROD || 'true').toLowerCase() === 'true',
+};
+
+// Resolved paths reused across helpers
+const PATHS = {
+  root: __dirname,
+  build: path.resolve(__dirname, 'build'),
+  imagesSrc: path.resolve(__dirname, 'src/images'),
+  svgSrc: path.resolve(__dirname, 'src/svg'),
+  blocksJs: path.resolve(__dirname, 'src/blocks'),
+  partsDir: path.resolve(__dirname, 'src/parts'),
+  sectionsDir: path.resolve(__dirname, 'src/sections'),
+  cssGlobal: path.resolve(__dirname, 'src/scss/global.scss'),
+  cssScreen: path.resolve(__dirname, 'src/scss/screen.scss'),
+  cssEditor: path.resolve(__dirname, 'src/scss/editor.scss'),
+  jsGlobal: path.resolve(__dirname, 'src/js/global.js'),
+  themeStyle: path.resolve(__dirname, 'style.css'),
+};
+
+// Helper utilities for repeated filesystem checks
+const isDir = (p) => fs.existsSync(p) && fs.statSync(p).isDirectory();
+
+/**
+ * Check if a block directory contains a block.json file (custom block).
+ *
+ * @param {string} blockDir - The block directory path.
+ * @return {boolean} True if the directory contains a block.json file.
+ */
+const isCustomBlock = (blockDir) => fs.existsSync(path.join(blockDir, 'block.json'));
+
+// Replace the default MiniCssExtractPlugin to remove the "style-" filename prefix.
+function withPlainCssFilenames(config) {
+  if (!config || !config.plugins) return config;
+
+  config.plugins = config.plugins.map((plugin) => {
+    const isMiniCss = plugin && plugin.constructor && plugin.constructor.name === 'MiniCssExtractPlugin';
+    if (!isMiniCss) return plugin;
+
+    return new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[name].css',
+    });
+  });
+
+  return config;
 }
 
-/** Utility: get styled block variation entries */
-function getStyleBlockEntries(rootDir, outputDir) {
-	if (!fs.existsSync(rootDir)) return {};
-	return fs
-		.readdirSync(rootDir)
-		.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
-		.reduce((entries, styleName) => {
-			const dir = path.join(rootDir, styleName);
-			fs.readdirSync(dir)
-				.filter((f) => f.endsWith(".scss"))
-				.forEach((f) => {
-					const name = f.replace(/\.scss$/, "");
-					entries[`${outputDir}/${styleName}/${name}`] = path.resolve(dir, f);
-				});
-			return entries;
-		}, {});
+// Rename assets like styles/{block}/style-*.css to drop the redundant "style-" prefix.
+class StripStylePrefixPlugin {
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap('StripStylePrefixPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: 'StripStylePrefixPlugin',
+          stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
+        },
+        () => {
+          const { Compilation } = compiler.webpack;
+          const regex = /^styles\/([^/]+)\/style-(.+)$/;
+
+          Object.keys(compilation.assets).forEach((filename) => {
+            const match = regex.exec(filename);
+            if (!match) return;
+
+            const newName = filename.replace(regex, (all, block, rest) => `styles/${block}/${rest}`);
+
+            // Avoid clobbering an existing asset name.
+            if (compilation.assets[newName]) return;
+
+            compilation.renameAsset(filename, newName);
+            // Mark the new asset as processed to keep asset info intact.
+            compilation.updateAsset(newName, (source, info) => source, (info) => info);
+          });
+        }
+      );
+    });
+  }
 }
 
-module.exports = (env) => {
-	const isProd = process.env.NODE_ENV === "production";
-	const mode = isProd ? "production" : "development";
+// Remove empty files from the build output after compilation.
+class RemoveEmptyFilesPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('RemoveEmptyFilesPlugin', () => {
+      const buildDir = PATHS.build;
+      const walk = (dir) => {
+        if (!fs.existsSync(dir)) return;
+        fs.readdirSync(dir, { withFileTypes: true }).forEach((dirent) => {
+          const fullPath = path.join(dir, dirent.name);
+          if (dirent.isDirectory()) {
+            walk(fullPath);
+          } else if (dirent.isFile() && fs.statSync(fullPath).size === 0) {
+            fs.unlinkSync(fullPath);
+          }
+        });
+        // Remove directory if empty after file removal.
+        try {
+          const entries = fs.readdirSync(dir);
+          if (entries.length === 0) {
+            fs.rmdirSync(dir);
+          }
+        } catch {
+          // Directory not empty or doesn't exist; skip.
+        }
+      };
+      walk(buildDir);
+    });
+  }
+}
 
-	const globalEntry = {
-		"css/global": path.resolve(__dirname, "src/scss/global.scss"),
-	};
-	const screenEntry = {
-		"css/screen": path.resolve(__dirname, "src/scss/screen.scss"),
-	};
-	const editorEntry = {
-		"css/editor": path.resolve(__dirname, "src/scss/editor.scss"),
-	};
-	const jsBaseEntry = {
-		"js/global": path.resolve(__dirname, "src/js/global.js"),
-	};
+// Utility to collect files matching extensions from a directory
+function collectFiles(rootDir, extensions = []) {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
 
-	// Automatically gather block JS (index.js & view.js) and style.scss (style-index) files
-	const blocksRootDir = path.resolve(__dirname, "src/blocks");
+  const extSet = new Set(extensions);
+  const walk = (dir, relPath = '') => {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir, { withFileTypes: true }).forEach((d) => {
+      const fullPath = path.join(dir, d.name);
+      const newRelPath = relPath ? `${relPath}/${d.name}` : d.name;
 
-	function getBlockJsEntries(rootDir, outputDir = "js/blocks") {
-		if (!fs.existsSync(rootDir)) return {};
-		return fs
-			.readdirSync(rootDir)
-			.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
-			.reduce((entries, blockName) => {
-				const dir = path.join(rootDir, blockName);
-				["index", "view"].forEach((file) => {
-					const filePath = path.join(dir, `${file}.js`);
-					if (fs.existsSync(filePath)) {
-						entries[`${outputDir}/${blockName}/${file}`] = filePath;
-					}
-				});
-				return entries;
-			}, {});
-	}
+      if (d.isDirectory()) {
+        walk(fullPath, newRelPath);
+      } else {
+        const ext = path.extname(d.name);
+        if (extSet.has(ext)) {
+          const key = newRelPath.replace(ext, '');
+          entries[key] = fullPath;
+        }
+      }
+    });
+  };
+  walk(rootDir);
+  return entries;
+}
 
-	function getBlockStyleIndexEntries(rootDir, outputDir = "css/blocks") {
-		if (!fs.existsSync(rootDir)) return {};
-		return fs
-			.readdirSync(rootDir)
-			.filter((d) => fs.statSync(path.join(rootDir, d)).isDirectory())
-			.reduce((entries, blockName) => {
-				const stylePath = path.join(rootDir, blockName, "style.scss");
-				if (fs.existsSync(stylePath)) {
-					entries[`${outputDir}/${blockName}/style-index`] = stylePath;
-				}
-				return entries;
-			}, {});
-	}
+// Add entries for block JS files (index.js, view.js) skipping custom blocks
+function blockJsEntries(rootDir, outBase = 'blocks') {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
 
-	const blockJsEntries = getBlockJsEntries(blocksRootDir);
-	const blockStyleIndexEntries = getBlockStyleIndexEntries(blocksRootDir);
+  fs.readdirSync(rootDir).forEach((name) => {
+    const blockDir = path.join(rootDir, name);
+    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
 
-	const blockDir = path.resolve(__dirname, "src/scss/blocks");
-	const blockEntries = getRecursiveBlockEntries(blockDir, "css/blocks");
+    ['index.js', 'view.js'].forEach((filename) => {
+      const fp = path.join(blockDir, filename);
+      if (fs.existsSync(fp)) {
+        const base = filename.replace('.js', '');
+        entries[`${outBase}/${name}/${base}`] = fp;
+      }
+    });
+  });
+  return entries;
+}
 
-	const styleBlocksDir = path.resolve(__dirname, "src/scss/block-styles");
-	const styleEntries = getStyleBlockEntries(styleBlocksDir, "css/block-styles");
+// Add nested JS/SCSS files from blocks directory (excluding style.scss and styles/ subdirs)
+function blocksRootJsEntries(rootDir, outBase = 'blocks') {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
 
-	const sectionFiles = getScssFiles(
-		path.resolve(__dirname, "src/scss/styles/sections"),
-	);
-	const sectionEntry = sectionFiles.length
-		? { "css/styles/sections": sectionFiles }
-		: {};
+  const walk = (dir, relPath = '') => {
+    const block = relPath ? relPath.split('/')[0] : '';
+    if (block && isCustomBlock(path.join(rootDir, block))) return;
 
-	const entries = Object.assign(
-		{},
-		globalEntry,
-		screenEntry,
-		editorEntry,
-		jsBaseEntry,
-		blockJsEntries,
-		blockStyleIndexEntries,
-		blockEntries,
-		styleEntries,
-		sectionEntry,
-	);
+    fs.readdirSync(dir, { withFileTypes: true }).forEach((d) => {
+      const fullPath = path.join(dir, d.name);
+      const newRelPath = relPath ? `${relPath}/${d.name}` : d.name;
 
-	const plugins = [
-		...(defaultConfig.plugins || []),
-		new RemoveEmptyScriptsPlugin({
-			stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
-		}),
-	];
+      if (d.isDirectory() && d.name !== 'styles' && !isCustomBlock(fullPath)) {
+        walk(fullPath, newRelPath);
+      } else if (d.isFile()) {
+        if (d.name.endsWith('.js')) {
+          entries[`${outBase}/${newRelPath.replace(/\.js$/, '')}`] = fullPath;
+        } else if (d.name.endsWith('.scss') && d.name !== 'style.scss') {
+          entries[`${outBase}/${newRelPath.replace(/\.scss$/, '')}-styles`] = fullPath;
+        }
+      }
+    });
+  };
+  walk(rootDir);
+  return entries;
+}
 
-	if (isProd) {
-		plugins.push(
-			new CopyWebpackPlugin({
-				patterns: [
-					{
-						from: "**/*.{jpg,jpeg,png,avif,webp}",
-						context: path.resolve(__dirname, "src/images"),
-						to: "images/[path][name][ext]",
-						noErrorOnMissing: true,
-						transform: async (content, absoluteFrom) => {
-							const ext = path.extname(absoluteFrom).toLowerCase();
-							const img = sharp(content).resize({
-								width: 2560,
-								withoutEnlargement: true,
-							});
-							switch (ext) {
-								case ".jpg":
-								case ".jpeg":
-									return img.jpeg({ quality: 50 }).toBuffer();
-								case ".png":
-									return img.png({ quality: 50 }).toBuffer();
-								case ".avif":
-									return img.avif({ quality: 50 }).toBuffer();
-								case ".webp":
-									return img.webp({ quality: 70 }).toBuffer();
-								default:
-									return content;
-							}
-						},
-					},
-					{
-						from: "**/*.{jpg,jpeg,png,avif,webp}",
-						context: path.resolve(__dirname, "src/images"),
-						to: "webp/[path][name].webp",
-						noErrorOnMissing: true,
-						transform: async (content) => {
-							return sharp(content)
-								.resize({ width: 2560, withoutEnlargement: true })
-								.webp({ quality: 60 })
-								.toBuffer();
-						},
-					},
-					{
-						from: "**/*.svg",
-						context: path.resolve(__dirname, "src/svg"),
-						to: "svg/[path][name][ext]",
-						noErrorOnMissing: true,
-						transform: async (content) => {
-							const result = optimize(content.toString(), {
-								multipass: true,
-								plugins: [
-									"removeDimensions",
-									{
-										name: "removeViewBox",
-										active: true,
-									},
-									"removeTitle",
-									"removeDesc",
-									"removeUselessDefs",
-									"removeXMLNS",
-								],
-							});
-							return Buffer.from(result.data);
-						},
-					},
-				],
-			}),
-		);
-	}
+// Add style.scss entries for blocks (skipping custom blocks)
+function blockStyleIndexEntries(rootDir, outBase = 'styles') {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
 
-	plugins.push({
-		apply: (compiler) => {
-			compiler.hooks.afterEmit.tap("UpdateThemeVersionPlugin", () => {
-				const stylePath = path.resolve(__dirname, "style.css");
-				if (!fs.existsSync(stylePath)) return;
-				let content = fs.readFileSync(stylePath, "utf-8");
-				content = content.replace(
-					/(Version:\s*)([^\r\n]+)/,
-					`$1${packageJson.version}`,
-				);
-				fs.writeFileSync(stylePath, content, "utf-8");
-			});
-		},
-	});
+  fs.readdirSync(rootDir).forEach((name) => {
+    const blockDir = path.join(rootDir, name);
+    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
 
-	return merge(defaultConfig, {
-		mode,
-		entry: entries,
-		output: {
-			path: path.resolve(__dirname, "build"),
-			filename: "[name].js",
-			assetModuleFilename: "images/[path][name][ext]",
-		},
-		module: {
-			rules: [
-				{
-					test: /\.svg$/i,
-					type: "asset/resource",
-					generator: {
-						filename: "images/[path][name][ext]",
-					},
-				},
-			],
-		},
-		plugins,
-		performance: {
-			hints: false,
-		},
-		stats: {
-			all: false,
-			source: true,
-			assets: true,
-			errorsCount: true,
-			errors: true,
-			warningsCount: true,
-			warnings: true,
-			colors: true,
-		},
-	});
+    const fp = path.join(blockDir, 'style.scss');
+    if (fs.existsSync(fp)) entries[`${outBase}/${name}/base`] = fp;
+  });
+  return entries;
+}
+
+// Add block style variant entries from styles/ subdirectories (skipping custom blocks)
+function blockStyleVariantsEntries(rootDir, outBase = 'styles') {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
+
+  fs.readdirSync(rootDir).forEach((name) => {
+    const blockDir = path.join(rootDir, name);
+    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
+
+    const stylesDir = path.join(blockDir, 'styles');
+    if (!isDir(stylesDir)) return;
+
+    fs.readdirSync(stylesDir).forEach((f) => {
+      if (f.endsWith('.scss')) {
+        const styleName = f.replace(/\.scss$/, '');
+        entries[`${outBase}/${name}/${styleName}`] = path.join(stylesDir, f);
+      }
+    });
+  });
+  return entries;
+}
+
+// Create entries for a flat-structure directory (parts, sections, etc.)
+function flatDirEntries(rootDir, outBase, extensions = ['.scss', '.js']) {
+  const entries = {};
+  if (!isDir(rootDir)) return entries;
+
+  fs.readdirSync(rootDir).forEach((itemName) => {
+    const itemDir = path.join(rootDir, itemName);
+    if (!isDir(itemDir)) return;
+
+    fs.readdirSync(itemDir).forEach((f) => {
+      const ext = path.extname(f);
+      if (extensions.includes(ext)) {
+        const fileName = f.replace(ext, '');
+        entries[`${outBase}/${fileName}`] = path.join(itemDir, f);
+      }
+    });
+  });
+  return entries;
+}
+
+// Image transformation helpers
+const imageTransforms = {
+  raster: (content, absolutePath) => {
+    const ext = path.extname(absolutePath).toLowerCase();
+    const img = sharp(content).resize({ width: CONFIG.IMG_MAX_WIDTH, withoutEnlargement: true });
+    const qualityMap = {
+      '.jpg': CONFIG.QUALITY_JPEG,
+      '.jpeg': CONFIG.QUALITY_JPEG,
+      '.png': CONFIG.QUALITY_PNG,
+      '.avif': CONFIG.QUALITY_AVIF,
+      '.webp': CONFIG.QUALITY_WEBP,
+    };
+    if (ext === '.webp') return img.webp({ quality: qualityMap[ext] }).toBuffer();
+    if (ext === '.avif') return img.avif({ quality: qualityMap[ext] }).toBuffer();
+    if (ext === '.png') return img.png({ quality: qualityMap[ext] }).toBuffer();
+    if (ext === '.jpg' || ext === '.jpeg') return img.jpeg({ quality: qualityMap[ext] }).toBuffer();
+    return content;
+  },
+  webp: (content) => sharp(content)
+    .resize({ width: CONFIG.IMG_MAX_WIDTH, withoutEnlargement: true })
+    .webp({ quality: CONFIG.QUALITY_WEBP_CONVERT })
+    .toBuffer(),
+  svg: (content) => {
+    const result = optimize(content.toString(), {
+      multipass: true,
+      plugins: [
+        'removeDimensions',
+        { name: 'removeViewBox', active: true },
+        'removeTitle',
+        'removeDesc',
+        'removeUselessDefs',
+        'removeXMLNS',
+      ],
+    });
+    return Buffer.from(result.data);
+  },
+};
+
+// Base plugin stack shared by dev + prod builds
+function commonPlugins() {
+  return [
+    ...(scriptConfig.plugins || []),
+    new RemoveEmptyScriptsPlugin({
+      stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
+    }),
+    new StripStylePrefixPlugin(),
+    new RemoveEmptyFilesPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/sections/**/*.php', to: 'sections/[name][ext]', noErrorOnMissing: true },
+        { from: 'src/parts/**/*.php', to: 'parts/[name][ext]', noErrorOnMissing: true },
+        {
+          from: '**/*.php',
+          context: 'src/blocks',
+          to: 'blocks/[path][name][ext]',
+          noErrorOnMissing: true,
+          globOptions: { ignore: ['**/block.json', '**/render.php'] },
+        },
+      ],
+    }),
+    {
+      apply: (compiler) => {
+        compiler.hooks.afterEmit.tap('UpdateThemeVersionPlugin', () => {
+          if (!fs.existsSync(PATHS.themeStyle)) return;
+          let content = fs.readFileSync(PATHS.themeStyle, 'utf-8');
+          content = content.replace(/(Version:\s*)([^\r\n]+)/, `$1${packageJson.version}`);
+          fs.writeFileSync(PATHS.themeStyle, content, 'utf-8');
+        });
+      },
+    },
+  ];
+}
+
+// Enable BrowserSync when a proxy is provided
+function devPlugins({ proxy, host, port }) {
+  if (!proxy || !BrowserSyncPlugin) return [];
+  return [
+    new BrowserSyncPlugin(
+      { host, port, proxy, files: ['**/*.php', 'build/**/*.css', 'build/**/*.js'], open: false, injectChanges: true },
+      { reload: false }
+    ),
+  ];
+}
+
+// Copy and optimize static assets in production builds
+function prodPlugins() {
+  if (!CONFIG.COPY_IMAGES_IN_PROD) return [];
+  return [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.raster },
+        { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'webp/[path][name].webp', noErrorOnMissing: true, transform: imageTransforms.webp },
+        { from: '**/*.svg', context: PATHS.svgSrc, to: 'svg/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
+      ],
+    }),
+  ];
+}
+
+// Additional entries for global assets, core block customizations, and parts/sections.
+// Custom blocks are handled by wp-scripts default entry() function.
+function makeAdditionalEntries() {
+  return {
+    'theme/global-styles': PATHS.cssGlobal,
+    'theme/screen': PATHS.cssScreen,
+    'theme/editor': PATHS.cssEditor,
+    'theme/global': PATHS.jsGlobal,
+    ...blockJsEntries(PATHS.blocksJs),
+    ...blocksRootJsEntries(PATHS.blocksJs),
+    ...blockStyleIndexEntries(PATHS.blocksJs),
+    ...blockStyleVariantsEntries(PATHS.blocksJs),
+    ...flatDirEntries(PATHS.partsDir, 'parts'),
+    ...flatDirEntries(PATHS.sectionsDir, 'sections'),
+  };
+}
+
+// Export the merged config consumed by npm scripts
+module.exports = () => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  // Script config for traditional scripts and core block customizations
+  const customScriptConfig = merge(scriptConfig, {
+    mode: isProd ? 'production' : 'development',
+    entry: {
+      // Include default block entries from wp-scripts (handles custom blocks with block.json)
+      ...scriptConfig.entry(),
+      // Add our additional entries
+      ...makeAdditionalEntries(),
+    },
+    output: {
+      path: PATHS.build,
+      filename: '[name].js',
+      assetModuleFilename: 'images/[path][name][ext]',
+      clean: false,
+    },
+    module: {
+      rules: [
+        {
+          test: /\.svg$/i,
+          type: 'asset/resource',
+          generator: { filename: 'images/[path][name][ext]' },
+        },
+      ],
+    },
+    cache: {
+      type: 'filesystem',
+      cacheDirectory: path.resolve(PATHS.root, '.webpack-cache'),
+      buildDependencies: { config: [__filename] },
+    },
+    plugins: [
+      ...commonPlugins(),
+      ...(isProd ? prodPlugins() : devPlugins({
+        proxy: CONFIG.BS_PROXY,
+        host: CONFIG.BS_HOST,
+        port: CONFIG.BS_PORT,
+      })),
+    ],
+    performance: { hints: false },
+    stats: {
+      all: false,
+      source: true,
+      assets: true,
+      errorsCount: true,
+      errors: true,
+      warningsCount: true,
+      warnings: true,
+      colors: true,
+    },
+    infrastructureLogging: { level: 'warn' },
+  });
+
+  // Remove the default "style-" prefix from CSS output filenames.
+  withPlainCssFilenames(customScriptConfig);
+
+  // Return array of configs if moduleConfig exists (for Interactivity API support)
+  if (moduleConfig) {
+    const moduleWithCss = withPlainCssFilenames(moduleConfig);
+    return [customScriptConfig, moduleWithCss];
+  }
+
+  return customScriptConfig;
 };

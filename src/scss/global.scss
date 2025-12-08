@@ -14,14 +14,21 @@
  * global.css and global.js are loaded for both frontend and editor.
  */
 
+
 @use "./base/variables";
-@use "./base/global";
 @use "./base/typography";
-@use "./base/form";
-@use "./base/button";
-@use "./parts/footer";
-@use "./parts/header";
-@use "./parts/header-fixed";
-@use "./utilities/keyframes";
-@use "./utilities/withkit-helpers.scss";
-@use "./utilities/on-hover";
+@use "./base/view-transition";
+@use "./base/helpers";
+/* Block Styes are getting imported by Webpack automatically */
+/* Blocks are getting imported by Webpack automatically */
+/* Parts are getting imported by Webpack automatically */
+/* Sections are getting imported by Webpack automatically */
+@use "./elements/html";
+@use "./elements/button";
+@use "./elements/heading";
+@use "./elements/code";
+@use "./elements/link";
+@use "./elements/textinput";
+
+
+// @use "./base/dev-a11y"; // Uncomment for development to highlight accessibility issues

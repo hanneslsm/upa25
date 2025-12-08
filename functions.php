@@ -6,12 +6,8 @@
  * @package upa25
  */
 
-
 // Setup
 require get_template_directory() . '/inc/setup.php';
-
-// Woocommerce Setup
-require get_template_directory() . '/inc/woo-remove-patterns.php';
 
 // Enqueue files
 require get_template_directory() . '/inc/enqueuing.php';
@@ -25,29 +21,29 @@ require get_template_directory() . '/inc/block-styles.php';
 // Patterns Setup
 require get_template_directory() . '/inc/block-patterns.php';
 
-// Dashboard Widget
-require get_template_directory() . '/inc/dashboard-widget.php';
 
-// Helpers
-require get_template_directory() . '/inc/gdpr-remove-emojis.php';
+/**
+ * Woo
+ */
+
+// Woocommerce Setup
+require get_template_directory() . '/inc/woo-remove-patterns.php';
 
 // Woocommerce Disable Marketing
 require get_template_directory() . '/inc/woo-disable-marketing.php';
 
 
-
-
-
-
 /**
- * Development tools
+ * ProLooks tools
  */
+// Remove emojis
+require get_template_directory() . '/inc/prolooks/gpdr-remove-emojis.php';
+
+// Dashboard Widget
+require get_template_directory() . '/inc/prolooks/dashboard-widget.php';
 
 // Remove default CSS variables
-// require get_template_directory() . '/inc/dev_remove-defaults.php';
+// require get_template_directory() . '/inc/prolooks/dev-remove-defaults.php';
 
 // Purge theme cache
-require get_template_directory() . '/inc/dev_purge-themes-cache.php';
-
-// Helpers
-require get_template_directory() . '/inc/withkit-utils.php';
+require get_template_directory() . '/inc/prolooks/dev-purge-themes-cache.php';

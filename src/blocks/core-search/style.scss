@@ -1,0 +1,16 @@
+///
+/// Block: Search
+///
+
+/* General Styling
+--------------------------------------------- */
+:where(.wp-block-search__button-inside .wp-block-search__inside-wrapper) {
+	border: 1px solid var(--wp--preset--color--base-4);
+	border-radius: 0 999px 999px 0;
+}
+
+/* Update button padding when icon is present */
+.wp-block-search__button.has-icon {
+	padding-top: calc(2px + var(--wp--preset--spacing--10));
+	padding-bottom: calc(2px + var(--wp--preset--spacing--10));
+}

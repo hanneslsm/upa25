@@ -1,0 +1,44 @@
+///
+/// Block Style: Stripes
+///
+
+/* Block Style for Table
+--------------------------------------------- */
+.wp-block-table.is-style-stripes {
+	border-bottom: none; /* Revert https://github.com/WordPress/gutenberg/blob/b754e9f3473bc7de033142772138dba7a6cb7abf/packages/block-library/src/table/style.scss#L118 */
+
+	tbody tr:nth-child(odd) {
+		background-color: var(--wp--preset--color--base-2);
+	}
+
+	tr {
+		border-bottom: 1px solid var(--wp--preset--color--base-6);
+
+		&:hover {
+			background-color: transparent;
+		}
+	}
+
+	/* Section Styles
+	--------------------------------------------- */
+
+	/* [Contrast] */
+	.is-style-section-contrast & {
+		tbody tr:nth-child(odd) {
+			background-color: var(--wp--preset--color--contrast-2);
+		}
+	}
+	tr {
+		border-bottom: 1px solid var(--wp--preset--color--contrast-6);
+	}
+
+	/* [Brand] */
+	.is-style-section-brand & {
+		tbody tr:nth-child(odd) {
+			background-color: var(--wp--preset--color--contrast);
+		}
+	}
+	tr {
+		border-bottom: 1px solid var(--wp--preset--color--base-6);
+	}
+}

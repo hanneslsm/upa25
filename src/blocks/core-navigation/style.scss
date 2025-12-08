@@ -6,6 +6,10 @@
 
 /* General: Navigation Styling
 --------------------------------------------- */
+.wp-block-navigation .current-menu-item {
+	text-decoration: underline;
+}
+
 @media screen and (min-width: $medium) {
 	.wp-block-navigation
 		.has-child:not(.open-on-click):hover

@@ -1,6 +1,6 @@
 {
 	"name": "upa25",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"main": "index.js",
 	"scripts": {
 		"start": "wp-scripts start --config webpack.config.js --env development ",

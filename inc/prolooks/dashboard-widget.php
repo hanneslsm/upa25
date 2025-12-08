@@ -1,18 +1,18 @@
 <?php
 /**
- * upa25 Dashboard Widget
+ * prolooks Dashboard Widget
  *
- * @package upa25
+ * @package prolooks
  * @version 1.2.0
- */
+*/
 
-add_action('wp_dashboard_setup', 'upa25_dashboard_widgets');
-function upa25_dashboard_widgets()
+add_action('wp_dashboard_setup', 'prolooks_dashboard_widgets');
+function prolooks_dashboard_widgets()
 {
-	wp_add_dashboard_widget('upa25_help_widget', 'Theme Support & Server Info', 'upa25_dashboard_help');
+	wp_add_dashboard_widget('prolooks_help_widget', 'Theme Support & Server Info', 'prolooks_dashboard_help');
 }
 
-function upa25_dashboard_help()
+function prolooks_dashboard_help()
 {
 	$theme = wp_get_theme();
 

@@ -4,6 +4,12 @@
 
 /* Button
 --------------------------------------------- */
+.wp-element-button {
+	&:active {
+		scale: (0.98);
+	}
+}
+
 .wp-element-button:hover {
 	background-color: color-mix(
 		in srgb,

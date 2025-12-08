@@ -1,6 +1,6 @@
 /**
- * WithKit Helper classes
- * @version 1.1.0
+ * Helper classes
+ * @version 1.0.0
  */
 @use "../base/variables" as *;
 
@@ -99,6 +99,37 @@
 }
 
 /**
+ * Title: Text Shadow
+ * Description: contrast-3 as shadow color
+ **/
+.with-text-shadow-x-small {
+	text-shadow: 0 1px 2px var(--wp--preset--color--contrast-3);
+}
+.with-text-shadow-small {
+	text-shadow:
+		0 1px 3px var(--wp--preset--color--contrast-3),
+		0 1px 2px var(--wp--preset--color--contrast-3);
+}
+.with-text-shadow-medium {
+	text-shadow:
+		0 4px 6px var(--wp--preset--color--contrast-3),
+		0 2px 4px var(--wp--preset--color--contrast-3);
+}
+.with-text-shadow-large {
+	text-shadow:
+		0 10px 15px var(--wp--preset--color--contrast-3),
+		0 4px 6px var(--wp--preset--color--contrast-3);
+}
+.with-text-shadow-x-large {
+	text-shadow:
+		0 20px 25px var(--wp--preset--color--contrast-3),
+		0 8px 10px var(--wp--preset--color--contrast-3);
+}
+.with-text-shadow-xx-large {
+	text-shadow: 0 25px 50px var(--wp--preset--color--contrast-3);
+}
+
+/**
  * Title: Height
  **/
 .with-max-height-none {
@@ -121,6 +152,9 @@
 .with-rotate-minus-3 {
 	transform: rotate(-3deg);
 }
+.with-rotate-180 {
+	transform: rotate(180deg);
+}
 
 /**
  * Title: Display
@@ -128,9 +162,30 @@
 
 .with-display-none {
 	display: none;
+	opacity: 0;
 }
 .with-display-none-when-empty:empty {
 	display: none;
+	opacity: 0;
+}
+
+/**
+ * Title: Position
+ **/
+.with-position-static {
+	position: static;
+}
+.with-position-relative {
+	position: relative;
+}
+.with-position-absolute {
+	position: absolute;
+}
+.with-position-fixed {
+	position: fixed;
+}
+.with-position-sticky {
+	position: sticky;
 }
 
 /* Responsive
@@ -156,9 +211,6 @@
 		.#{$prefix}-display-none-when-empty:empty {
 			display: none;
 			opacity: 0;
-		}
-		.#{$prefix}-display-flex {
-			display: flex;
 		}
 
 		/**
@@ -189,6 +241,6 @@
 // Responsive styles for each breakpoint
 @include responsive-styles($large, with-large, min);
 @include responsive-styles($large, with-max-large, max);
-@include responsive-styles($medium, with-medium, min);
 @include responsive-styles($medium, with-max-medium, max);
+@include responsive-styles($medium, with-medium, min);
 @include responsive-styles($mobile, with-mobile, max);

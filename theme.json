@@ -685,14 +685,6 @@
 					"background": "var(--wp--preset--color--brand-3)",
 					"text": "var(--wp--preset--color--base)"
 				},
-				"spacing": {
-					"padding": {
-						"bottom": ".5em",
-						"left": "var(--wp--preset--spacing--20)",
-						"right": "var(--wp--preset--spacing--20)",
-						"top": ".5em"
-					}
-				},
 				"typography": {
 					"fontSize": "var(--wp--preset--font-size--medium)"
 				}

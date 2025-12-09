@@ -1,26 +1,5 @@
 {
 	"customTemplates": [
-		{
-			"name": "page-without-title",
-			"postTypes": [
-				"page"
-			],
-			"title": "→ Seite: Ohne Titel"
-		},
-		{
-			"name": "page-with-title-and-spacing",
-			"postTypes": [
-				"page"
-			],
-			"title": "→ Seite: Mit Titel & Spacing"
-		},
-		{
-			"name": "page-with-featured-image",
-			"postTypes": [
-				"page"
-			],
-			"title": "→ Seite: Mit Beitragsbild"
-		}
 	],
 	"settings": {
 		"appearanceTools": true,
@@ -522,7 +501,6 @@
 					"blockGap": "var(--wp--preset--spacing--20)"
 				},
 				"typography": {
-					"fontSize": "var(--wp--preset--font-size--medium)",
 					"textDecoration": "none"
 				}
 			},

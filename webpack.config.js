@@ -2,7 +2,7 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 3.5.3
+ * @version 4.0.0
  * @docs docs/webpack.md
  */
 
@@ -53,12 +53,10 @@ const PATHS = {
   imagesSrc: path.resolve(__dirname, 'src/images'),
   svgSrc: path.resolve(__dirname, 'src/svg'),
   blocksJs: path.resolve(__dirname, 'src/blocks'),
-  partsDir: path.resolve(__dirname, 'src/parts'),
-  sectionsDir: path.resolve(__dirname, 'src/sections'),
-  cssGlobal: path.resolve(__dirname, 'src/scss/global.scss'),
+  cssGlobal: path.resolve(__dirname, 'src/global.scss'),
   cssScreen: path.resolve(__dirname, 'src/scss/screen.scss'),
   cssEditor: path.resolve(__dirname, 'src/scss/editor.scss'),
-  jsGlobal: path.resolve(__dirname, 'src/js/global.js'),
+  jsGlobal: path.resolve(__dirname, 'src/global.js'),
   themeStyle: path.resolve(__dirname, 'style.css'),
 };
 
@@ -264,26 +262,6 @@ function blockStyleVariantsEntries(rootDir, outBase = 'styles') {
   return entries;
 }
 
-// Create entries for a flat-structure directory (parts, sections, etc.)
-function flatDirEntries(rootDir, outBase, extensions = ['.scss', '.js']) {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
-
-  fs.readdirSync(rootDir).forEach((itemName) => {
-    const itemDir = path.join(rootDir, itemName);
-    if (!isDir(itemDir)) return;
-
-    fs.readdirSync(itemDir).forEach((f) => {
-      const ext = path.extname(f);
-      if (extensions.includes(ext)) {
-        const fileName = f.replace(ext, '');
-        entries[`${outBase}/${fileName}`] = path.join(itemDir, f);
-      }
-    });
-  });
-  return entries;
-}
-
 // Image transformation helpers
 const imageTransforms = {
   raster: (content, absolutePath) => {
@@ -333,8 +311,8 @@ function commonPlugins() {
     new RemoveEmptyFilesPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'src/sections/**/*.php', to: 'sections/[name][ext]', noErrorOnMissing: true },
-        { from: 'src/parts/**/*.php', to: 'parts/[name][ext]', noErrorOnMissing: true },
+        // Parts and sections are now manually imported via global.scss and global.js
+        // so we no longer copy their PHP files separately
         {
           from: '**/*.php',
           context: 'src/blocks',
@@ -391,8 +369,9 @@ function hasCustomBlocks() {
   });
 }
 
-// Additional entries for global assets, core block customizations, and parts/sections.
+// Additional entries for global assets, core block customizations.
 // Custom blocks are handled by wp-scripts default entry() function.
+// Parts and sections are now manually imported via global.scss and global.js
 function makeAdditionalEntries() {
   return {
     'theme/global-styles': PATHS.cssGlobal,
@@ -403,8 +382,6 @@ function makeAdditionalEntries() {
     ...blocksRootJsEntries(PATHS.blocksJs),
     ...blockStyleIndexEntries(PATHS.blocksJs),
     ...blockStyleVariantsEntries(PATHS.blocksJs),
-    ...flatDirEntries(PATHS.partsDir, 'parts'),
-    ...flatDirEntries(PATHS.sectionsDir, 'sections'),
   };
 }
 

@@ -4,7 +4,7 @@
  * Enqueue frontend and editor styles.
  *
  * @package upa25
- * @version 0.2.0
+ * @version 0.3.0
  * @since 0.2.0
  */
 
@@ -30,13 +30,20 @@ function upa25_enqueue_scripts()
 		wp_style_add_data( 'upa25-global-style', 'onload', "this.media='all'" );
 	}
 
-	// Note: global.js is empty (comments-only) so we skip enqueuing it.
+	// Enqueue the global JavaScript.
+	$global_js_path   = get_template_directory_uri() . '/build/theme/global.js';
+	$global_js_asset  = require get_template_directory() . '/build/theme/global.asset.php';
 
-	// Enqueue part styles and scripts
-	upa25_enqueue_parts();
+	wp_enqueue_script(
+		'upa25-global-script',
+		$global_js_path,
+		$global_js_asset['dependencies'],
+		$global_js_asset['version'],
+		true // Load in footer
+	);
 
-	// Enqueue section styles and scripts
-	upa25_enqueue_sections();
+	// Note: Parts and sections are now manually imported via global.scss and global.js
+	// so we no longer need to enqueue them separately.
 }
 add_action('enqueue_block_assets', 'upa25_enqueue_scripts');
 
@@ -58,240 +65,13 @@ function upa25_enqueue_frontend_styles()
 add_action('wp_enqueue_scripts', 'upa25_enqueue_frontend_styles');
 
 /**
- * Enqueue part styles and scripts conditionally based on usage.
+ * Parts and sections are now manually imported via global.scss and global.js,
+ * so the following functions are no longer needed and have been removed:
+ * - upa25_enqueue_parts()
+ * - upa25_enqueue_all_parts()
+ * - upa25_enqueue_sections()
+ * - upa25_enqueue_all_sections()
  */
-function upa25_enqueue_parts(): void
-{
-	// Skip on admin/editor - always load all parts there
-	if (is_admin()) {
-		upa25_enqueue_all_parts();
-		return;
-	}
-
-	$used = $GLOBALS['upa25_used_blocks']['parts'] ?? [];
-
-	// If no parts collected yet (before render), enqueue all
-	if (empty($used)) {
-		upa25_enqueue_all_parts();
-		return;
-	}
-
-	$parts_dir = get_theme_file_path('build/parts');
-	$parts_url = get_theme_file_uri('build/parts');
-
-	// Only enqueue parts that are actually used
-	foreach ($used as $part_slug) {
-		// Enqueue CSS
-		$css_file = "{$parts_dir}/{$part_slug}.css";
-		if (file_exists($css_file)) {
-			$asset_file = str_replace('.css', '.asset.php', $css_file);
-			if (file_exists($asset_file)) {
-				$asset = require $asset_file;
-				$handle = "upa25-part-{$part_slug}";
-				wp_enqueue_style(
-					$handle,
-					"{$parts_url}/{$part_slug}.css",
-					$asset['dependencies'] ?? [],
-					$asset['version'] ?? filemtime($css_file)
-				);
-				// Load async to prevent render blocking
-				wp_style_add_data($handle, 'media', 'print');
-				wp_style_add_data($handle, 'onload', "this.media='all'");
-			}
-		}
-
-		// Enqueue JS
-		$js_file = "{$parts_dir}/{$part_slug}.js";
-		if (file_exists($js_file)) {
-			$asset_file = str_replace('.js', '.asset.php', $js_file);
-			if (file_exists($asset_file)) {
-				$asset = require $asset_file;
-				$handle = "upa25-part-js-{$part_slug}";
-				wp_enqueue_script(
-					$handle,
-					"{$parts_url}/{$part_slug}.js",
-					$asset['dependencies'] ?? [],
-					$asset['version'] ?? filemtime($js_file),
-					true // Load in footer
-				);
-				// Add defer attribute for non-blocking load
-				wp_script_add_data($handle, 'strategy', 'defer');
-			}
-		}
-	}
-}
-
-/**
- * Enqueue all parts (for editor or fallback).
- */
-function upa25_enqueue_all_parts(): void
-{
-	$parts_dir = get_theme_file_path('build/parts');
-	$parts_url = get_theme_file_uri('build/parts');
-
-	if (!is_dir($parts_dir)) {
-		return;
-	}
-
-	// Enqueue CSS files from build/parts/ (non-blocking)
-	foreach (glob($parts_dir . '/*.css') as $file) {
-		$part_name = basename($file, '.css');
-		$asset_file = str_replace('.css', '.asset.php', $file);
-
-		if (file_exists($asset_file)) {
-			$asset = require $asset_file;
-			$handle = "upa25-part-{$part_name}";
-			wp_enqueue_style(
-				$handle,
-				"{$parts_url}/{$part_name}.css",
-				$asset['dependencies'] ?? [],
-				$asset['version'] ?? filemtime($file)
-			);
-			// Load async to prevent render blocking
-			wp_style_add_data($handle, 'media', 'print');
-			wp_style_add_data($handle, 'onload', "this.media='all'");
-		}
-	}
-
-	// Enqueue JS files from build/parts/ (deferred)
-	foreach (glob($parts_dir . '/*.js') as $file) {
-		$part_name = basename($file, '.js');
-		$asset_file = str_replace('.js', '.asset.php', $file);
-
-		if (file_exists($asset_file)) {
-			$asset = require $asset_file;
-			$handle = "upa25-part-js-{$part_name}";
-			wp_enqueue_script(
-				$handle,
-				"{$parts_url}/{$part_name}.js",
-				$asset['dependencies'] ?? [],
-				$asset['version'] ?? filemtime($file),
-				true // Load in footer
-			);
-			// Add defer attribute for non-blocking load
-			wp_script_add_data($handle, 'strategy', 'defer');
-		}
-	}
-}
-
-
-/**
- * Enqueue section styles and scripts conditionally based on usage.
- */
-function upa25_enqueue_sections(): void
-{
-	// Skip on admin/editor - always load all sections there
-	if (is_admin()) {
-		upa25_enqueue_all_sections();
-		return;
-	}
-
-	$used = $GLOBALS['upa25_used_blocks']['sections'] ?? [];
-
-	// If no sections collected yet (before render), enqueue all
-	if (empty($used)) {
-		upa25_enqueue_all_sections();
-		return;
-	}
-
-	$sections_dir = get_theme_file_path('build/sections');
-	$sections_url = get_theme_file_uri('build/sections');
-
-	// Only enqueue sections that are actually used
-	foreach ($used as $section_slug) {
-		// Enqueue CSS
-		$css_file = "{$sections_dir}/{$section_slug}.css";
-		if (file_exists($css_file)) {
-			$asset_file = str_replace('.css', '.asset.php', $css_file);
-			if (file_exists($asset_file)) {
-				$asset = require $asset_file;
-				$handle = "upa25-section-{$section_slug}";
-				wp_enqueue_style(
-					$handle,
-					"{$sections_url}/{$section_slug}.css",
-					$asset['dependencies'] ?? [],
-					$asset['version'] ?? filemtime($css_file)
-				);
-				// Load async to prevent render blocking
-				wp_style_add_data($handle, 'media', 'print');
-				wp_style_add_data($handle, 'onload', "this.media='all'");
-			}
-		}
-
-		// Enqueue JS
-		foreach (glob($sections_dir . '/*.js') as $js_file) {
-			$js_name = basename($js_file, '.js');
-			$asset_file = str_replace('.js', '.asset.php', $js_file);
-
-			if (file_exists($asset_file)) {
-				$asset = require $asset_file;
-				$handle = "upa25-section-js-{$js_name}";
-				wp_enqueue_script(
-					$handle,
-					"{$sections_url}/{$js_name}.js",
-					$asset['dependencies'] ?? [],
-					$asset['version'] ?? filemtime($js_file),
-					true // Load in footer
-				);
-				// Add defer attribute for non-blocking load
-				wp_script_add_data($handle, 'strategy', 'defer');
-			}
-		}
-	}
-}
-
-/**
- * Enqueue all sections (for editor or fallback).
- */
-function upa25_enqueue_all_sections(): void
-{
-	$sections_dir = get_theme_file_path('build/sections');
-	$sections_url = get_theme_file_uri('build/sections');
-
-	if (!is_dir($sections_dir)) {
-		return;
-	}
-
-	// Enqueue CSS files from build/sections/ (non-blocking)
-	foreach (glob($sections_dir . '/*.css') as $file) {
-		$section_name = basename($file, '.css');
-		$asset_file = str_replace('.css', '.asset.php', $file);
-
-		if (file_exists($asset_file)) {
-			$asset = require $asset_file;
-			$handle = "upa25-section-{$section_name}";
-			wp_enqueue_style(
-				$handle,
-				"{$sections_url}/{$section_name}.css",
-				$asset['dependencies'] ?? [],
-				$asset['version'] ?? filemtime($file)
-			);
-			// Load async to prevent render blocking
-			wp_style_add_data($handle, 'media', 'print');
-			wp_style_add_data($handle, 'onload', "this.media='all'");
-		}
-	}
-
-	// Enqueue JS files from build/sections/ (deferred)
-	foreach (glob($sections_dir . '/*.js') as $file) {
-		$section_name = basename($file, '.js');
-		$asset_file = str_replace('.js', '.asset.php', $file);
-
-		if (file_exists($asset_file)) {
-			$asset = require $asset_file;
-			$handle = "upa25-section-js-{$section_name}";
-			wp_enqueue_script(
-				$handle,
-				"{$sections_url}/{$section_name}.js",
-				$asset['dependencies'] ?? [],
-				$asset['version'] ?? filemtime($file),
-				true // Load in footer
-			);
-			// Add defer attribute for non-blocking load
-			wp_script_add_data($handle, 'strategy', 'defer');
-		}
-	}
-}
 
 /**
  * Remove the upa25_enqueue_editor_styles function and its add_action, and replace with add_editor_style for block editor CSS
@@ -311,8 +91,6 @@ function upa25_collect_used_blocks(string $block_content, array $block): string
 		'blocks' => [],
 		'styles' => [],
 		'extras' => [],
-		'parts' => [],
-		'sections' => [],
 	];
 
 	if (empty($block['blockName'])) {
@@ -324,25 +102,6 @@ function upa25_collect_used_blocks(string $block_content, array $block): string
 	// Collect block names.
 	if (! in_array($block_name, $collected['blocks'], true)) {
 		$collected['blocks'][] = $block_name;
-	}
-
-	// Collect template parts (header, footer, etc.)
-	if ('core/template-part' === $block_name && !empty($block['attrs']['slug'])) {
-		$part_slug = $block['attrs']['slug'];
-		if (!in_array($part_slug, $collected['parts'], true)) {
-			$collected['parts'][] = $part_slug;
-		}
-	}
-
-	// Collect sections (brand section, etc.)
-	if (!empty($block['attrs']['className'])) {
-		// Check for section-brand class or similar
-		if (preg_match('/\bis-style-section-([a-z0-9\-]+)\b/', $block['attrs']['className'], $m)) {
-			$section_slug = $m[1];
-			if (!in_array($section_slug, $collected['sections'], true)) {
-				$collected['sections'][] = $section_slug;
-			}
-		}
 	}
 
 	// Collect style variations.

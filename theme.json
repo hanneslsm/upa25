@@ -1,5 +1,17 @@
 {
 	"customTemplates": [
+		{
+			"name": "page-blank",
+			"title": " Page (Blank)"
+		},
+		{
+			"name": "page-no-title",
+			"title": " Page (no Title)"
+		},
+		{
+			"name": "page-no-margin",
+			"title": " Page (no Margin)"
+		}
 	],
 	"settings": {
 		"appearanceTools": true,

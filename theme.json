@@ -5,21 +5,21 @@
 			"postTypes": [
 				"page"
 			],
-			"title": "Seite: Ohne Titel"
+			"title": "→ Seite: Ohne Titel"
 		},
 		{
 			"name": "page-with-title-and-spacing",
 			"postTypes": [
 				"page"
 			],
-			"title": "Seite: Mit Titel & Spacing"
+			"title": "→ Seite: Mit Titel & Spacing"
 		},
 		{
 			"name": "page-with-featured-image",
 			"postTypes": [
 				"page"
 			],
-			"title": "Seite: Mit Beitragsbild"
+			"title": "→ Seite: Mit Beitragsbild"
 		}
 	],
 	"settings": {

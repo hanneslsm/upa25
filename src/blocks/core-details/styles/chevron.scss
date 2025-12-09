@@ -23,14 +23,14 @@
 			align-items: center;
 			transform: rotate(0deg); /* chevron faces to right */
 			transition: none;
-
-			@media (prefers-reduced-motion: no-preference) {
-				transition: 0.2s;
-			}
 			aspect-ratio: 1/1;
 			content: "\203A"; /* chevron */
 			font-weight: 400;
 			font-size: 1em;
+
+			@media (prefers-reduced-motion: no-preference) {
+				transition: 0.2s;
+			}
 		}
 	}
 	& > :nth-child(2) {

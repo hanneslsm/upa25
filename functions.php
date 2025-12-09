@@ -23,6 +23,12 @@ require get_template_directory() . '/inc/block-patterns.php';
 
 
 /**
+ * Block controls
+ */
+
+require get_template_directory() . '/build/blocks/core-spacer/disable-margin.php';
+
+/**
  * Woo
  */
 
@@ -36,6 +42,7 @@ require get_template_directory() . '/inc/woo-disable-marketing.php';
 /**
  * ProLooks tools
  */
+
 // Remove emojis
 require get_template_directory() . '/inc/prolooks/gpdr-remove-emojis.php';
 

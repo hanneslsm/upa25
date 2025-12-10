@@ -1,6 +1,6 @@
 <!---
- * @package hxi25
- * @version 3.5.2
+ * @package upa25
+ * @version 4.0.0
 -->
 
 ## Webpack Build
@@ -78,16 +78,16 @@ The theme supports creating custom blocks with the WordPress Interactivity API. 
 Run this command inside the `src/blocks/` directory:
 
 ```bash
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --template @wordpress/create-block-interactive-template --no-plugin
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --template @wordpress/create-block-interactive-template --no-plugin
 ```
 
 For a non-interactive (static or dynamic) block:
 ```bash
 # Static block
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --no-plugin
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --no-plugin
 
 # Dynamic block
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --no-plugin --variant dynamic
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --no-plugin --variant dynamic
 ```
 
 After creating the block, run `npm run build` – the block will be automatically registered.
@@ -127,6 +127,9 @@ Webpack's filesystem cache is stored in `.webpack-cache`. Touching `webpack.conf
 | `PROLOOKS_COPY_IMAGES_IN_PROD` | `true` | Toggle for the Sharp/SVGO copy routine in production builds. |
 
 ### Changelog
+* 4.0.0 – Rebuild webpack overrides on top of `@wordpress/scripts`: auto-discover global + nested block JS/SCSS/style entries, remove redundant `style-` prefixes, prune empty artifacts, keep `style.css` version synced, and run Sharp/SVGO-powered image processing guarded by environment toggles.
+* Enqueuing 0.3.0 – Replace parts/sections loaders with a render-block collector that defers global CSS, conditionally enqueues `build/styles` assets & gradient utilities on the frontend, and feeds every block/style variation into all block editors via `add_editor_style` + `enqueue_block_editor_assets`.
+* 3.5.3 - Add watching `theme.json`
 * 3.5.2 – Allow missing sections directory with `noErrorOnMissing: true` in CopyWebpackPlugin.
 * 3.5.1 – Fix core-group gradient enqueuing path from `build/editor/` to `build/blocks/` and add editor-specific gradient styles for proper display in block editor.
 * 3.5.0 – Consolidate all block-related files into `build/blocks/` folder: custom blocks and core block enhancements now output to the same directory for cleaner organization and better scalability.

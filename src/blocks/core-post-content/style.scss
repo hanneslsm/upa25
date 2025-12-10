@@ -1,0 +1,46 @@
+///
+/// Block: Post Conent
+///
+
+/* Password Form
+--------------------------------------------- */
+.post-password-form {
+	input[type="password"] {
+		border: 1px solid var(--wp--preset--color--base-4);
+		background: var(--wp--preset--color--base-2);
+		color: var(--wp--preset--color--contrast-2);
+		font-size: var(--wp--preset--font-size--medium);
+		padding: var(--wp--preset--spacing--10);
+	}
+	input[type="submit"] {
+		border: 1px solid var(--wp--preset--color--base-4);
+		background: var(--wp--preset--color--contrast);
+		color: var(--wp--preset--color--base);
+		font-size: var(--wp--preset--font-size--medium);
+		padding: var(--wp--preset--spacing--10);
+		border-radius: 999px;
+		padding-left: var(--wp--preset--spacing--30);
+		padding-right: var(--wp--preset--spacing--30);
+	}
+}
+
+/* Navigation Links
+--------------------------------------------- */
+/* This navigation style is also used in
+* core-comments-pagination.scss and core-query-pagination.scss
+*/
+.post-nav-links {
+	.post-page-numbers {
+		padding: 0.5em 1em;
+		border: 1px solid var(--wp--preset--color--base-4);
+		border-radius: 3px;
+		text-decoration: none;
+		font-variant-numeric: tabular-nums;
+	}
+	a:hover {
+		background-color: var(--wp--preset--color--base-2);
+	}
+	.current {
+		border: 1px dashed var(--wp--preset--color--base-4);
+	}
+}

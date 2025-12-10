@@ -1,0 +1,23 @@
+///
+/// Block: Quote
+///
+
+/* General Styling
+--------------------------------------------- */
+.wp-block-quote:not(.is-style-plain) {
+	quotes: "„" "“";
+	p:first-of-type {
+		&::before {
+			content: open-quote;
+			display: inline-block;
+			position: relative;
+		}
+	}
+	p:last-of-type {
+		&::after {
+			content: close-quote;
+			display: inline-block;
+			position: relative;
+		}
+	}
+}

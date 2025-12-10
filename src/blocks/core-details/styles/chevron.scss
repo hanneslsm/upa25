@@ -22,16 +22,19 @@
 			justify-content: center;
 			align-items: center;
 			transform: rotate(0deg); /* chevron faces to right */
-			transition: 0.2s;
-
+			transition: none;
 			aspect-ratio: 1/1;
 			content: "\203A"; /* chevron */
 			font-weight: 400;
 			font-size: 1em;
+
+			@media (prefers-reduced-motion: no-preference) {
+				transition: 0.2s;
+			}
 		}
 	}
 	& > :nth-child(2) {
-		margin-block-start: 0px;
+		margin-block-start: 0;
 	}
 	& > :last-child {
 		padding-block-end: var(--wp--preset--spacing--20);

@@ -1,0 +1,56 @@
+///
+/// Template-part: Header Fixed
+///
+
+:root {
+	--header-fixed-height: 0px;
+	--header-fixed-admin-offset: 0px;
+	--header-fixed-dynamic-offset: 0px;
+}
+
+body.with-header-fixed {
+	padding-top: var(--header-fixed-height, 0px);
+	scroll-padding-top: calc(
+		var(--header-fixed-height, 0px) + var(--header-fixed-admin-offset, 0px)
+	);
+}
+
+body.with-header-fixed
+	header.wp-block-template-part
+	.wp-block-group.is-style-header-fixed {
+	position: fixed;
+	top: calc(
+		var(--header-fixed-admin-offset, 0px) +
+			var(--header-fixed-dynamic-offset, 0px)
+	);
+	inset-inline-start: 0;
+	inset-inline-end: 0;
+	left: 0;
+	right: 0;
+	z-index: 100; //must be higher than wp sticky elements with z-index 10
+	width: 100%;
+	transform: translateY(0);
+	transition: transform 0.25s ease;
+	will-change: transform;
+}
+
+body.with-header-fixed
+	header.wp-block-template-part
+	.wp-block-group.is-style-header-fixed.is-hidden {
+	transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.with-header-fixed
+		header.wp-block-template-part
+		.wp-block-group.is-style-header-fixed {
+		transition: none;
+		transform: none;
+	}
+
+	body.with-header-fixed
+		header.wp-block-template-part
+		.wp-block-group.is-style-header-fixed.is-hidden {
+		transform: none;
+	}
+}

@@ -15,20 +15,26 @@
  */
 
 
-@use "./base/variables";
-@use "./base/typography";
-@use "./base/view-transition";
-@use "./base/helpers";
+@use "./scss/base/variables";
+@use "./scss/base/typography";
+@use "./scss/base/view-transition";
+@use "./scss/base/helpers";
+
+@use "./scss/elements/html";
+@use "./scss/elements/button";
+@use "./scss/elements/heading";
+@use "./scss/elements/code";
+@use "./scss/elements/link";
+@use "./scss/elements/textinput";
+
+/* Parts */
+@use "./parts/index.scss";
+
+/* Sections */
+// No sections in this theme
+
 /* Block Styes are getting imported by Webpack automatically */
 /* Blocks are getting imported by Webpack automatically */
-/* Parts are getting imported by Webpack automatically */
-/* Sections are getting imported by Webpack automatically */
-@use "./elements/html";
-@use "./elements/button";
-@use "./elements/heading";
-@use "./elements/code";
-@use "./elements/link";
-@use "./elements/textinput";
 
 
 // @use "./base/dev-a11y"; // Uncomment for development to highlight accessibility issues

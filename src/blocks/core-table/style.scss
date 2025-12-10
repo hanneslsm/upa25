@@ -1,0 +1,53 @@
+///
+/// Block: Table
+///
+
+/* General Styling
+--------------------------------------------- */
+.wp-block-table {
+	table,
+	th,
+	td {
+		border: none;
+	}
+
+	thead {
+		background-color: var(--wp--preset--color--base-2);
+		border-bottom: 1px solid var(--wp--preset--color--base-6);
+		text-align: left;
+	}
+
+	tr {
+		border-bottom: 1px solid var(--wp--preset--color--base-6);
+	}
+
+	tfoot {
+		background-color: var(--wp--preset--color--base-2);
+		border-top: 1px solid var(--wp--preset--color--base-6);
+		text-align: left;
+
+		& tr {
+			border-bottom: none;
+		}
+	}
+
+	/* Section Styles
+	--------------------------------------------- */
+
+	/* [Contrast] */
+	/* [Brand] */
+	.is-style-section-contrast &,
+	.is-style-section-brand & {
+		thead {
+			background-color: transparent;
+			border-bottom: 2px solid var(--wp--preset--color--base-2);
+		}
+		tfoot {
+			background-color: transparent;
+			border-top: 2px solid var(--wp--preset--color--base-6);
+			& tr {
+				border-bottom: none;
+			}
+		}
+	}
+}

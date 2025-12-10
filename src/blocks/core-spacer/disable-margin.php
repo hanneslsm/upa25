@@ -4,7 +4,7 @@
  *
  * @package upa25
  * @version 0.1.0
- * @since hxi25 0.1.0
+ * @since upa25 0.1.0
  */
 
 /**
@@ -14,7 +14,7 @@
  * @param string              $name Block type name including namespace.
  * @return array|WP_Block_Type
  */
-function hxi25_disable_spacer_margin( $args, $name ) {
+function upa25_disable_spacer_margin( $args, $name ) {
     if ( 'core/spacer' !== $name ) {
         return $args;
     }
@@ -28,4 +28,4 @@ function hxi25_disable_spacer_margin( $args, $name ) {
 
     return $args;
 }
-add_filter( 'register_block_type_args', 'hxi25_disable_spacer_margin', 10, 2 );
+add_filter( 'register_block_type_args', 'upa25_disable_spacer_margin', 10, 2 );

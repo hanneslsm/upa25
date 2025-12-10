@@ -2,7 +2,7 @@
 /**
  * Disable margin controls for the core/spacer block.
  *
- * @package hxi25
+ * @package upa25
  * @version 0.1.0
  * @since hxi25 0.1.0
  */

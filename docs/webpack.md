@@ -1,5 +1,5 @@
 <!---
- * @package hxi25
+ * @package upa25
  * @version 4.0.0
 -->
 
@@ -78,16 +78,16 @@ The theme supports creating custom blocks with the WordPress Interactivity API. 
 Run this command inside the `src/blocks/` directory:
 
 ```bash
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --template @wordpress/create-block-interactive-template --no-plugin
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --template @wordpress/create-block-interactive-template --no-plugin
 ```
 
 For a non-interactive (static or dynamic) block:
 ```bash
 # Static block
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --no-plugin
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --no-plugin
 
 # Dynamic block
-npx @wordpress/create-block@latest your-block-name --textdomain hxi25 --no-plugin --variant dynamic
+npx @wordpress/create-block@latest your-block-name --textdomain upa25 --no-plugin --variant dynamic
 ```
 
 After creating the block, run `npm run build` – the block will be automatically registered.

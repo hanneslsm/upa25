@@ -1,3 +1,5 @@
+![Made in Europe](https://img.shields.io/badge/Made_in_Europe-white?logo=europeanunion&logoColor=FFCC00&labelColor=003399)
+
 # upa25 Block Theme
 
 ![Theme screenshot](screenshot.png)

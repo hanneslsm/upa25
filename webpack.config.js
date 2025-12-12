@@ -2,7 +2,7 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 4.0.0
+ * @version 3.7.0
  * @docs docs/webpack.md
  */
 

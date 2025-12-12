@@ -127,7 +127,7 @@ Webpack's filesystem cache is stored in `.webpack-cache`. Touching `webpack.conf
 | `PROLOOKS_COPY_IMAGES_IN_PROD` | `true` | Toggle for the Sharp/SVGO copy routine in production builds. |
 
 ### Changelog
-* 4.0.0 – Rebuild webpack overrides on top of `@wordpress/scripts`: auto-discover global + nested block JS/SCSS/style entries, remove redundant `style-` prefixes, prune empty artifacts, keep `style.css` version synced, and run Sharp/SVGO-powered image processing guarded by environment toggles.
+* 3.7.0 – Rebuild webpack overrides on top of `@wordpress/scripts`: auto-discover global + nested block JS/SCSS/style entries, remove redundant `style-` prefixes, prune empty artifacts, keep `style.css` version synced, and run Sharp/SVGO-powered image processing guarded by environment toggles.
 * Enqueuing 0.3.0 – Replace parts/sections loaders with a render-block collector that defers global CSS, conditionally enqueues `build/styles` assets & gradient utilities on the frontend, and feeds every block/style variation into all block editors via `add_editor_style` + `enqueue_block_editor_assets`.
 * 3.5.3 - Add watching `theme.json`
 * 3.5.2 – Allow missing sections directory with `noErrorOnMissing: true` in CopyWebpackPlugin.

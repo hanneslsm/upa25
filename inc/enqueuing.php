@@ -161,28 +161,27 @@ function upa25_maybe_enqueue_include_assets( array $block ): void {
 		}
 	}
 
-		// Check className for style variations and custom classes
-		if ( ! empty( $block['attrs']['className'] ) ) {
-			$class_name = $block['attrs']['className'];
+	// Check className for style variations and custom classes
+	if ( ! empty( $block['attrs']['className'] ) ) {
+		$class_name = $block['attrs']['className'];
 
-			// Match is-style-* classes
-			if ( preg_match_all( '/\bis-style-([a-z0-9\-]+)\b/', $class_name, $matches ) ) {
-				foreach ( $matches[1] as $style_slug ) {
-					$potential_slugs = array(
-						$style_slug,
-						'parts-' . $style_slug,
-					);
+		// Match is-style-* classes
+		if ( preg_match_all( '/\bis-style-([a-z0-9\-]+)\b/', $class_name, $matches ) ) {
+			foreach ( $matches[1] as $style_slug ) {
+				$potential_slugs = array(
+					$style_slug,
+					'parts-' . $style_slug,
+				);
 
-					foreach ( $potential_slugs as $potential_slug ) {
-						if ( isset( $components[ $potential_slug ] ) ) {
-							$slugs_to_enqueue[] = $potential_slug;
-						}
+				foreach ( $potential_slugs as $potential_slug ) {
+					if ( isset( $components[ $potential_slug ] ) ) {
+						$slugs_to_enqueue[] = $potential_slug;
 					}
 				}
 			}
-
 		}
 
+	}
 	/**
 	 * Filters the include component slugs detected for the current block.
 	 *

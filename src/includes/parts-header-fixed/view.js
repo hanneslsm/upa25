@@ -3,7 +3,7 @@
  * reappears when the user scrolls up. Adjusts offsets to accommodate the
  * WordPress admin bar across breakpoints and honours reduced-motion settings.
  *
-* @package upa25
+ * @package upa25
  * @version 0.1.0
  * @since upa25 0.2.0
  */
@@ -67,9 +67,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		const position = style.position || '';
 		const isFixed =
 			position === 'fixed' ||
-			position === 'sticky' ||
-			style.position === 'fixed';
-
+			position === 'sticky';
 		return { height, isFixed };
 	};
 

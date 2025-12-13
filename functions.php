@@ -36,7 +36,7 @@ require get_template_directory() . '/build/blocks/core-spacer/disable-margin.php
 require get_template_directory() . '/inc/woo-remove-patterns.php';
 
 // Woocommerce Disable Marketing
-require get_template_directory() . '/inc/woo-disable-marketing.php';
+//require get_template_directory() . '/inc/woo-disable-marketing.php';
 
 
 /**

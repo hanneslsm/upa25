@@ -3,7 +3,7 @@
  * reappears when the user scrolls up. Adjusts offsets to accommodate the
  * WordPress admin bar across breakpoints and honours reduced-motion settings.
  *
- * @package upa25
+* @package upa25
  * @version 0.1.0
  * @since upa25 0.2.0
  */
@@ -65,7 +65,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					)
 			) || 0;
 		const position = style.position || '';
-		const isFixed = position === 'fixed' || position === 'sticky';
+		const isFixed =
+			position === 'fixed' ||
+			position === 'sticky' ||
+			style.position === 'fixed';
 
 		return { height, isFixed };
 	};
@@ -153,8 +156,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			adminBarIsFixed ? `${ adminBarHeight }px` : '0px'
 		);
 
-		body.classList.remove( 'with-header-fixed' );
-		body.classList.add( 'with-header-fixed' );
+		body.classList.remove( 'has-hxi-header-fixed' );
+		body.classList.add( 'has-header-fixed' );
 
 		updateDynamicOffset();
 		updateVisibility( true );

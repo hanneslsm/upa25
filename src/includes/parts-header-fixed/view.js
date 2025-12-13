@@ -65,8 +65,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					)
 			) || 0;
 		const position = style.position || '';
-		const isFixed = position === 'fixed' || position === 'sticky';
-
+		const isFixed =
+			position === 'fixed' ||
+			position === 'sticky';
 		return { height, isFixed };
 	};
 
@@ -153,8 +154,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			adminBarIsFixed ? `${ adminBarHeight }px` : '0px'
 		);
 
-		body.classList.remove( 'with-header-fixed' );
-		body.classList.add( 'with-header-fixed' );
+		body.classList.remove( 'has-hxi-header-fixed' );
+		body.classList.add( 'has-header-fixed' );
 
 		updateDynamicOffset();
 		updateVisibility( true );

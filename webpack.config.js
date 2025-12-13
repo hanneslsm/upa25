@@ -2,13 +2,14 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 3.7.0
+ * @version 4.0.0
  * @docs docs/webpack.md
  */
 
 // Core dependencies
 const path = require('path');
 const fs = require('fs');
+const fg = require('fast-glob');
 const { merge } = require('webpack-merge');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -53,10 +54,10 @@ const PATHS = {
   imagesSrc: path.resolve(__dirname, 'src/images'),
   svgSrc: path.resolve(__dirname, 'src/svg'),
   blocksJs: path.resolve(__dirname, 'src/blocks'),
-  cssGlobal: path.resolve(__dirname, 'src/global.scss'),
+  cssGlobal: path.resolve(__dirname, 'src/scss/global.scss'),
   cssScreen: path.resolve(__dirname, 'src/scss/screen.scss'),
   cssEditor: path.resolve(__dirname, 'src/scss/editor.scss'),
-  jsGlobal: path.resolve(__dirname, 'src/global.js'),
+  jsGlobal: path.resolve(__dirname, 'src/js/global.js'),
   themeStyle: path.resolve(__dirname, 'style.css'),
 };
 
@@ -71,23 +72,6 @@ const isDir = (p) => fs.existsSync(p) && fs.statSync(p).isDirectory();
  */
 const isCustomBlock = (blockDir) => fs.existsSync(path.join(blockDir, 'block.json'));
 
-// Replace the default MiniCssExtractPlugin to remove the "style-" filename prefix.
-function withPlainCssFilenames(config) {
-  if (!config || !config.plugins) return config;
-
-  config.plugins = config.plugins.map((plugin) => {
-    const isMiniCss = plugin && plugin.constructor && plugin.constructor.name === 'MiniCssExtractPlugin';
-    if (!isMiniCss) return plugin;
-
-    return new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[name].css',
-    });
-  });
-
-  return config;
-}
-
 // Rename assets like styles/{block}/style-*.css to drop the redundant "style-" prefix.
 class StripStylePrefixPlugin {
   apply(compiler) {
@@ -98,21 +82,27 @@ class StripStylePrefixPlugin {
           stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
         },
         () => {
-          const { Compilation } = compiler.webpack;
-          const regex = /^styles\/([^/]+)\/style-(.+)$/;
+          // Match both styles/{block}/style-*.css and blocks/{block}/style-style.css
+          const patterns = [
+            { regex: /^styles\/([^/]+)\/style-(.+)$/, replace: (all, block, rest) => `styles/${block}/${rest}` },
+            { regex: /^blocks\/([^/]+)\/style-style(.*)$/, replace: (all, block, rest) => `blocks/${block}/style${rest}` },
+          ];
 
           Object.keys(compilation.assets).forEach((filename) => {
-            const match = regex.exec(filename);
-            if (!match) return;
+            for (const { regex, replace } of patterns) {
+              const match = regex.exec(filename);
+              if (!match) continue;
 
-            const newName = filename.replace(regex, (all, block, rest) => `styles/${block}/${rest}`);
+              const newName = filename.replace(regex, replace);
 
-            // Avoid clobbering an existing asset name.
-            if (compilation.assets[newName]) return;
+              // Avoid clobbering an existing asset name.
+              if (compilation.assets[newName]) continue;
 
-            compilation.renameAsset(filename, newName);
-            // Mark the new asset as processed to keep asset info intact.
-            compilation.updateAsset(newName, (source, info) => source, (info) => info);
+              compilation.renameAsset(filename, newName);
+              // Mark the new asset as processed to keep asset info intact.
+              compilation.updateAsset(newName, (source, info) => source, (info) => info);
+              break; // Only apply one pattern per file
+            }
           });
         }
       );
@@ -120,146 +110,59 @@ class StripStylePrefixPlugin {
   }
 }
 
-// Remove empty files from the build output after compilation.
-class RemoveEmptyFilesPlugin {
-  apply(compiler) {
-    compiler.hooks.afterEmit.tap('RemoveEmptyFilesPlugin', () => {
-      const buildDir = PATHS.build;
-      const walk = (dir) => {
-        if (!fs.existsSync(dir)) return;
-        fs.readdirSync(dir, { withFileTypes: true }).forEach((dirent) => {
-          const fullPath = path.join(dir, dirent.name);
-          if (dirent.isDirectory()) {
-            walk(fullPath);
-          } else if (dirent.isFile() && fs.statSync(fullPath).size === 0) {
-            fs.unlinkSync(fullPath);
-          }
-        });
-        // Remove directory if empty after file removal.
-        try {
-          const entries = fs.readdirSync(dir);
-          if (entries.length === 0) {
-            fs.rmdirSync(dir);
-          }
-        } catch {
-          // Directory not empty or doesn't exist; skip.
-        }
-      };
-      walk(buildDir);
-    });
-  }
-}
+// Glob-based entry builder for includes and SCSS bundles
+function makeEntries(patterns, baseDir = 'src') {
+  const files = fg.sync(patterns, { cwd: baseDir });
 
-// Utility to collect files matching extensions from a directory
-function collectFiles(rootDir, extensions = []) {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
+  // Build map of base names to file types for collision detection
+  const fileMap = new Map();
+  files.forEach(relPath => {
+    const withoutExt = relPath.replace(/\.(js|ts|scss)$/i, '');
+    const ext = path.extname(relPath);
+    if (!fileMap.has(withoutExt)) {
+      fileMap.set(withoutExt, []);
+    }
+    fileMap.get(withoutExt).push(ext);
+  });
 
-  const extSet = new Set(extensions);
-  const walk = (dir, relPath = '') => {
-    if (!fs.existsSync(dir)) return;
-    fs.readdirSync(dir, { withFileTypes: true }).forEach((d) => {
-      const fullPath = path.join(dir, d.name);
-      const newRelPath = relPath ? `${relPath}/${d.name}` : d.name;
-
-      if (d.isDirectory()) {
-        walk(fullPath, newRelPath);
-      } else {
-        const ext = path.extname(d.name);
-        if (extSet.has(ext)) {
-          const key = newRelPath.replace(ext, '');
-          entries[key] = fullPath;
-        }
-      }
-    });
+  // Cache for block.json checks
+  const customBlockCache = new Map();
+  const isBlockCustom = (blockName) => {
+    if (!customBlockCache.has(blockName)) {
+      const blockDir = path.join(PATHS.root, baseDir, 'blocks', blockName);
+      customBlockCache.set(blockName, isCustomBlock(blockDir));
+    }
+    return customBlockCache.get(blockName);
   };
-  walk(rootDir);
-  return entries;
-}
 
-// Add entries for block JS files (index.js, view.js) skipping custom blocks
-function blockJsEntries(rootDir, outBase = 'blocks') {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
-
-  fs.readdirSync(rootDir).forEach((name) => {
-    const blockDir = path.join(rootDir, name);
-    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
-
-    ['index.js', 'view.js'].forEach((filename) => {
-      const fp = path.join(blockDir, filename);
-      if (fs.existsSync(fp)) {
-        const base = filename.replace('.js', '');
-        entries[`${outBase}/${name}/${base}`] = fp;
+  // Build entries with collision-aware naming
+  return files.reduce((entries, relPath) => {
+    // Skip files in custom block directories (those with block.json)
+    if (relPath.startsWith('blocks/')) {
+      const blockName = relPath.split('/')[1];
+      if (isBlockCustom(blockName)) {
+        return entries; // Skip files in custom blocks (wp-scripts handles them)
       }
-    });
-  });
-  return entries;
-}
-
-// Add nested JS/SCSS files from blocks directory (excluding style.scss and styles/ subdirs)
-function blocksRootJsEntries(rootDir, outBase = 'blocks') {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
-
-  const walk = (dir, relPath = '') => {
-    const block = relPath ? relPath.split('/')[0] : '';
-    if (block && isCustomBlock(path.join(rootDir, block))) return;
-
-    fs.readdirSync(dir, { withFileTypes: true }).forEach((d) => {
-      const fullPath = path.join(dir, d.name);
-      const newRelPath = relPath ? `${relPath}/${d.name}` : d.name;
-
-      if (d.isDirectory() && d.name !== 'styles' && !isCustomBlock(fullPath)) {
-        walk(fullPath, newRelPath);
-      } else if (d.isFile()) {
-        if (d.name.endsWith('.js')) {
-          entries[`${outBase}/${newRelPath.replace(/\.js$/, '')}`] = fullPath;
-        } else if (d.name.endsWith('.scss') && d.name !== 'style.scss') {
-          entries[`${outBase}/${newRelPath.replace(/\.scss$/, '')}-styles`] = fullPath;
-        }
+      // Skip index.js and view.js in core blocks (wp-scripts handles these)
+      const fileName = path.basename(relPath);
+      if (fileName === 'index.js' || fileName === 'view.js') {
+        return entries;
       }
-    });
-  };
-  walk(rootDir);
-  return entries;
-}
+    }
 
-// Add style.scss entries for blocks (skipping custom blocks)
-function blockStyleIndexEntries(rootDir, outBase = 'styles') {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
+    const ext = path.extname(relPath);
+    const withoutExt = relPath.replace(/\.(js|ts|scss)$/i, '');
+    const extensions = fileMap.get(withoutExt);
 
-  fs.readdirSync(rootDir).forEach((name) => {
-    const blockDir = path.join(rootDir, name);
-    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
+    // Skip SCSS files if a JS/TS file with the same base name exists
+    // (JS will import and bundle the SCSS, avoiding duplicates)
+    if (ext === '.scss' && (extensions.includes('.js') || extensions.includes('.ts'))) {
+      return entries;
+    }
 
-    const fp = path.join(blockDir, 'style.scss');
-    if (fs.existsSync(fp)) entries[`${outBase}/${name}/base`] = fp;
-  });
-  return entries;
-}
-
-// Add block style variant entries from styles/ subdirectories (skipping custom blocks)
-function blockStyleVariantsEntries(rootDir, outBase = 'styles') {
-  const entries = {};
-  if (!isDir(rootDir)) return entries;
-
-  fs.readdirSync(rootDir).forEach((name) => {
-    const blockDir = path.join(rootDir, name);
-    if (!isDir(blockDir) || isCustomBlock(blockDir)) return;
-
-    const stylesDir = path.join(blockDir, 'styles');
-    if (!isDir(stylesDir)) return;
-
-    fs.readdirSync(stylesDir).forEach((f) => {
-      if (f.endsWith('.scss')) {
-        const styleName = f.replace(/\.scss$/, '');
-        entries[`${outBase}/${name}/${styleName}`] = path.join(stylesDir, f);
-      }
-    });
-  });
-  return entries;
+    entries[withoutExt] = path.resolve(PATHS.root, baseDir, relPath);
+    return entries;
+  }, {});
 }
 
 // Image transformation helpers
@@ -285,18 +188,21 @@ const imageTransforms = {
     .webp({ quality: CONFIG.QUALITY_WEBP_CONVERT })
     .toBuffer(),
   svg: (content) => {
-    const result = optimize(content.toString(), {
-      multipass: true,
-      plugins: [
-        'removeDimensions',
-        { name: 'removeViewBox', active: true },
-        'removeTitle',
-        'removeDesc',
-        'removeUselessDefs',
-        'removeXMLNS',
-      ],
-    });
-    return Buffer.from(result.data);
+    try {
+      const result = optimize(content.toString(), {
+        multipass: true,
+        plugins: [
+          'removeDimensions',
+          'removeTitle',
+          'removeDesc',
+          'removeUselessDefs',
+        ],
+      });
+      return Buffer.from(result.data);
+    } catch (error) {
+      console.warn('SVG optimization failed, returning original content:', error.message);
+      return content;
+    }
   },
 };
 
@@ -308,11 +214,9 @@ function commonPlugins() {
       stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
     }),
     new StripStylePrefixPlugin(),
-    new RemoveEmptyFilesPlugin(),
     new CopyWebpackPlugin({
       patterns: [
-        // Parts and sections are now manually imported via global.scss and global.js
-        // so we no longer copy their PHP files separately
+        { from: '**/*.php', context: 'src/includes', to: 'includes/[path][name][ext]', noErrorOnMissing: true },
         {
           from: '**/*.php',
           context: 'src/blocks',
@@ -354,6 +258,7 @@ function prodPlugins() {
       patterns: [
         { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.raster },
         { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'webp/[path][name].webp', noErrorOnMissing: true, transform: imageTransforms.webp },
+        { from: '**/*.svg', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
         { from: '**/*.svg', context: PATHS.svgSrc, to: 'svg/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
       ],
     }),
@@ -369,19 +274,20 @@ function hasCustomBlocks() {
   });
 }
 
-// Additional entries for global assets, core block customizations.
+// Additional entries for global assets, includes, and core block customizations.
 // Custom blocks are handled by wp-scripts default entry() function.
-// Parts and sections are now manually imported via global.scss and global.js
 function makeAdditionalEntries() {
   return {
     'theme/global-styles': PATHS.cssGlobal,
     'theme/screen': PATHS.cssScreen,
     'theme/editor': PATHS.cssEditor,
     'theme/global': PATHS.jsGlobal,
-    ...blockJsEntries(PATHS.blocksJs),
-    ...blocksRootJsEntries(PATHS.blocksJs),
-    ...blockStyleIndexEntries(PATHS.blocksJs),
-    ...blockStyleVariantsEntries(PATHS.blocksJs),
+    ...makeEntries([
+      'includes/**/*.{js,ts,scss}',
+      'blocks/**/style.scss',
+      'blocks/**/styles/*.scss',
+      'blocks/**/*.js',
+    ]),
   };
 }
 
@@ -441,13 +347,17 @@ module.exports = () => {
     infrastructureLogging: { level: 'warn' },
   });
 
-  // Remove the default "style-" prefix from CSS output filenames.
-  withPlainCssFilenames(customScriptConfig);
-
   // Return array of configs if moduleConfig exists (for Interactivity API support)
   if (moduleConfig) {
-    const moduleWithCss = withPlainCssFilenames(moduleConfig);
-    return [customScriptConfig, moduleWithCss];
+    const customModuleConfig = merge(moduleConfig, {
+      plugins: [
+        new MiniCssExtractPlugin({
+          filename: '[name].css',
+          chunkFilename: '[name].css',
+        }),
+      ],
+    });
+    return [customScriptConfig, customModuleConfig];
   }
 
   return customScriptConfig;

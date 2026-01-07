@@ -344,10 +344,10 @@
 			"fontSizes": [
 				{
 					"fluid": {
-						"min": "0.75rem"
+						"min": "0.815rem"
 					},
 					"name": "small",
-					"size": "0.8125rem",
+					"size": "0.8725rem",
 					"slug": "small"
 				},
 				{

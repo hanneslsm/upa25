@@ -2,7 +2,7 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 4.0.0
+ * @version 4.0.1
  * @docs docs/webpack.md
  */
 
@@ -86,6 +86,7 @@ class StripStylePrefixPlugin {
           const patterns = [
             { regex: /^styles\/([^/]+)\/style-(.+)$/, replace: (all, block, rest) => `styles/${block}/${rest}` },
             { regex: /^blocks\/([^/]+)\/style-style(.*)$/, replace: (all, block, rest) => `blocks/${block}/style${rest}` },
+            { regex: /^includes\/([^/]+)\/style-style(.*)$/, replace: (all, slug, rest) => `includes/${slug}/style${rest}` },
           ];
 
           Object.keys(compilation.assets).forEach((filename) => {

@@ -15,6 +15,17 @@
 					"text": "var:preset|color|contrast-2"
 				}
 			}
+		},
+		"blocks":{
+			"core/accordion-item": {
+				"border": {
+					"bottom": {
+						"color": "var(--wp--preset--color--base-5)",
+						"style": "solid",
+						"width": "1px"
+					}
+				}
+			}
 		}
 	}
 }

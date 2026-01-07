@@ -29,4 +29,6 @@
 @use "./elements/textinput";
 /* Sections are getting imported by Webpack automatically */
 
+@use "./custom/sugar-calendar.scss"
+
 // @use "./base/dev-a11y"; // Uncomment for development to highlight accessibility issues

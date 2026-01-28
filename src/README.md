@@ -25,8 +25,6 @@ The exact build pipeline may change, but the **meaning** of each area should rem
 
 - `blocks/`
   Block-specific assets and block style variations.
-- `parts/`
-  Template-part-specific assets.
 - `includes/`
   Feature folders for non-block behavior (integrations, UI features, utilities).
 - `scss/`
@@ -114,29 +112,6 @@ Use a `styles/` subfolder for block style variations:
 All block style variation selectors should start with:
 
 - `.is-style-...`
-
----
-
-## `parts/` — Template Part Assets
-
-Template parts often render with the default class:
-
-- `.wp-block-template-part`
-
-Use `parts/` for styles/scripts that belong to a specific template part.
-
-Suggested structure:
-
-- `parts/<part-name>/style.scss`
-- `parts/<part-name>/editor.scss` (only if needed)
-- `parts/<part-name>/view.js` (only if needed)
-
-Examples:
-
-- `parts/header/style.scss`
-- `parts/page-comments/style.scss`
-
-Keep part styles focused on layout/structure. Avoid redefining global typography or tokens here.
 
 ---
 
@@ -273,11 +248,9 @@ Follow this decision flow:
 
 1. Is it block-specific?
    If yes, place it in `blocks/...`.
-2. Is it tied to a template part?
-   If yes, place it in `parts/...`.
-3. Is it a cross-cutting feature or integration?
+2. Is it a cross-cutting feature or integration?
    If yes, place it in `includes/...`.
-4. Is it truly global foundation?
+3. Is it truly global foundation?
    If yes, place it in `scss/...`.
 
 Then:

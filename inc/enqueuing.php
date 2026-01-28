@@ -2,19 +2,29 @@
 /**
  * Asset registration and enqueueing helpers.
  *
+ * Auto-discovers and conditionally loads assets from the build/ folder structure:
+ * - build/blocks/{namespace}/{block}/ — Block base styles, style variations, custom blocks
+ * - build/includes/{category}/{name}/ — Component assets (plugins, utilities, etc.)
+ *
  * @package upa25
- * @version 4.0.0
+ * @version 5.0.0
  */
+
+declare( strict_types=1 );
+
+/*
+|--------------------------------------------------------------------------
+| Global & Screen Styles
+|--------------------------------------------------------------------------
+*/
 
 /**
  * Enqueue the shared theme styles for both the editor and the frontend.
  */
-function upa25_enqueue_scripts(): void {
+function upa25_enqueue_global_styles(): void {
 	upa25_enqueue_style_asset( 'upa25-global-style', 'build/global-styles.css', ! is_admin() );
-
-	// global.js is intentionally empty so we skip enqueuing it.
 }
-add_action( 'enqueue_block_assets', 'upa25_enqueue_scripts' );
+add_action( 'enqueue_block_assets', 'upa25_enqueue_global_styles' );
 
 /**
  * Enqueue the public-facing stylesheet.
@@ -25,56 +35,55 @@ function upa25_enqueue_frontend_styles(): void {
 add_action( 'wp_enqueue_scripts', 'upa25_enqueue_frontend_styles' );
 
 /**
- * Register CSS handles for every block style emitted during the build step.
- *
- * WordPress uses these handles when register_block_style() references them,
- * and wp_enqueue_block_style() adds the base styles to matching blocks.
+ * Register block-editor stylesheet support.
  */
-function upa25_register_block_style_assets(): void {
+function upa25_register_editor_styles(): void {
+	add_editor_style( 'build/editor.css' );
+}
+add_action( 'after_setup_theme', 'upa25_register_editor_styles' );
+
+/*
+|--------------------------------------------------------------------------
+| Block Assets Auto-Registration
+|--------------------------------------------------------------------------
+|
+| Scans build/blocks/{namespace}/{block}/ for:
+| - style.css — Base block styles (auto-enqueued via wp_enqueue_block_style)
+| - styles/*.css — Style variations (registered, enqueued when is-style-* detected)
+| - block.json — Custom block registration (calls register_block_type)
+|
+*/
+
+/**
+ * Register and auto-enqueue block assets from build/blocks/.
+ */
+function upa25_register_block_assets(): void {
 	$blocks_dir = get_theme_file_path( 'build/blocks' );
 	if ( ! is_dir( $blocks_dir ) ) {
 		return;
 	}
 
-	foreach ( glob( $blocks_dir . '/*', GLOB_ONLYDIR ) as $block_path ) {
-		$block_slug = basename( $block_path );
-		$block_name = preg_replace( '/-/', '/', $block_slug, 1 );
+	// Scan for namespace directories (core, woocommerce, upa25, etc.)
+	foreach ( glob( $blocks_dir . '/*', GLOB_ONLYDIR ) as $namespace_path ) {
+		$namespace = basename( $namespace_path );
 
-		// Register base style (style.css) if it exists
-		$base_style_file = $block_path . '/style.css';
-		if ( file_exists( $base_style_file ) ) {
-			$handle   = "upa25-block-style-{$block_slug}-base";
-			$relative = "build/blocks/{$block_slug}/style.css";
-			$asset    = upa25_read_asset_file( $base_style_file );
+		// Scan for block directories within namespace
+		foreach ( glob( $namespace_path . '/*', GLOB_ONLYDIR ) as $block_path ) {
+			$block_slug = basename( $block_path );
+			$block_name = "{$namespace}/{$block_slug}";
 
-			wp_register_style(
-				$handle,
-				get_theme_file_uri( $relative ),
-				$asset['dependencies'],
-				$asset['version']
-			);
+			// Register custom block if block.json exists
+			$block_json = $block_path . '/block.json';
+			if ( file_exists( $block_json ) ) {
+				register_block_type( $block_path );
+			}
 
-			// Auto-enqueue base styles for the block
-			wp_enqueue_block_style(
-				$block_name,
-				array(
-					'handle' => $handle,
-				)
-			);
-		}
-
-		// Register style variations from styles/ subdirectory
-		$styles_dir = $block_path . '/styles';
-		if ( is_dir( $styles_dir ) ) {
-			foreach ( glob( $styles_dir . '/*.css' ) as $css_file ) {
-				if ( str_ends_with( $css_file, '-rtl.css' ) ) {
-					continue;
-				}
-
-				$style_slug = basename( $css_file, '.css' );
-				$handle     = "upa25-block-style-{$block_slug}-{$style_slug}";
-				$relative   = "build/blocks/{$block_slug}/styles/{$style_slug}.css";
-				$asset      = upa25_read_asset_file( $css_file );
+			// Register base style (style.css) if it exists
+			$base_style_file = $block_path . '/style.css';
+			if ( file_exists( $base_style_file ) ) {
+				$handle   = upa25_build_block_style_handle( $block_name, 'base' );
+				$relative = "build/blocks/{$namespace}/{$block_slug}/style.css";
+				$asset    = upa25_read_asset_file( $base_style_file );
 
 				wp_register_style(
 					$handle,
@@ -82,134 +91,261 @@ function upa25_register_block_style_assets(): void {
 					$asset['dependencies'],
 					$asset['version']
 				);
-			}
-		}
-	}
-}
-add_action( 'init', 'upa25_register_block_style_assets', 9 );
 
-/**
- * Always load component assets inside the block editor / site editor.
- */
-function upa25_enqueue_component_assets_in_editor(): void {
-	static $did_enqueue = false;
-
-	if ( $did_enqueue || ! is_admin() ) {
-		return;
-	}
-
-	$did_enqueue = true;
-
-	// Enqueue all components from build/includes/
-	upa25_enqueue_all_includes_assets();
-
-	// Enqueue all block style variation handles for editor preview
-	upa25_enqueue_all_block_style_handles();
-}
-add_action( 'enqueue_block_editor_assets', 'upa25_enqueue_component_assets_in_editor', 5 );
-add_action( 'enqueue_block_assets', 'upa25_enqueue_component_assets_in_editor', 5 );
-
-/**
- * Conditionally enqueue component assets on the frontend as blocks render.
- *
- * @param string $block_content Rendered markup.
- * @param array  $block         Block metadata.
- *
- * @return string
- */
-function upa25_enqueue_dynamic_component_assets( string $block_content, array $block ): string {
-	if ( is_admin() ) {
-		return $block_content;
-	}
-
-	upa25_maybe_enqueue_include_assets( $block );
-	upa25_maybe_enqueue_block_style_variations( $block );
-
-	return $block_content;
-}
-add_filter( 'render_block', 'upa25_enqueue_dynamic_component_assets', 10, 2 );
-
-/**
- * Load component assets from build/includes/ when blocks reference them.
- *
- * Components can be referenced via:
- * - Template part slug (core/template-part)
- * - CSS class (is-style-*, hxiGradient, etc.)
- *
- * @param array $block The current block data.
- */
-function upa25_maybe_enqueue_include_assets( array $block ): void {
-	$components = upa25_get_includes_component_map();
-	if ( empty( $components ) ) {
-		return;
-	}
-
-	$slugs_to_enqueue = array();
-
-	// Check template-part slug
-	if ( 'core/template-part' === ( $block['blockName'] ?? '' ) && ! empty( $block['attrs']['slug'] ) ) {
-		$slug = sanitize_title( $block['attrs']['slug'] );
-		// Map template-part slug to component (e.g., 'header' -> 'parts-header')
-		$potential_slugs = array(
-			$slug,
-			'parts-' . $slug,
-		);
-		foreach ( $potential_slugs as $potential_slug ) {
-			if ( isset( $components[ $potential_slug ] ) ) {
-				$slugs_to_enqueue[] = $potential_slug;
-			}
-		}
-	}
-
-	// Check className for style variations and custom classes
-	if ( ! empty( $block['attrs']['className'] ) ) {
-		$class_name = $block['attrs']['className'];
-
-		// Match is-style-* classes
-		if ( preg_match_all( '/\bis-style-([a-z0-9\-]+)\b/', $class_name, $matches ) ) {
-			foreach ( $matches[1] as $style_slug ) {
-				$potential_slugs = array(
-					$style_slug,
-					'parts-' . $style_slug,
+				// Auto-enqueue base styles when block is used
+				wp_enqueue_block_style(
+					$block_name,
+					array( 'handle' => $handle )
 				);
+			}
 
-				foreach ( $potential_slugs as $potential_slug ) {
-					if ( isset( $components[ $potential_slug ] ) ) {
-						$slugs_to_enqueue[] = $potential_slug;
+			// Register style variations from styles/ subdirectory
+			$styles_dir = $block_path . '/styles';
+			if ( is_dir( $styles_dir ) ) {
+				foreach ( glob( $styles_dir . '/*.css' ) as $css_file ) {
+					if ( str_ends_with( $css_file, '-rtl.css' ) ) {
+						continue;
+					}
+
+					$style_slug = basename( $css_file, '.css' );
+					$handle     = upa25_build_block_style_handle( $block_name, $style_slug );
+					$relative   = "build/blocks/{$namespace}/{$block_slug}/styles/{$style_slug}.css";
+					$asset      = upa25_read_asset_file( $css_file );
+
+					wp_register_style(
+						$handle,
+						get_theme_file_uri( $relative ),
+						$asset['dependencies'],
+						$asset['version']
+					);
+				}
+			}
+		}
+	}
+}
+add_action( 'init', 'upa25_register_block_assets', 9 );
+
+/**
+ * Auto-load PHP files from build/blocks/ (e.g., block controls, filters).
+ */
+function upa25_autoload_block_php_files(): void {
+	$blocks_dir = get_theme_file_path( 'build/blocks' );
+	if ( ! is_dir( $blocks_dir ) ) {
+		return;
+	}
+
+	// Recursively find all PHP files in build/blocks/
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $blocks_dir, RecursiveDirectoryIterator::SKIP_DOTS )
+	);
+
+	foreach ( $iterator as $file ) {
+		if ( $file->isFile() && 'php' === $file->getExtension() ) {
+			require_once $file->getPathname();
+		}
+	}
+}
+add_action( 'after_setup_theme', 'upa25_autoload_block_php_files', 5 );
+
+/*
+|--------------------------------------------------------------------------
+| Includes / Component Assets
+|--------------------------------------------------------------------------
+|
+| Scans build/includes/{category}/{name}/ for component assets:
+| - plugins/{slug}/ — Loads globally when plugin is active
+| - {category}/{name}/ — Loads when CSS class matches component name
+|
+*/
+
+/**
+ * Build the includes component map with category awareness.
+ *
+ * @return array<string, array{category: string, name: string, path: string}>
+ */
+function upa25_get_includes_component_map(): array {
+	static $cache = null;
+	if ( null !== $cache ) {
+		return $cache;
+	}
+
+	$dir = get_theme_file_path( 'build/includes' );
+	if ( ! is_dir( $dir ) ) {
+		$cache = array();
+		return $cache;
+	}
+
+	$components = array();
+
+	// Scan category directories
+	foreach ( glob( $dir . '/*', GLOB_ONLYDIR ) as $category_path ) {
+		$category = basename( $category_path );
+
+		// Scan component directories within category
+		foreach ( glob( $category_path . '/*', GLOB_ONLYDIR ) as $component_path ) {
+			$name = basename( $component_path );
+
+			// Check if component has at least one asset file
+			$has_assets = ! empty( glob( $component_path . '/*.{css,js}', GLOB_BRACE ) );
+			if ( $has_assets ) {
+				$key                = "{$category}/{$name}";
+				$components[ $key ] = array(
+					'category' => $category,
+					'name'     => $name,
+					'path'     => $component_path,
+				);
+			}
+		}
+	}
+
+	$cache = $components;
+	return $components;
+}
+
+/**
+ * Check if a plugin is active by slug.
+ *
+ * Tries common plugin file patterns.
+ *
+ * @param string $slug Plugin slug.
+ * @return bool
+ */
+function upa25_is_plugin_active( string $slug ): bool {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	// Try common patterns
+	$patterns = array(
+		"{$slug}/{$slug}.php",
+		"{$slug}/plugin.php",
+		"{$slug}/index.php",
+		"{$slug}.php",
+	);
+
+	foreach ( $patterns as $pattern ) {
+		if ( is_plugin_active( $pattern ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Enqueue plugin component assets globally when plugin is active.
+ */
+function upa25_enqueue_plugin_includes(): void {
+	$components = upa25_get_includes_component_map();
+
+	foreach ( $components as $key => $component ) {
+		if ( 'plugins' !== $component['category'] ) {
+			continue;
+		}
+
+		// Check if plugin is active
+		if ( upa25_is_plugin_active( $component['name'] ) ) {
+			upa25_enqueue_include_component( $key );
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'upa25_enqueue_plugin_includes' );
+
+/**
+ * Enqueue all include assets in the editor for preview consistency.
+ */
+function upa25_enqueue_includes_in_editor(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$components = upa25_get_includes_component_map();
+	foreach ( $components as $key => $component ) {
+		upa25_enqueue_include_component( $key );
+	}
+}
+add_action( 'enqueue_block_assets', 'upa25_enqueue_includes_in_editor' );
+
+/**
+ * Enqueue all block style variation handles in the editor.
+ */
+function upa25_enqueue_block_styles_in_editor(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$blocks_dir = get_theme_file_path( 'build/blocks' );
+	if ( ! is_dir( $blocks_dir ) ) {
+		return;
+	}
+
+	foreach ( glob( $blocks_dir . '/*', GLOB_ONLYDIR ) as $namespace_path ) {
+		$namespace = basename( $namespace_path );
+
+		foreach ( glob( $namespace_path . '/*', GLOB_ONLYDIR ) as $block_path ) {
+			$block_slug = basename( $block_path );
+			$block_name = "{$namespace}/{$block_slug}";
+
+			// Enqueue base style if registered
+			$base_handle = upa25_build_block_style_handle( $block_name, 'base' );
+			if ( wp_style_is( $base_handle, 'registered' ) ) {
+				wp_enqueue_style( $base_handle );
+			}
+
+			// Enqueue all style variations
+			$styles_dir = $block_path . '/styles';
+			if ( is_dir( $styles_dir ) ) {
+				foreach ( glob( $styles_dir . '/*.css' ) as $css_file ) {
+					if ( str_ends_with( $css_file, '-rtl.css' ) ) {
+						continue;
+					}
+
+					$style_slug = basename( $css_file, '.css' );
+					$handle     = upa25_build_block_style_handle( $block_name, $style_slug );
+
+					if ( wp_style_is( $handle, 'registered' ) ) {
+						wp_enqueue_style( $handle );
 					}
 				}
 			}
 		}
-
-	}
-	/**
-	 * Filters the include component slugs detected for the current block.
-	 *
-	 * Components can hook into this filter to declare their own detection
-	 * logic without modifying the generic enqueue helpers.
-	 *
-	 * @param array $slugs_to_enqueue Slugs detected so far.
-	 * @param array $block            The current block metadata.
-	 * @param array $components       Available include component slugs.
-	 */
-	$slugs_to_enqueue = apply_filters(
-		'upa25_include_component_slugs',
-		$slugs_to_enqueue,
-		$block,
-		$components
-	);
-
-	// Enqueue unique components
-	$slugs_to_enqueue = array_unique( $slugs_to_enqueue );
-	foreach ( $slugs_to_enqueue as $slug ) {
-		upa25_enqueue_include_component( $slug );
 	}
 }
+add_action( 'enqueue_block_assets', 'upa25_enqueue_block_styles_in_editor' );
+
+/*
+|--------------------------------------------------------------------------
+| Dynamic Asset Enqueueing (Frontend)
+|--------------------------------------------------------------------------
+|
+| On render_block, detect which assets to enqueue based on:
+| - Block className (for style variations and includes)
+|
+*/
 
 /**
- * Ensure block style variation handles load whenever a matching class appears.
+ * Conditionally enqueue assets as blocks render on the frontend.
  *
- * @param array $block Current block metadata.
+ * @param string $block_content Rendered markup.
+ * @param array  $block         Block metadata.
+ * @return string
+ */
+function upa25_enqueue_dynamic_assets( string $block_content, array $block ): string {
+	if ( is_admin() ) {
+		return $block_content;
+	}
+
+	upa25_maybe_enqueue_block_style_variations( $block );
+	upa25_maybe_enqueue_include_assets( $block );
+
+	return $block_content;
+}
+add_filter( 'render_block', 'upa25_enqueue_dynamic_assets', 10, 2 );
+
+/**
+ * Enqueue block style variation CSS when is-style-* class detected.
+ *
+ * @param array $block Block metadata.
  */
 function upa25_maybe_enqueue_block_style_variations( array $block ): void {
 	if ( empty( $block['blockName'] ) || empty( $block['attrs']['className'] ) ) {
@@ -229,17 +365,127 @@ function upa25_maybe_enqueue_block_style_variations( array $block ): void {
 }
 
 /**
- * Register block-editor stylesheet support.
+ * Enqueue include component assets based on block className.
+ *
+ * Detects components by matching className against component names.
+ * Plugins are handled separately via upa25_enqueue_plugin_includes().
+ *
+ * @param array $block Block metadata.
  */
-add_action(
-	'after_setup_theme',
-	function () {
-		add_editor_style( 'build/editor.css' );
+function upa25_maybe_enqueue_include_assets( array $block ): void {
+	$components = upa25_get_includes_component_map();
+	if ( empty( $components ) ) {
+		return;
 	}
-);
+
+	$class_name = $block['attrs']['className'] ?? '';
+	if ( empty( $class_name ) ) {
+		return;
+	}
+
+	$slugs_to_enqueue = array();
+
+	foreach ( $components as $key => $component ) {
+		// Skip plugins (handled globally)
+		if ( 'plugins' === $component['category'] ) {
+			continue;
+		}
+
+		$name = $component['name'];
+
+		// Match exact class name or is-style-{name}
+		$patterns = array(
+			'/\b' . preg_quote( $name, '/' ) . '\b/',
+			'/\bis-style-' . preg_quote( $name, '/' ) . '\b/',
+		);
+
+		foreach ( $patterns as $pattern ) {
+			if ( preg_match( $pattern, $class_name ) ) {
+				$slugs_to_enqueue[] = $key;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filters the include component keys detected for the current block.
+	 *
+	 * @param array $slugs_to_enqueue Component keys detected so far.
+	 * @param array $block            The current block metadata.
+	 * @param array $components       Available include components.
+	 */
+	$slugs_to_enqueue = apply_filters(
+		'upa25_include_component_slugs',
+		$slugs_to_enqueue,
+		$block,
+		$components
+	);
+
+	$slugs_to_enqueue = array_unique( $slugs_to_enqueue );
+	foreach ( $slugs_to_enqueue as $key ) {
+		upa25_enqueue_include_component( $key );
+	}
+}
 
 /**
- * Enqueue a style relative to the theme root and include dependencies.
+ * Enqueue a single include component's CSS/JS.
+ *
+ * @param string $key Component key (category/name format).
+ */
+function upa25_enqueue_include_component( string $key ): void {
+	static $enqueued = array();
+
+	if ( isset( $enqueued[ $key ] ) ) {
+		return;
+	}
+
+	$components = upa25_get_includes_component_map();
+	if ( ! isset( $components[ $key ] ) ) {
+		return;
+	}
+
+	$enqueued[ $key ] = true;
+	$component        = $components[ $key ];
+	$component_dir    = $component['path'];
+	$relative_base    = "build/includes/{$component['category']}/{$component['name']}";
+
+	// Enqueue all CSS files
+	foreach ( glob( $component_dir . '/*.css' ) as $css_file ) {
+		if ( str_ends_with( $css_file, '-rtl.css' ) ) {
+			continue;
+		}
+
+		$filename = basename( $css_file, '.css' );
+		$handle   = "upa25-include-{$component['category']}-{$component['name']}-{$filename}";
+		$relative = "{$relative_base}/{$filename}.css";
+
+		upa25_enqueue_style_asset( $handle, $relative, ! is_admin() );
+	}
+
+	// Enqueue view.js on frontend, editor.js in editor
+	$view_js = $component_dir . '/view.js';
+	if ( file_exists( $view_js ) && ! is_admin() ) {
+		$handle   = "upa25-include-{$component['category']}-{$component['name']}-view";
+		$relative = "{$relative_base}/view.js";
+		upa25_enqueue_script_asset( $handle, $relative );
+	}
+
+	$editor_js = $component_dir . '/editor.js';
+	if ( file_exists( $editor_js ) && is_admin() ) {
+		$handle   = "upa25-include-{$component['category']}-{$component['name']}-editor";
+		$relative = "{$relative_base}/editor.js";
+		upa25_enqueue_script_asset( $handle, $relative, false );
+	}
+}
+
+/*
+|--------------------------------------------------------------------------
+| Asset Helper Functions
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Enqueue a style relative to the theme root.
  *
  * @param string $handle        Unique style handle.
  * @param string $relative_path Path relative to the theme directory.
@@ -271,7 +517,7 @@ function upa25_enqueue_style_asset( string $handle, string $relative_path, bool 
  *
  * @param string $handle        Script handle.
  * @param string $relative_path Relative path.
- * @param bool   $defer         Whether to defer execution on the frontend.
+ * @param bool   $defer         Whether to defer execution.
  */
 function upa25_enqueue_script_asset( string $handle, string $relative_path, bool $defer = true ): void {
 	$file_path = get_theme_file_path( $relative_path );
@@ -298,8 +544,7 @@ function upa25_enqueue_script_asset( string $handle, string $relative_path, bool
  * Retrieve dependency metadata from the generated asset file.
  *
  * @param string $file_path Absolute file path.
- *
- * @return array
+ * @return array{dependencies: array, version: string}
  */
 function upa25_read_asset_file( string $file_path ): array {
 	$asset_path = preg_replace( '/\.(css|js)$/', '.asset.php', $file_path );
@@ -308,173 +553,22 @@ function upa25_read_asset_file( string $file_path ): array {
 		if ( is_array( $data ) ) {
 			return array(
 				'dependencies' => $data['dependencies'] ?? array(),
-				'version'      => $data['version'] ?? filemtime( $file_path ),
+				'version'      => $data['version'] ?? (string) filemtime( $file_path ),
 			);
 		}
 	}
 
 	return array(
 		'dependencies' => array(),
-		'version'      => filemtime( $file_path ),
+		'version'      => (string) filemtime( $file_path ),
 	);
-}
-
-/**
- * Cache available component slugs from build/includes/ to avoid repeated filesystem scans.
- *
- * @return array<string,bool>
- */
-function upa25_get_includes_component_map(): array {
-	static $cache = null;
-	if ( null !== $cache ) {
-		return $cache;
-	}
-
-	$dir = get_theme_file_path( 'build/includes' );
-	if ( ! is_dir( $dir ) ) {
-		$cache = array();
-		return $cache;
-	}
-
-	$components = array();
-	foreach ( glob( $dir . '/*', GLOB_ONLYDIR ) as $component_dir ) {
-		$slug = basename( $component_dir );
-		// Check if component has at least one asset file
-		$has_assets = ! empty( glob( $component_dir . '/*.{css,js}', GLOB_BRACE ) );
-		if ( $has_assets ) {
-			$components[ $slug ] = true;
-		}
-	}
-
-	$cache = $components;
-	return $components;
-}
-
-/**
- * Enqueue all assets for all components in build/includes/.
- * Used in the editor to ensure all components preview correctly.
- */
-function upa25_enqueue_all_includes_assets(): void {
-	$dir = get_theme_file_path( 'build/includes' );
-	if ( ! is_dir( $dir ) ) {
-		return;
-	}
-
-	foreach ( glob( $dir . '/*', GLOB_ONLYDIR ) as $component_dir ) {
-		$slug = basename( $component_dir );
-		upa25_enqueue_include_component( $slug );
-	}
-}
-
-/**
- * Enqueue a single component's CSS/JS bundle from build/includes/.
- *
- * @param string $slug Component slug (directory name in build/includes/).
- */
-function upa25_enqueue_include_component( string $slug ): void {
-	static $enqueued = array();
-
-	// Prevent duplicate enqueueing
-	if ( isset( $enqueued[ $slug ] ) ) {
-		return;
-	}
-
-	$component_dir = get_theme_file_path( "build/includes/{$slug}" );
-	if ( ! is_dir( $component_dir ) ) {
-		return;
-	}
-
-	$enqueued[ $slug ] = true;
-
-	// Enqueue all CSS files in the component directory (both frontend and editor)
-	foreach ( glob( $component_dir . '/*.css' ) as $css_file ) {
-		if ( str_ends_with( $css_file, '-rtl.css' ) ) {
-			continue;
-		}
-
-		$filename = basename( $css_file, '.css' );
-		$handle   = "upa25-include-{$slug}-{$filename}";
-		$relative = "build/includes/{$slug}/{$filename}.css";
-
-		// Enqueue CSS always. Async flag only affects frontend lazy-loading (! is_admin()).
-		upa25_enqueue_style_asset( $handle, $relative, ! is_admin() );
-	}
-
-	/**
-	 * Allow components to opt-out of automatic JS enqueueing.
-	 *
-	 * Returning false lets a component handle its JS manually (e.g. editor-only
-	 * scripts) while still benefiting from the shared CSS loader above.
-	 *
-	 * @param bool   $should_enqueue_js Whether JS should be enqueued for the slug.
-	 * @param string $slug              Component slug.
-	 * @param string $component_dir     Absolute path to the component assets.
-	 */
-	$should_enqueue_js = apply_filters(
-		'upa25_should_enqueue_include_component_js',
-		true,
-		$slug,
-		$component_dir
-	);
-
-	if ( ! $should_enqueue_js ) {
-		return;
-	}
-
-	// Enqueue all JS files in the component directory
-	foreach ( glob( $component_dir . '/*.js' ) as $js_file ) {
-		$filename = basename( $js_file, '.js' );
-		$handle   = "upa25-include-{$slug}-{$filename}";
-		$relative = "build/includes/{$slug}/{$filename}.js";
-
-		upa25_enqueue_script_asset( $handle, $relative );
-	}
-}
-
-/**
- * Enqueue every registered block-style handle inside the editor so previews
- * always match the frontend output.
- */
-function upa25_enqueue_all_block_style_handles(): void {
-	$blocks_dir = get_theme_file_path( 'build/blocks' );
-	if ( ! is_dir( $blocks_dir ) ) {
-		return;
-	}
-
-	foreach ( glob( $blocks_dir . '/*', GLOB_ONLYDIR ) as $block_path ) {
-		$block_slug = basename( $block_path );
-
-		// Enqueue base style if registered
-		$base_handle = "upa25-block-style-{$block_slug}-base";
-		if ( wp_style_is( $base_handle, 'registered' ) ) {
-			wp_enqueue_style( $base_handle );
-		}
-
-		// Enqueue all style variations
-		$styles_dir = $block_path . '/styles';
-		if ( is_dir( $styles_dir ) ) {
-			foreach ( glob( $styles_dir . '/*.css' ) as $css_file ) {
-				if ( str_ends_with( $css_file, '-rtl.css' ) ) {
-					continue;
-				}
-
-				$style_slug = basename( $css_file, '.css' );
-				$handle     = "upa25-block-style-{$block_slug}-{$style_slug}";
-
-				if ( wp_style_is( $handle, 'registered' ) ) {
-					wp_enqueue_style( $handle );
-				}
-			}
-		}
-	}
 }
 
 /**
  * Build a consistent handle for block style variations.
  *
- * @param string $block_name Block name such as core/paragraph.
- * @param string $style_slug Style slug (e.g. number).
- *
+ * @param string $block_name Block name (e.g., core/paragraph).
+ * @param string $style_slug Style slug (e.g., indicator).
  * @return string
  */
 function upa25_build_block_style_handle( string $block_name, string $style_slug ): string {

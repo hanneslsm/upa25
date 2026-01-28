@@ -220,3 +220,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		}
 	}
 } );
+
+
+
+console.info('header-fixed/view.js loaded');

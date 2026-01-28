@@ -47,7 +47,6 @@ const PATHS = {
 const ENTRY_PATTERNS = {
 	scss: [ 'scss/**/_index.scss' ],
 	includes: [ 'includes/**/*.{js,ts,scss}' ],
-	parts: [ 'parts/**/*.{js,ts,scss}' ],
 	blocks: [
 		'blocks/**/style.scss',
 		'blocks/**/editor.scss',
@@ -163,11 +162,6 @@ class StripStylePrefixPlugin {
 								regex: /^includes\/(.+)\/style-style(.*)$/,
 								replace: ( all, includePath, rest ) =>
 									`includes/${ includePath }/style${ rest }`,
-							},
-							{
-								regex: /^parts\/(.+)\/style-style(.*)$/,
-								replace: ( all, partPath, rest ) =>
-									`parts/${ partPath }/style${ rest }`,
 							},
 						];
 
@@ -298,7 +292,6 @@ function makeAdditionalEntries() {
 		...makeEntries( [
 			...ENTRY_PATTERNS.scss,
 			...ENTRY_PATTERNS.includes,
-			...ENTRY_PATTERNS.parts,
 			...ENTRY_PATTERNS.blocks,
 		] ),
 	};
@@ -314,12 +307,6 @@ const COPY_PATTERNS_PHP = [
 		from: '**/*.php',
 		context: 'src/includes',
 		to: 'includes/[path][name][ext]',
-		noErrorOnMissing: true,
-	},
-	{
-		from: '**/*.php',
-		context: 'src/parts',
-		to: 'parts/[path][name][ext]',
 		noErrorOnMissing: true,
 	},
 	{

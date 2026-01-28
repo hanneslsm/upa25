@@ -2,7 +2,7 @@
  * ProLooks webpack configuration.
  *
  * @package ProLooks
- * @version 4.0.1
+ * @version 4.1.0
  * @docs docs/webpack.md
  */
 
@@ -61,6 +61,26 @@ const PATHS = {
   themeStyle: path.resolve(__dirname, 'style.css'),
 };
 
+// Entry file patterns used to auto-discover bundles.
+const ENTRY_PATTERNS = {
+  includes: ['includes/**/*.{js,ts,scss}'],
+  blocks: [
+    'blocks/**/style.scss',
+    'blocks/**/editor.scss',
+    'blocks/**/view.js',
+    'blocks/**/editor.js',
+    'blocks/**/styles/*.scss',
+  ],
+};
+
+// Explicit global entry points that are always built.
+const GLOBAL_ENTRIES = {
+  'theme/global-styles': PATHS.cssGlobal,
+  'theme/screen': PATHS.cssScreen,
+  'theme/editor': PATHS.cssEditor,
+  'theme/global': PATHS.jsGlobal,
+};
+
 // Helper utilities for repeated filesystem checks
 const isDir = (p) => fs.existsSync(p) && fs.statSync(p).isDirectory();
 
@@ -111,7 +131,9 @@ class StripStylePrefixPlugin {
   }
 }
 
-// Glob-based entry builder for includes and SCSS bundles
+// Build entries from glob patterns with guardrails:
+// - Skip custom blocks (handled by wp-scripts).
+// - Avoid duplicate CSS when a JS/TS entry of the same base name exists.
 function makeEntries(patterns, baseDir = 'src') {
   const files = fg.sync(patterns, { cwd: baseDir });
 
@@ -143,11 +165,6 @@ function makeEntries(patterns, baseDir = 'src') {
       const blockName = relPath.split('/')[1];
       if (isBlockCustom(blockName)) {
         return entries; // Skip files in custom blocks (wp-scripts handles them)
-      }
-      // Skip index.js and view.js in core blocks (wp-scripts handles these)
-      const fileName = path.basename(relPath);
-      if (fileName === 'index.js' || fileName === 'view.js') {
-        return entries;
       }
     }
 
@@ -207,6 +224,35 @@ const imageTransforms = {
   },
 };
 
+// Files copied into build/ as-is (or transformed).
+const COPY_PATTERNS = {
+  php: [
+    { from: '**/*.php', context: 'src/includes', to: 'includes/[path][name][ext]', noErrorOnMissing: true },
+    { from: '**/*.php', context: 'src/blocks', to: 'blocks/[path][name][ext]', noErrorOnMissing: true },
+    { from: '**/block.json', context: 'src/blocks', to: 'blocks/[path][name][ext]', noErrorOnMissing: true },
+  ],
+  images: [
+    { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.raster },
+    { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'webp/[path][name].webp', noErrorOnMissing: true, transform: imageTransforms.webp },
+    { from: '**/*.svg', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
+    { from: '**/*.svg', context: PATHS.svgSrc, to: 'svg/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
+  ],
+};
+
+// Keep the theme version in style.css in sync with package.json.
+function updateThemeVersionPlugin() {
+  return {
+    apply: (compiler) => {
+      compiler.hooks.afterEmit.tap('UpdateThemeVersionPlugin', () => {
+        if (!fs.existsSync(PATHS.themeStyle)) return;
+        let content = fs.readFileSync(PATHS.themeStyle, 'utf-8');
+        content = content.replace(/(Version:\s*)([^\r\n]+)/, `$1${packageJson.version}`);
+        fs.writeFileSync(PATHS.themeStyle, content, 'utf-8');
+      });
+    },
+  };
+}
+
 // Base plugin stack shared by dev + prod builds
 function commonPlugins() {
   return [
@@ -216,36 +262,18 @@ function commonPlugins() {
     }),
     new StripStylePrefixPlugin(),
     new CopyWebpackPlugin({
-      patterns: [
-        { from: '**/*.php', context: 'src/includes', to: 'includes/[path][name][ext]', noErrorOnMissing: true },
-        {
-          from: '**/*.php',
-          context: 'src/blocks',
-          to: 'blocks/[path][name][ext]',
-          noErrorOnMissing: true,
-          globOptions: { ignore: ['**/block.json', '**/render.php'] },
-        },
-      ],
+      patterns: COPY_PATTERNS.php,
     }),
-    {
-      apply: (compiler) => {
-        compiler.hooks.afterEmit.tap('UpdateThemeVersionPlugin', () => {
-          if (!fs.existsSync(PATHS.themeStyle)) return;
-          let content = fs.readFileSync(PATHS.themeStyle, 'utf-8');
-          content = content.replace(/(Version:\s*)([^\r\n]+)/, `$1${packageJson.version}`);
-          fs.writeFileSync(PATHS.themeStyle, content, 'utf-8');
-        });
-      },
-    },
+    updateThemeVersionPlugin(),
   ];
 }
 
 // Enable BrowserSync when a proxy is provided
-function devPlugins({ proxy, host, port }) {
-  if (!proxy || !BrowserSyncPlugin) return [];
+function devPlugins() {
+  if (!CONFIG.BS_PROXY || !BrowserSyncPlugin) return [];
   return [
     new BrowserSyncPlugin(
-      { host, port, proxy, files: ['theme.json','**/*.php', 'build/**/*.css', 'build/**/*.js'], open: false, injectChanges: true },
+      { host: CONFIG.BS_HOST, port: CONFIG.BS_PORT, proxy: CONFIG.BS_PROXY, files: ['theme.json','**/*.php', 'build/**/*.css', 'build/**/*.js'], open: false, injectChanges: true },
       { reload: false }
     ),
   ];
@@ -256,17 +284,12 @@ function prodPlugins() {
   if (!CONFIG.COPY_IMAGES_IN_PROD) return [];
   return [
     new CopyWebpackPlugin({
-      patterns: [
-        { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.raster },
-        { from: '**/*.{jpg,jpeg,png,avif,webp}', context: PATHS.imagesSrc, to: 'webp/[path][name].webp', noErrorOnMissing: true, transform: imageTransforms.webp },
-        { from: '**/*.svg', context: PATHS.imagesSrc, to: 'images/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
-        { from: '**/*.svg', context: PATHS.svgSrc, to: 'svg/[path][name][ext]', noErrorOnMissing: true, transform: imageTransforms.svg },
-      ],
+      patterns: COPY_PATTERNS.images,
     }),
   ];
 }
 
-// Check if any custom blocks exist (directories with block.json)
+// Check if any custom blocks exist (directories with block.json).
 function hasCustomBlocks() {
   if (!isDir(PATHS.blocksJs)) return false;
   return fs.readdirSync(PATHS.blocksJs).some((name) => {
@@ -279,15 +302,10 @@ function hasCustomBlocks() {
 // Custom blocks are handled by wp-scripts default entry() function.
 function makeAdditionalEntries() {
   return {
-    'theme/global-styles': PATHS.cssGlobal,
-    'theme/screen': PATHS.cssScreen,
-    'theme/editor': PATHS.cssEditor,
-    'theme/global': PATHS.jsGlobal,
+    ...GLOBAL_ENTRIES,
     ...makeEntries([
-      'includes/**/*.{js,ts,scss}',
-      'blocks/**/style.scss',
-      'blocks/**/styles/*.scss',
-      'blocks/**/*.js',
+      ...ENTRY_PATTERNS.includes,
+      ...ENTRY_PATTERNS.blocks,
     ]),
   };
 }
@@ -328,11 +346,7 @@ module.exports = () => {
     },
     plugins: [
       ...commonPlugins(),
-      ...(isProd ? prodPlugins() : devPlugins({
-        proxy: CONFIG.BS_PROXY,
-        host: CONFIG.BS_HOST,
-        port: CONFIG.BS_PORT,
-      })),
+      ...(isProd ? prodPlugins() : devPlugins()),
     ],
     performance: { hints: false },
     stats: {

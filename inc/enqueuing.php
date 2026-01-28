@@ -10,7 +10,7 @@
  * Enqueue the shared theme styles for both the editor and the frontend.
  */
 function upa25_enqueue_scripts(): void {
-	upa25_enqueue_style_asset( 'upa25-global-style', 'build/theme/global-styles.css', ! is_admin() );
+	upa25_enqueue_style_asset( 'upa25-global-style', 'build/global-styles.css', ! is_admin() );
 
 	// global.js is intentionally empty so we skip enqueuing it.
 }
@@ -20,7 +20,7 @@ add_action( 'enqueue_block_assets', 'upa25_enqueue_scripts' );
  * Enqueue the public-facing stylesheet.
  */
 function upa25_enqueue_frontend_styles(): void {
-	upa25_enqueue_style_asset( 'upa25-screen-style', 'build/theme/screen.css' );
+	upa25_enqueue_style_asset( 'upa25-screen-style', 'build/screen.css' );
 }
 add_action( 'wp_enqueue_scripts', 'upa25_enqueue_frontend_styles' );
 
@@ -234,7 +234,7 @@ function upa25_maybe_enqueue_block_style_variations( array $block ): void {
 add_action(
 	'after_setup_theme',
 	function () {
-		add_editor_style( 'build/theme/editor.css' );
+		add_editor_style( 'build/editor.css' );
 	}
 );
 

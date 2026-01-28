@@ -3,8 +3,8 @@
 	"version": "0.2.0",
 	"main": "index.js",
 	"scripts": {
-		"start": "PROLOOKS_BS_PROXY=http://uniquepoleart.local wp-scripts start --config webpack.config.js",
-		"build": "wp-scripts build --config webpack.config.js --env production",
+		"start": "PROLOOKS_BS_PROXY=http://uniquepoleart.local wp-scripts start --config webpack.dev.js",
+		"build": "wp-scripts build --config webpack.prod.js",
 		"lint:css": "wp-scripts lint-style 'src/scss/*'",
 		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",
 		"lint:js": "wp-scripts lint-js 'src/js/*'",
@@ -19,7 +19,7 @@
 		"!.editorconfig",
 		"!.gitignore",
 		"!package.json",
-		"!webpack.config.js"
+		"!webpack.*.js"
 	],
 	"author": "hanneslsm",
 	"license": "GPL-2.0",

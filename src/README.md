@@ -210,35 +210,79 @@ imported by an entry, it will not be bundled.
 
 Global entries:
 
-- `src/scss/global.scss`
-- `src/scss/screen.scss`
-- `src/scss/editor.scss`
-- `src/js/global.js`
+- `src/scss/global.scss` → `build/global-styles.css`
+- `src/scss/screen.scss` → `build/screen.css`
+- `src/scss/editor.scss` → `build/editor.css`
 
-Block entries:
+Block entries (any namespace):
 
-- `src/blocks/**/style.scss`
-- `src/blocks/**/editor.scss`
-- `src/blocks/**/view.js`
-- `src/blocks/**/editor.js`
-- `src/blocks/**/styles/*.scss` (style variations)
+- `src/blocks/**/style.scss` → `build/blocks/{namespace}/{block}/style.css`
+- `src/blocks/**/editor.scss` → `build/blocks/{namespace}/{block}/editor.scss`
+- `src/blocks/**/view.js` → `build/blocks/{namespace}/{block}/view.js`
+- `src/blocks/**/editor.js` → `build/blocks/{namespace}/{block}/editor.js`
+- `src/blocks/**/styles/*.scss` → `build/blocks/{namespace}/{block}/styles/{variation}.css`
+- `src/blocks/**/block.json` → Auto-registered custom blocks
+- `src/blocks/**/*.php` → Copied to `build/blocks/...` and auto-loaded
 
 Include entries:
 
-- `src/includes/**/*.{js,ts,scss}`
+- `src/includes/**/*.scss` → `build/includes/{category}/{name}/style.css`
+- `src/includes/**/*.js` → `build/includes/{category}/{name}/view.js`
+- `src/includes/**/*.php` → Copied to `build/includes/...`
 
 ---
 
-## Runtime Rule (Important)
+## Auto-Discovery & Enqueuing System
 
-Runtime code must reference **build output**, never `src/`.
-For PHP files under `src/`, this means:
+Assets are automatically discovered and loaded based on folder structure and naming conventions.
+**Zero manual PHP configuration needed** when adding new features.
 
-- Place them in the correct folder (`blocks/` or `includes/`).
-- Ensure they are copied into `build/`.
-- Require them from your theme entry points.
+### How assets are detected and loaded
 
-This keeps the theme clean and avoids shipping source paths.
+**Block Assets:**
+- `style.scss` → Auto-enqueued when block is used (via `wp_enqueue_block_style`)
+- `styles/{variation}.scss` → Registered; enqueued when `is-style-{variation}` class detected
+- `block.json` → Auto-registered custom blocks
+- `*.php` → Auto-required on theme setup
+
+**Include Assets (Non-Block Features):**
+- `style.scss` → Enqueued when CSS class matches component name or `is-style-{name}`
+- `view.js` → Enqueued on frontend only
+- `editor.js` → Enqueued in block editor only
+- Plugin includes in `plugins/` category → Enqueued globally when plugin is active
+
+**Global Styles:**
+- Always loaded (frontend + editor)
+- `global.scss` → Theme-wide tokens, base styles, utilities
+- `screen.scss` → Frontend-only styles
+- `editor.scss` → Editor-only styles
+
+### Class-based detection for includes
+
+Include components are detected by CSS class matching:
+
+```html
+<!-- This will auto-enqueue includes/custom/modal/style.scss -->
+<div class="modal">...</div>
+<div class="is-style-modal">...</div>
+```
+
+Plugin includes load automatically when their plugin is active:
+
+```
+src/includes/plugins/sugar-calendar/style.scss → Loads when Sugar Calendar is active
+```
+
+All source files are compiled to `build/`, and the enqueuing system automatically discovers and loads them.
+
+**PHP files:**
+- Block PHP files (`src/blocks/**/*.php`) are auto-required on `after_setup_theme`
+- Include PHP files can be required from entry points (e.g., `functions.php`) if needed for setup
+
+**Style & Script files:**
+- Automatically registered and enqueued based on presence on page
+- Never manually require from `src/` — always reference built assets from `build/`
+- Reference built assets via: `get_template_directory_uri() . '/build/...'`
 
 ---
 

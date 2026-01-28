@@ -26,7 +26,7 @@ require get_template_directory() . '/inc/block-patterns.php';
  * Block controls
  */
 
-require get_template_directory() . '/build/blocks/core-spacer/disable-margin.php';
+require get_template_directory() . '/build/blocks/core/spacer/disable-margin.php';
 
 /**
  * Woo

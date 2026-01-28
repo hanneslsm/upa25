@@ -77,6 +77,37 @@ const isCustomBlock = ( blockDir ) =>
 	fs.existsSync( path.join( blockDir, 'block.json' ) );
 
 /**
+ * Resolve the block root directory for a blocks/* entry.
+ *
+ * Supports both:
+ * - blocks/<namespace>/<block>/...
+ * - blocks/<block>/... (legacy)
+ *
+ * @param {string} relPath - Relative file path from baseDir.
+ * @param {string} baseDir - Base directory for the relative path.
+ * @return {string|null} Absolute block root path, or null if not a block path.
+ */
+function getBlockRoot( relPath, baseDir ) {
+	if ( ! relPath.startsWith( 'blocks/' ) ) {
+		return null;
+	}
+
+	const parts = relPath.split( '/' );
+
+	// blocks/<namespace>/<block>/...
+	if ( parts.length >= 4 ) {
+		return path.join( PATHS.root, baseDir, 'blocks', parts[ 1 ], parts[ 2 ] );
+	}
+
+	// blocks/<block>/... (legacy)
+	if ( parts.length >= 3 ) {
+		return path.join( PATHS.root, baseDir, 'blocks', parts[ 1 ] );
+	}
+
+	return null;
+}
+
+/**
  * Rename assets to drop redundant "style-" prefix.
  *
  * Matches patterns like:
@@ -201,20 +232,22 @@ function makeEntries( patterns, baseDir = 'src' ) {
 
 	// Cache for block.json checks.
 	const customBlockCache = new Map();
-	const isBlockCustom = ( blockName ) => {
-		if ( ! customBlockCache.has( blockName ) ) {
-			const blockDir = path.join( PATHS.root, baseDir, 'blocks', blockName );
-			customBlockCache.set( blockName, isCustomBlock( blockDir ) );
+	const isBlockCustom = ( blockRoot ) => {
+		if ( ! blockRoot ) {
+			return false;
 		}
-		return customBlockCache.get( blockName );
+		if ( ! customBlockCache.has( blockRoot ) ) {
+			customBlockCache.set( blockRoot, isCustomBlock( blockRoot ) );
+		}
+		return customBlockCache.get( blockRoot );
 	};
 
 	// Build entries with collision-aware naming.
 	return files.reduce( ( entries, relPath ) => {
 		// Skip files in custom block directories (those with block.json).
 		if ( relPath.startsWith( 'blocks/' ) ) {
-			const blockName = relPath.split( '/' )[ 1 ];
-			if ( isBlockCustom( blockName ) ) {
+			const blockRoot = getBlockRoot( relPath, baseDir );
+			if ( isBlockCustom( blockRoot ) ) {
 				return entries;
 			}
 		}
@@ -245,10 +278,12 @@ function hasCustomBlocks() {
 	if ( ! isDir( PATHS.blocksJs ) ) {
 		return false;
 	}
-	return fs.readdirSync( PATHS.blocksJs ).some( ( name ) => {
-		const blockDir = path.join( PATHS.blocksJs, name );
-		return isCustomBlock( blockDir );
-	} );
+	return (
+		fg.sync( 'blocks/**/block.json', {
+			cwd: 'src',
+			ignore: [ 'blocks/core/**' ],
+		} ).length > 0
+	);
 }
 
 /**

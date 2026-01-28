@@ -68,6 +68,12 @@ Referencing assets at runtime:
 
 Use this when styles/scripts are tightly coupled to a block.
 
+### Custom blocks (create-block)
+
+Custom blocks are created with `@wordpress/create-block`. Keep the generated structure intact
+(`block.json`, `index.js`, `render.php` when dynamic, etc.). We build and ship from `build/`,
+never from `src/`.
+
 ### Folder layout
 
 Use a two-level namespace:
@@ -166,7 +172,14 @@ Use the same file naming conventions as blocks where possible:
 - `editor.js`
 - `render.php` (rare here, but allowed)
 
-This keeps the mental model consistent across the codebase.
+This keeps the mental model consistent across the codebase. Includes can use any filenames,
+but **prefer these names** for predictability.
+
+### PHP usage (non-block)
+
+`includes/` is also the home for PHP that powers editor controls, theme utilities, or integrations
+that are not blocks. These files still need to be required from your theme entry points
+(e.g. `functions.php` or `inc/*`) to run.
 
 ---
 
@@ -212,6 +225,45 @@ Prefer these standard entry names:
 - `render.php`
 
 Use additional files only when the feature clearly benefits from splitting.
+
+---
+
+## Build Entries (Current Mental Model)
+
+The build looks for **specific entry file names**. If a file is not listed here and is not
+imported by an entry, it will not be bundled.
+
+Global entries:
+
+- `src/scss/global.scss`
+- `src/scss/screen.scss`
+- `src/scss/editor.scss`
+- `src/js/global.js`
+
+Block entries:
+
+- `src/blocks/**/style.scss`
+- `src/blocks/**/editor.scss`
+- `src/blocks/**/view.js`
+- `src/blocks/**/editor.js`
+- `src/blocks/**/styles/*.scss` (style variations)
+
+Include entries:
+
+- `src/includes/**/*.{js,ts,scss}`
+
+---
+
+## Runtime Rule (Important)
+
+Runtime code must reference **build output**, never `src/`.
+For PHP files under `src/`, this means:
+
+- Place them in the correct folder (`blocks/` or `includes/`).
+- Ensure they are copied into `build/`.
+- Require them from your theme entry points.
+
+This keeps the theme clean and avoids shipping source paths.
 
 ---
 

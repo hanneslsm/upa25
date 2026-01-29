@@ -12,6 +12,7 @@
 		font-size: var(--wp--preset--font-size--medium);
 		padding: var(--wp--preset--spacing--10);
 	}
+
 	input[type="submit"] {
 		border: 1px solid var(--wp--preset--color--base-4);
 		background: var(--wp--preset--color--contrast);
@@ -26,6 +27,7 @@
 
 /* Navigation Links
 --------------------------------------------- */
+
 /* This navigation style is also used in
 * comments-pagination and query-pagination
 */
@@ -37,9 +39,11 @@
 		text-decoration: none;
 		font-variant-numeric: tabular-nums;
 	}
+
 	a:hover {
 		background-color: var(--wp--preset--color--base-2);
 	}
+
 	.current {
 		border: 1px dashed var(--wp--preset--color--base-4);
 	}

@@ -4,6 +4,7 @@
 
 /* General Styling
 --------------------------------------------- */
+
 /* This navigation style is also used in
 * comments-pagination and post-content
 */
@@ -15,9 +16,11 @@
 		text-decoration: none;
 		font-variant-numeric: tabular-nums;
 	}
+
 	a:hover {
 		background-color: var(--wp--preset--color--base-2);
 	}
+
 	.current {
 		border: 1px dashed var(--wp--preset--color--base-4);
 	}

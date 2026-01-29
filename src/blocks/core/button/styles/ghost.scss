@@ -5,7 +5,7 @@
 /* Block Style: Ghost
 --------------------------------------------- */
 .wp-block-button.is-style-ghost > .wp-block-button__link {
-	color: currentColor;
+	color: currentcolor;
 	background-color: transparent;
 	border: transparent;
 	box-shadow: none;
@@ -21,6 +21,7 @@
 
 	/* Section Styles
 	--------------------------------------------- */
+
 	/* [Brand-3]  */
 	.is-style-section-brand-3 & {
 		&:not(.has-background):hover {

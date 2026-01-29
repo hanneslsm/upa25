@@ -6,13 +6,15 @@
 --------------------------------------------- */
 .wp-block-list.is-style-crossmark-2 {
 	padding: 0;
+
 	& li {
 		position: relative;
 		padding-left: 30px;
 		list-style: none;
 		margin-block-end: var(--wp--preset--spacing--10);
 	}
-	& li:after {
+
+	& li::after {
 		position: absolute;
 		left: 0;
 		top: 0.25em;

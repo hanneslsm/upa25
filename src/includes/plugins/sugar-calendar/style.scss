@@ -27,8 +27,16 @@
 		}
 	}
 
-	#sc-event-ticketing-wrap #sc-event-ticketing-price-wrap .sc-event-ticketing-price-wrap__add-to-cart-section .sc-event-ticketing-price-wrap__add-to-cart-section__btn-container #sc-event-ticketing-buy-button,
-	#sc-event-ticketing-wrap #sc-event-ticketing-price-wrap .sc-event-ticketing-price-wrap__add-to-cart-section .sc-event-ticketing-price-wrap__add-to-cart-section__btn-container #sc-event-ticketing-buy-button-woocommerce {
+	#sc-event-ticketing-wrap
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button,
+	#sc-event-ticketing-wrap
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button-woocommerce {
 		background: var(--wp--preset--color--brand-3);
 		border-radius: 999px;
 

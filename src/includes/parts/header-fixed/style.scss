@@ -3,13 +3,13 @@
 ///
 
 :root {
-	--header-fixed-height: 0px;
-	--header-fixed-admin-offset: 0px;
-	--header-fixed-dynamic-offset: 0px;
+	--header-fixed-height: 0;
+	--header-fixed-admin-offset: 0;
+	--header-fixed-dynamic-offset: 0;
 }
 
 body.has-header-fixed {
-	padding-top: var(--header-fixed-height, 0px);
+	padding-top: var(--header-fixed-height, 0);
 	scroll-padding-top: calc(
 		var(--header-fixed-height, 0px) + var(--header-fixed-admin-offset, 0px)
 	);

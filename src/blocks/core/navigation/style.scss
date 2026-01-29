@@ -16,9 +16,11 @@
 		> .wp-block-navigation__submenu-container {
 		width: 250px;
 		box-shadow: var(--wp--preset--shadow--x-large);
+
 		.wp-block-navigation-item:hover {
 			background-color: var(--wp--preset--color--base-2);
 		}
+
 		.wp-block-navigation-item a:hover {
 			color: var(--wp--preset--color--contrast-3);
 		}

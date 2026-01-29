@@ -35,6 +35,7 @@
 	--------------------------------------------- */
 
 	/* [Contrast] */
+
 	/* [Brand] */
 	.is-style-section-contrast &,
 	.is-style-section-brand & {
@@ -42,9 +43,11 @@
 			background-color: transparent;
 			border-bottom: 2px solid var(--wp--preset--color--base-2);
 		}
+
 		tfoot {
 			background-color: transparent;
 			border-top: 2px solid var(--wp--preset--color--base-6);
+
 			& tr {
 				border-bottom: none;
 			}

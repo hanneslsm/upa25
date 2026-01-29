@@ -14,6 +14,7 @@
 .with-overflow-hidden {
 	overflow: hidden;
 }
+
 .with-overflow-clip {
 	overflow: initial;
 	overflow: clip;
@@ -25,33 +26,43 @@
 .with-z--1 {
 	z-index: -1;
 }
+
 .with-z-1000 {
 	z-index: 1000;
 }
+
 .with-z-2000 {
 	z-index: 2000;
 }
+
 .with-z-3000 {
 	z-index: 3000;
 }
+
 .with-z-4000 {
 	z-index: 4000;
 }
+
 .with-z-5000 {
 	z-index: 5000;
 }
+
 .with-z-6000 {
 	z-index: 6000;
 }
+
 .with-z-7000 {
 	z-index: 7000;
 }
+
 .with-z-8000 {
 	z-index: 8000;
 }
+
 .with-z-9000 {
 	z-index: 9000;
 }
+
 .with-z-9999 {
 	z-index: 9999;
 }
@@ -62,21 +73,27 @@
 .with-top-10 {
 	top: var(--wp--preset--spacing--10) !important;
 }
+
 .with-top-20 {
 	top: var(--wp--preset--spacing--20) !important;
 }
+
 .with-top-30 {
 	top: var(--wp--preset--spacing--30) !important;
 }
+
 .with-top-40 {
 	top: var(--wp--preset--spacing--40) !important;
 }
+
 .with-top-50 {
 	top: var(--wp--preset--spacing--50) !important;
 }
+
 .with-top-60 {
 	top: var(--wp--preset--spacing--60) !important;
 }
+
 .with-top-70 {
 	top: var(--wp--preset--spacing--70) !important;
 }
@@ -90,9 +107,11 @@
 
 .with-text-decoration-none {
 	text-decoration: none;
+
 	a {
 		text-decoration: none;
 	}
+
 	a:hover {
 		text-decoration: none;
 	}
@@ -105,26 +124,31 @@
 .with-text-shadow-x-small {
 	text-shadow: 0 1px 2px var(--wp--preset--color--contrast-3);
 }
+
 .with-text-shadow-small {
 	text-shadow:
 		0 1px 3px var(--wp--preset--color--contrast-3),
 		0 1px 2px var(--wp--preset--color--contrast-3);
 }
+
 .with-text-shadow-medium {
 	text-shadow:
 		0 4px 6px var(--wp--preset--color--contrast-3),
 		0 2px 4px var(--wp--preset--color--contrast-3);
 }
+
 .with-text-shadow-large {
 	text-shadow:
 		0 10px 15px var(--wp--preset--color--contrast-3),
 		0 4px 6px var(--wp--preset--color--contrast-3);
 }
+
 .with-text-shadow-x-large {
 	text-shadow:
 		0 20px 25px var(--wp--preset--color--contrast-3),
 		0 8px 10px var(--wp--preset--color--contrast-3);
 }
+
 .with-text-shadow-xx-large {
 	text-shadow: 0 25px 50px var(--wp--preset--color--contrast-3);
 }
@@ -142,6 +166,7 @@
 .with-rotate-plus-2 {
 	transform: rotate(2deg);
 }
+
 .with-rotate-plus-3 {
 	transform: rotate(3deg);
 }
@@ -149,9 +174,11 @@
 .with-rotate-minus-2 {
 	transform: rotate(-2deg);
 }
+
 .with-rotate-minus-3 {
 	transform: rotate(-3deg);
 }
+
 .with-rotate-180 {
 	transform: rotate(180deg);
 }
@@ -164,6 +191,7 @@
 	display: none;
 	opacity: 0;
 }
+
 .with-display-none-when-empty:empty {
 	display: none;
 	opacity: 0;
@@ -175,21 +203,27 @@
 .with-position-static {
 	position: static;
 }
+
 .with-position-relative {
 	position: relative;
 }
+
 .with-position-absolute {
 	position: absolute;
 }
+
 .with-position-fixed {
 	position: fixed;
 }
+
 .with-position-sticky {
 	position: sticky;
 }
+
 .with-float-right {
 	float: right;
 }
+
 .with-float-left {
 	float: left;
 }

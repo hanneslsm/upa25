@@ -65,9 +65,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 					)
 			) || 0;
 		const position = style.position || '';
-		const isFixed =
-			position === 'fixed' ||
-			position === 'sticky';
+		const isFixed = position === 'fixed' || position === 'sticky';
 		return { height, isFixed };
 	};
 

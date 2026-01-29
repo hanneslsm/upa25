@@ -5,9 +5,9 @@
 	"scripts": {
 		"start": "PROLOOKS_BS_PROXY=http://uniquepoleart.local wp-scripts start --config webpack.dev.js",
 		"build": "wp-scripts build --config webpack.prod.js",
-		"lint:css": "wp-scripts lint-style 'src/scss/*'",
-		"lint:css:fix": "wp-scripts lint-style 'src/scss/*' --fix",
-		"lint:js": "wp-scripts lint-js 'src/js/*'",
+		"lint:css": "wp-scripts lint-style 'src/**/*'",
+		"lint:css:fix": "wp-scripts lint-style 'src/**/*' --fix",
+		"lint:js": "wp-scripts lint-js 'src/**/*'",
 		"format": "wp-scripts format 'src/**/*.{js,jsx,json,ts,tsx,css,scss,php}' '!src/fonts/**'",
 		"zip": "wp-scripts plugin-zip",
 		"packages-update": "wp-scripts packages-update"

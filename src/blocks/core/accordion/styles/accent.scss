@@ -1,0 +1,24 @@
+///
+/// Accordion
+///
+
+/* Block Style: Accent
+--------------------------------------------- */
+
+.wp-block-accordion.is-style-accent {
+	.wp-block-accordion-heading {
+		background-color: var(--wp--preset--color--brand-5);
+		border-top: 1px solid var(--wp--preset--color--brand-4);
+		padding: 0px;
+
+		button {
+			padding: var(--wp--preset--spacing--30);
+		}
+	}
+	.wp-block-accordion-item {
+		border: none;
+	}
+	.wp-block-accordion-panel {
+		margin-top: var(--wp--preset--spacing--20);
+	}
+}

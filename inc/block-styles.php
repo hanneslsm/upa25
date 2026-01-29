@@ -8,6 +8,9 @@ add_action( 'init', 'upa25_register_block_style_variations', 10 );
 function upa25_register_block_style_variations() {
 
 	$block_styles = [
+		'core/accordion' => [
+			[ 'name' => 'accent', 'label' => __( 'Accent', 'upa25' ) ],
+		],
 		'core/button' => [
 			[ 'name' => 'ghost', 'label' => __( 'Ghost', 'upa25' ) ],
 		],

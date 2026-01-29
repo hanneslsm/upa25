@@ -149,9 +149,6 @@ add_action( 'after_setup_theme', 'upa25_autoload_block_php_files', 5 );
 
 /**
  * Auto-load PHP files from build/includes/ (e.g., component logic, filters).
- *
- * Plugin-specific files (in plugins/ subdirectory) are loaded after plugins
- * are loaded to ensure the target plugin is available.
  */
 function upa25_autoload_includes_php_files(): void {
 	$includes_dir = get_theme_file_path( 'build/includes' );
@@ -166,28 +163,21 @@ function upa25_autoload_includes_php_files(): void {
 
 	foreach ( $iterator as $file ) {
 		if ( $file->isFile() && 'php' === $file->getExtension() ) {
-			$path = $file->getPathname();
-
-			// Skip plugin files - they're loaded via upa25_autoload_plugin_php_files
-			if ( str_contains( $path, '/plugins/' ) ) {
-				continue;
-			}
-
-			require_once $path;
+			require_once $file->getPathname();
 		}
 	}
 }
 add_action( 'after_setup_theme', 'upa25_autoload_includes_php_files', 5 );
 
 /**
- * Auto-load PHP files from build/includes/plugins/ early in theme setup.
+ * Auto-load PHP files from build/plugins/ early in theme setup.
  *
  * Runs on after_setup_theme (late priority) so plugin files can hook into
  * after_setup_theme and init. Uses class/constant checks since is_plugin_active()
  * isn't reliable this early.
  */
 function upa25_autoload_plugin_php_files(): void {
-	$plugins_dir = get_theme_file_path( 'build/includes/plugins' );
+	$plugins_dir = get_theme_file_path( 'build/plugins' );
 	if ( ! is_dir( $plugins_dir ) ) {
 		return;
 	}
@@ -350,23 +340,107 @@ function upa25_is_plugin_active( string $slug ): bool {
 }
 
 /**
+ * Build the plugins component map from build/plugins/.
+ *
+ * @return array<string, array{slug: string, path: string}>
+ */
+function upa25_get_plugins_component_map(): array {
+	static $cache = null;
+	if ( null !== $cache ) {
+		return $cache;
+	}
+
+	$dir = get_theme_file_path( 'build/plugins' );
+	if ( ! is_dir( $dir ) ) {
+		$cache = array();
+		return $cache;
+	}
+
+	$components = array();
+
+	// Scan plugin directories
+	foreach ( glob( $dir . '/*', GLOB_ONLYDIR ) as $plugin_path ) {
+		$slug = basename( $plugin_path );
+
+		// Check if plugin directory has at least one asset file
+		$has_assets = ! empty( glob( $plugin_path . '/*.{css,js}', GLOB_BRACE ) );
+		if ( $has_assets ) {
+			$components[ $slug ] = array(
+				'slug' => $slug,
+				'path' => $plugin_path,
+			);
+		}
+	}
+
+	$cache = $components;
+	return $components;
+}
+
+/**
  * Enqueue plugin component assets globally when plugin is active.
  */
-function upa25_enqueue_plugin_includes(): void {
-	$components = upa25_get_includes_component_map();
+function upa25_enqueue_plugin_assets(): void {
+	$components = upa25_get_plugins_component_map();
 
-	foreach ( $components as $key => $component ) {
-		if ( 'plugins' !== $component['category'] ) {
-			continue;
-		}
-
+	foreach ( $components as $slug => $component ) {
 		// Check if plugin is active
-		if ( upa25_is_plugin_active( $component['name'] ) ) {
-			upa25_enqueue_include_component( $key );
+		if ( upa25_is_plugin_active( $slug ) ) {
+			upa25_enqueue_plugin_component( $slug );
 		}
 	}
 }
-add_action( 'wp_enqueue_scripts', 'upa25_enqueue_plugin_includes' );
+add_action( 'wp_enqueue_scripts', 'upa25_enqueue_plugin_assets' );
+
+/**
+ * Enqueue a single plugin component's CSS/JS.
+ *
+ * @param string $slug Plugin slug.
+ */
+function upa25_enqueue_plugin_component( string $slug ): void {
+	static $enqueued = array();
+
+	if ( isset( $enqueued[ $slug ] ) ) {
+		return;
+	}
+
+	$components = upa25_get_plugins_component_map();
+	if ( ! isset( $components[ $slug ] ) ) {
+		return;
+	}
+
+	$enqueued[ $slug ] = true;
+	$component         = $components[ $slug ];
+	$component_dir     = $component['path'];
+	$relative_base     = "build/plugins/{$slug}";
+
+	// Enqueue all CSS files
+	foreach ( glob( $component_dir . '/*.css' ) as $css_file ) {
+		if ( str_ends_with( $css_file, '-rtl.css' ) ) {
+			continue;
+		}
+
+		$filename = basename( $css_file, '.css' );
+		$handle   = "upa25-plugin-{$slug}-{$filename}";
+		$relative = "{$relative_base}/{$filename}.css";
+
+		upa25_enqueue_style_asset( $handle, $relative, ! is_admin() );
+	}
+
+	// Enqueue view.js on frontend, editor.js in editor
+	$view_js = $component_dir . '/view.js';
+	if ( file_exists( $view_js ) && ! is_admin() ) {
+		$handle   = "upa25-plugin-{$slug}-view";
+		$relative = "{$relative_base}/view.js";
+		upa25_enqueue_script_asset( $handle, $relative );
+	}
+
+	$editor_js = $component_dir . '/editor.js';
+	if ( file_exists( $editor_js ) && is_admin() ) {
+		$handle   = "upa25-plugin-{$slug}-editor";
+		$relative = "{$relative_base}/editor.js";
+		upa25_enqueue_script_asset( $handle, $relative, false );
+	}
+}
 
 /**
  * Enqueue all include assets in the editor for preview consistency.
@@ -379,6 +453,14 @@ function upa25_enqueue_includes_in_editor(): void {
 	$components = upa25_get_includes_component_map();
 	foreach ( $components as $key => $component ) {
 		upa25_enqueue_include_component( $key );
+	}
+
+	// Also enqueue plugin assets in editor
+	$plugins = upa25_get_plugins_component_map();
+	foreach ( $plugins as $slug => $plugin ) {
+		if ( upa25_is_plugin_active( $slug ) ) {
+			upa25_enqueue_plugin_component( $slug );
+		}
 	}
 }
 add_action( 'enqueue_block_assets', 'upa25_enqueue_includes_in_editor' );
@@ -503,17 +585,12 @@ function upa25_maybe_enqueue_include_assets( array $block ): void {
 	$slugs_to_enqueue = array();
 
 	foreach ( $components as $key => $component ) {
-		// Skip plugins (handled globally)
-		if ( 'plugins' === $component['category'] ) {
-			continue;
-		}
-
 		$name = $component['name'];
 
 		// Match exact class name or is-style-{name}
 		$patterns = array(
-			'/\b' . preg_quote( $name, '/' ) . '\b/',
-			'/\bis-style-' . preg_quote( $name, '/' ) . '\b/',
+			'/\\b' . preg_quote( $name, '/' ) . '\\b/',
+			'/\\bis-style-' . preg_quote( $name, '/' ) . '\\b/',
 		);
 
 		foreach ( $patterns as $pattern ) {

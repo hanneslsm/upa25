@@ -26,7 +26,9 @@ The exact build pipeline may change, but the **meaning** of each area should rem
 - `blocks/`
   Block-specific assets and block style variations.
 - `includes/`
-  Feature folders for non-block behavior (integrations, UI features, utilities).
+  Feature folders for non-block behavior (UI features, utilities).
+- `plugins/`
+  Plugin-specific customizations (auto-loaded when plugin is active).
 - `scss/`
   Global styling foundations (tokens, base, elements, utilities).
 - `images/`
@@ -117,13 +119,13 @@ All block style variation selectors should start with:
 
 ## `includes/` — Feature Folders (Non-Block)
 
-Use `includes/` for cross-cutting features, integrations, or behaviors that are **not owned by a single block**.
+Use `includes/` for cross-cutting features or behaviors that are **not owned by a single block**.
 
 Examples:
 
-- Third-party plugin styling
 - UI features (e.g., modals, spotlight effects, filters)
 - Shared interactive behaviors
+- Theme utilities
 
 ### Folder layout
 
@@ -135,7 +137,6 @@ Examples:
 
 - `includes/upa/spotlight/view.js`
 - `includes/custom/forms/style.scss`
-- `includes/plugins/sugar-calendar/style.scss`
 
 ### File roles
 
@@ -153,8 +154,50 @@ but **prefer these names** for predictability.
 ### PHP usage (non-block)
 
 `includes/` is also the home for PHP that powers editor controls, theme utilities, or integrations
-that are not blocks. These files still need to be required from your theme entry points
-(e.g. `functions.php` or `inc/*`) to run.
+that are not blocks. These files are **automatically loaded** on `after_setup_theme`.
+
+No manual `require` statements needed in `functions.php` or `inc/*`.
+
+---
+
+## `plugins/` — Plugin Integrations
+
+Use `plugins/` for plugin-specific customizations. This folder has **special auto-detection behavior**:
+files only load when the corresponding plugin is active.
+
+### Folder structure
+
+```
+plugins/{plugin-slug}/
+```
+
+The `{plugin-slug}` must match the plugin's directory name in `wp-content/plugins/`.
+
+### Examples
+
+- `plugins/woocommerce/` → Loads when WooCommerce is active
+- `plugins/sugar-calendar/` → Loads when Sugar Calendar is active
+- `plugins/contact-form-7/` → Loads when Contact Form 7 is active
+
+### Auto-loading behavior
+
+1. **Plugin detection:** Theme checks if the plugin is loaded by detecting its main class, constant, or function
+2. **Conditional loading:** All files (PHP, CSS, JS) only load when their corresponding plugin is active
+3. **Timing:** PHP files load on `after_setup_theme` with late priority (99), so they can hook into `init` and other early actions
+
+### Common use cases
+
+- Remove unwanted plugin features (patterns, marketing, admin notices)
+- Customize plugin behavior (checkout fields, form styling)
+- Extend plugin functionality (custom filters, integrations)
+
+### Supported file types
+
+- `*.php` → Auto-required when plugin is active
+- `style.scss` → Auto-enqueued globally when plugin is active
+- `view.js` / `editor.js` → Auto-enqueued when plugin is active
+
+This keeps plugin-specific customizations organized and prevents errors when plugins are deactivated.
 
 ---
 
@@ -228,9 +271,13 @@ Include entries:
 
 - `src/includes/**/*.scss` → `build/includes/{category}/{name}/style.css`
 - `src/includes/**/*.js` → `build/includes/{category}/{name}/view.js`
-- `src/includes/**/*.php` → Copied to `build/includes/...` and auto-loaded
-  - Non-plugin PHP: Auto-required on `after_setup_theme`
-  - Plugin PHP (`plugins/{slug}/`): Auto-required on `init` when plugin is active
+- `src/includes/**/*.php` → Copied to `build/includes/...` and auto-loaded on `after_setup_theme`
+
+Plugin entries:
+
+- `src/plugins/{slug}/*.scss` → `build/plugins/{slug}/style.css`
+- `src/plugins/{slug}/*.js` → `build/plugins/{slug}/view.js`
+- `src/plugins/{slug}/**/*.php` → Copied to `build/plugins/...` and auto-loaded when plugin is active
 
 ---
 
@@ -251,7 +298,10 @@ Assets are automatically discovered and loaded based on folder structure and nam
 - `style.scss` → Enqueued when CSS class matches component name or `is-style-{name}`
 - `view.js` → Enqueued on frontend only
 - `editor.js` → Enqueued in block editor only
-- Plugin includes in `plugins/` category → Enqueued globally when plugin is active
+
+**Plugin Assets:**
+- All assets enqueued globally when the corresponding plugin is active
+- PHP files auto-required on `after_setup_theme` (late priority)
 
 **Global Styles:**
 - Always loaded (frontend + editor)
@@ -269,19 +319,21 @@ Include components are detected by CSS class matching:
 <div class="is-style-modal">...</div>
 ```
 
-Plugin includes load automatically when their plugin is active:
+### Plugin auto-loading
+
+Plugin assets load automatically when their plugin is active:
 
 ```
-src/includes/plugins/sugar-calendar/style.scss → Loads when Sugar Calendar is active
-src/includes/plugins/woocommerce/disable-checkout-note.php → Auto-required when WooCommerce is active
+src/plugins/sugar-calendar/style.scss → Loads when Sugar Calendar is active
+src/plugins/woocommerce/disable-checkout-note.php → Auto-required when WooCommerce is active
 ```
 
 All source files are compiled to `build/`, and the enqueuing system automatically discovers and loads them.
 
 **PHP files:**
 - Block PHP files (`src/blocks/**/*.php`) are auto-required on `after_setup_theme`
-- Non-plugin include PHP files (`src/includes/{category}/**/*.php`, excluding `plugins/`) are auto-required on `after_setup_theme`
-- Plugin include PHP files (`src/includes/plugins/{slug}/**/*.php`) are auto-required on `init` only when the corresponding plugin is active
+- Include PHP files (`src/includes/**/*.php`) are auto-required on `after_setup_theme`
+- Plugin PHP files (`src/plugins/{slug}/**/*.php`) are auto-required on `after_setup_theme` (late priority) only when the corresponding plugin is active
 
 **Style & Script files:**
 - Automatically registered and enqueued based on presence on page
@@ -296,9 +348,11 @@ Follow this decision flow:
 
 1. Is it block-specific?
    If yes, place it in `blocks/...`.
-2. Is it a cross-cutting feature or integration?
+2. Is it a plugin integration?
+   If yes, place it in `plugins/{plugin-slug}/...`.
+3. Is it a cross-cutting feature or utility?
    If yes, place it in `includes/...`.
-3. Is it truly global foundation?
+4. Is it truly global foundation?
    If yes, place it in `scss/...`.
 
 Then:
@@ -333,10 +387,11 @@ Don’t:
 - Path: `blocks/core/button/styles/ghost.scss`
 - Selector: `.is-style-ghost`
 
-### New third-party integration styling
+### New plugin integration
 
-- Path: `includes/plugins/sugar-calendar/style.scss`
-- Optional: `includes/plugins/sugar-calendar/view.js`
+- Path: `plugins/sugar-calendar/style.scss`
+- Optional: `plugins/sugar-calendar/view.js`
+- PHP customization: `plugins/woocommerce/disable-checkout-note.php`
 
 ### New cross-cutting UI feature
 

@@ -23,17 +23,6 @@ require get_template_directory() . '/inc/block-patterns.php';
 
 
 /**
- * Woo
- */
-
-// Woocommerce Setup
-require get_template_directory() . '/inc/woo-remove-patterns.php';
-
-// Woocommerce Disable Marketing
-//require get_template_directory() . '/inc/woo-disable-marketing.php';
-
-
-/**
  * ProLooks tools
  */
 

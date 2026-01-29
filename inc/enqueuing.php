@@ -147,6 +147,123 @@ function upa25_autoload_block_php_files(): void {
 }
 add_action( 'after_setup_theme', 'upa25_autoload_block_php_files', 5 );
 
+/**
+ * Auto-load PHP files from build/includes/ (e.g., component logic, filters).
+ *
+ * Plugin-specific files (in plugins/ subdirectory) are loaded after plugins
+ * are loaded to ensure the target plugin is available.
+ */
+function upa25_autoload_includes_php_files(): void {
+	$includes_dir = get_theme_file_path( 'build/includes' );
+	if ( ! is_dir( $includes_dir ) ) {
+		return;
+	}
+
+	// Recursively find all PHP files in build/includes/
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $includes_dir, RecursiveDirectoryIterator::SKIP_DOTS )
+	);
+
+	foreach ( $iterator as $file ) {
+		if ( $file->isFile() && 'php' === $file->getExtension() ) {
+			$path = $file->getPathname();
+
+			// Skip plugin files - they're loaded via upa25_autoload_plugin_php_files
+			if ( str_contains( $path, '/plugins/' ) ) {
+				continue;
+			}
+
+			require_once $path;
+		}
+	}
+}
+add_action( 'after_setup_theme', 'upa25_autoload_includes_php_files', 5 );
+
+/**
+ * Auto-load PHP files from build/includes/plugins/ early in theme setup.
+ *
+ * Runs on after_setup_theme (late priority) so plugin files can hook into
+ * after_setup_theme and init. Uses class/constant checks since is_plugin_active()
+ * isn't reliable this early.
+ */
+function upa25_autoload_plugin_php_files(): void {
+	$plugins_dir = get_theme_file_path( 'build/includes/plugins' );
+	if ( ! is_dir( $plugins_dir ) ) {
+		return;
+	}
+
+	// Scan plugin directories
+	foreach ( glob( $plugins_dir . '/*', GLOB_ONLYDIR ) as $plugin_path ) {
+		$plugin_slug = basename( $plugin_path );
+
+		// Only load if the plugin is active (check class/constant existence)
+		if ( ! upa25_is_plugin_loaded( $plugin_slug ) ) {
+			continue;
+		}
+
+		// Recursively find all PHP files in this plugin's directory
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $plugin_path, RecursiveDirectoryIterator::SKIP_DOTS )
+		);
+
+		foreach ( $iterator as $file ) {
+			if ( $file->isFile() && 'php' === $file->getExtension() ) {
+				require_once $file->getPathname();
+			}
+		}
+	}
+}
+add_action( 'after_setup_theme', 'upa25_autoload_plugin_php_files', 99 );
+
+/**
+ * Check if a plugin is loaded by detecting its class or constant.
+ *
+ * This works earlier than is_plugin_active() since it checks if the plugin
+ * code has actually been loaded, not just if it's in the active plugins option.
+ *
+ * @param string $slug Plugin slug.
+ * @return bool
+ */
+function upa25_is_plugin_loaded( string $slug ): bool {
+	// Map plugin slugs to their main class or constant
+	$plugin_indicators = array(
+		'woocommerce'       => array( 'class' => 'WooCommerce' ),
+		'sugar-calendar'    => array( 'class' => 'Sugar_Calendar\Plugin' ),
+		'wc-serial-numbers' => array( 'class' => 'WC_Serial_Numbers' ),
+		'contact-form-7'    => array( 'constant' => 'WPCF7_VERSION' ),
+		'wordpress-seo'     => array( 'constant' => 'WPSEO_VERSION' ),
+		'gutenberg'         => array( 'function' => 'gutenberg_init' ),
+	);
+
+	if ( ! isset( $plugin_indicators[ $slug ] ) ) {
+		// Fallback: try common class naming patterns
+		$class_patterns = array(
+			str_replace( '-', '_', ucwords( $slug, '-' ) ),
+			str_replace( '-', '_', strtoupper( $slug ) ),
+		);
+		foreach ( $class_patterns as $class ) {
+			if ( class_exists( $class, false ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	$indicator = $plugin_indicators[ $slug ];
+
+	if ( isset( $indicator['class'] ) && class_exists( $indicator['class'], false ) ) {
+		return true;
+	}
+	if ( isset( $indicator['constant'] ) && defined( $indicator['constant'] ) ) {
+		return true;
+	}
+	if ( isset( $indicator['function'] ) && function_exists( $indicator['function'] ) ) {
+		return true;
+	}
+
+	return false;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Includes / Component Assets

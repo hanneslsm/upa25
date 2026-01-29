@@ -228,7 +228,9 @@ Include entries:
 
 - `src/includes/**/*.scss` → `build/includes/{category}/{name}/style.css`
 - `src/includes/**/*.js` → `build/includes/{category}/{name}/view.js`
-- `src/includes/**/*.php` → Copied to `build/includes/...`
+- `src/includes/**/*.php` → Copied to `build/includes/...` and auto-loaded
+  - Non-plugin PHP: Auto-required on `after_setup_theme`
+  - Plugin PHP (`plugins/{slug}/`): Auto-required on `init` when plugin is active
 
 ---
 
@@ -271,13 +273,15 @@ Plugin includes load automatically when their plugin is active:
 
 ```
 src/includes/plugins/sugar-calendar/style.scss → Loads when Sugar Calendar is active
+src/includes/plugins/woocommerce/disable-checkout-note.php → Auto-required when WooCommerce is active
 ```
 
 All source files are compiled to `build/`, and the enqueuing system automatically discovers and loads them.
 
 **PHP files:**
 - Block PHP files (`src/blocks/**/*.php`) are auto-required on `after_setup_theme`
-- Include PHP files can be required from entry points (e.g., `functions.php`) if needed for setup
+- Non-plugin include PHP files (`src/includes/{category}/**/*.php`, excluding `plugins/`) are auto-required on `after_setup_theme`
+- Plugin include PHP files (`src/includes/plugins/{slug}/**/*.php`) are auto-required on `init` only when the corresponding plugin is active
 
 **Style & Script files:**
 - Automatically registered and enqueued based on presence on page

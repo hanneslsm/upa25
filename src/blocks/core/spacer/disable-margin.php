@@ -14,18 +14,22 @@
  * @param string              $name Block type name including namespace.
  * @return array|WP_Block_Type
  */
-function upa25_disable_spacer_margin( $args, $name ) {
-    if ( 'core/spacer' !== $name ) {
+if ( ! function_exists( 'upa25_disable_spacer_margin' ) ) {
+    function upa25_disable_spacer_margin( $args, $name ) {
+        if ( 'core/spacer' !== $name ) {
+            return $args;
+        }
+
+        // Disable margin support for spacer blocks.
+        if ( isset( $args['supports']['spacing']['margin'] ) ) {
+            $args['supports']['spacing']['margin'] = false;
+        } elseif ( is_array( $args ) ) {
+            $args['supports']['spacing']['margin'] = false;
+        }
+
         return $args;
     }
-
-    // Disable margin support for spacer blocks.
-    if ( isset( $args['supports']['spacing']['margin'] ) ) {
-        $args['supports']['spacing']['margin'] = false;
-    } elseif ( is_array( $args ) ) {
-        $args['supports']['spacing']['margin'] = false;
-    }
-
-    return $args;
 }
-add_filter( 'register_block_type_args', 'upa25_disable_spacer_margin', 10, 2 );
+if ( ! has_filter( 'register_block_type_args', 'upa25_disable_spacer_margin' ) ) {
+    add_filter( 'register_block_type_args', 'upa25_disable_spacer_margin', 10, 2 );
+}

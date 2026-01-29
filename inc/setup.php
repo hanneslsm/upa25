@@ -14,9 +14,6 @@ if (!function_exists('upa25_setup')) :
 	{
 		// Make theme available for translation.
 		load_theme_textdomain('upa25', get_template_directory() . '/languages');
-
-		// Enqueue editor styles.
-		add_editor_style('assets/css/editor-style.css');
 	}
 endif; // upa25_setup
 add_action('after_setup_theme', 'upa25_setup');

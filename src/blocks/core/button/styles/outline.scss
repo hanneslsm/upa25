@@ -5,12 +5,9 @@
 /* Block Style: Outline
 --------------------------------------------- */
 .wp-block-button.is-style-outline > .wp-block-button__link {
+
 	&:not(.has-background):hover {
-		background-color: color-mix(
-			in srgb,
-			var(--wp--preset--color--base) 40%,
-			transparent
-		);
+		background-color: color-mix(in srgb, var(--wp--preset--color--base) 40%, transparent);
 	}
 
 	/* Section Styles
@@ -18,6 +15,7 @@
 
 	/* [Brand-3]  */
 	.is-style-section-brand-3 & {
+
 		&:not(.has-background) {
 			background-color: transparent;
 			color: currentcolor;
@@ -25,33 +23,27 @@
 		}
 
 		&:hover {
-			background-color: color-mix(
-				in srgb,
-				var(--wp--preset--color--brand) 20%,
-				transparent
-			);
+			background-color: color-mix(in srgb, var(--wp--preset--color--brand) 20%, transparent);
 			border: 1px solid var(--wp--preset--color--brand-5);
 		}
 	}
 
 	/* [Brand-4]  */
 	.is-style-section-brand-4 & {
+
 		&:not(.has-background) {
 			color: var(--wp--preset--color--brand);
 		}
 
 		&:hover {
-			background-color: color-mix(
-				in srgb,
-				var(--wp--preset--color--base) 80%,
-				transparent
-			);
+			background-color: color-mix(in srgb, var(--wp--preset--color--base) 80%, transparent);
 			border: 1px solid var(--wp--preset--color--brand);
 		}
 	}
 
 	/* [Contrast-2]  */
 	.is-style-section-contrast-2 & {
+
 		&:not(.has-background) {
 			background-color: transparent;
 			color: currentcolor;
@@ -59,11 +51,7 @@
 		}
 
 		&:hover {
-			background-color: color-mix(
-				in srgb,
-				var(--wp--preset--color--base) 5%,
-				transparent
-			);
+			background-color: color-mix(in srgb, var(--wp--preset--color--base) 5%, transparent);
 			border: 1px solid var(--wp--preset--color--brand-3);
 		}
 	}

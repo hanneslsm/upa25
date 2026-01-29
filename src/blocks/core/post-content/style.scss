@@ -5,6 +5,7 @@
 /* Password Form
 --------------------------------------------- */
 .post-password-form {
+
 	input[type="password"] {
 		border: 1px solid var(--wp--preset--color--base-4);
 		background: var(--wp--preset--color--base-2);
@@ -32,6 +33,7 @@
 * comments-pagination and query-pagination
 */
 .post-nav-links {
+
 	.post-page-numbers {
 		padding: 0.5em 1em;
 		border: 1px solid var(--wp--preset--color--base-4);

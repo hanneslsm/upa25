@@ -4,18 +4,8 @@
 
 /* General Styling
 --------------------------------------------- */
-.wp-block-calendar {
-	td {
-		border: 1px solid var(--wp--preset--color--base-4);
-		padding: 0.25em;
-	}
-
-	th {
-		border: 1px solid var(--wp--preset--color--base-4);
-	}
-}
-
 :where(.wp-block-calendar table:not(.has-background)) {
+
 	td > a {
 		display: flex;
 		justify-content: space-evenly;
@@ -33,5 +23,17 @@
 	#today {
 		outline: 1px dashed var(--wp--preset--color--base-6);
 		outline-offset: -0.25em;
+	}
+}
+
+.wp-block-calendar {
+
+	td {
+		border: 1px solid var(--wp--preset--color--base-4);
+		padding: 0.25em;
+	}
+
+	th {
+		border: 1px solid var(--wp--preset--color--base-4);
 	}
 }

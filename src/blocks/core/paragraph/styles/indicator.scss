@@ -19,6 +19,7 @@ p.is-style-indicator {
 
 	/* [Brand-3] */
 	.is-style-section-brand-3 & {
+
 		&::before {
 			border: 1px solid var(--wp--preset--color--brand-7);
 		}

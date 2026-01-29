@@ -1,7 +1,7 @@
 ///
 /// Cover
 ///
-@use "../../../../scss/global/_variables" as *;
+@use "../../../../scss/global/variables" as *;
 
 /* Block Style: Cover Link
 --------------------------------------------- */
@@ -45,7 +45,9 @@
 }
 
 @media screen and (min-width: $medium) {
+
 	.is-style-cover-link {
+
 		.has-background-dim {
 			display: none;
 		}

@@ -5,6 +5,7 @@
 /* General Styling
 --------------------------------------------- */
 .wp-block-table {
+
 	table,
 	th,
 	td {
@@ -26,7 +27,7 @@
 		border-top: 1px solid var(--wp--preset--color--base-6);
 		text-align: left;
 
-		& tr {
+		tr {
 			border-bottom: none;
 		}
 	}
@@ -39,6 +40,7 @@
 	/* [Brand] */
 	.is-style-section-contrast &,
 	.is-style-section-brand & {
+
 		thead {
 			background-color: transparent;
 			border-bottom: 2px solid var(--wp--preset--color--base-2);
@@ -48,7 +50,7 @@
 			background-color: transparent;
 			border-top: 2px solid var(--wp--preset--color--base-6);
 
-			& tr {
+			tr {
 				border-bottom: none;
 			}
 		}

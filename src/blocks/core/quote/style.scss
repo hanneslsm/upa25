@@ -8,6 +8,7 @@
 	quotes: "„" "“";
 
 	p:first-of-type {
+
 		&::before {
 			content: open-quote;
 			display: inline-block;
@@ -16,6 +17,7 @@
 	}
 
 	p:last-of-type {
+
 		&::after {
 			content: close-quote;
 			display: inline-block;

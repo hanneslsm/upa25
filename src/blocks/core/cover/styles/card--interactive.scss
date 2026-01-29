@@ -3,7 +3,7 @@
 ///
 /// @link https://developer.wordpress.org/news/2024/07/building-a-card-layout-with-a-hover-reveal-effect/
 ///
-@use "../../../../scss/global/_variables" as *;
+@use "../../../../scss/global/variables" as *;
 
 /* Block Style: Cards
 --------------------------------------------- */
@@ -11,27 +11,8 @@
 	position: relative;
 	box-shadow: var(--wp--preset--shadow--medium);
 
-	&:focus-within,
-	&:hover {
-		box-shadow: var(--wp--preset--shadow--large);
-	}
-
 	:where(.wp-block-group.wp-block-group-is-layout-constrained) {
 		position: static;
-	}
-
-	/* Make whole card clickable */
-	&:not(.has-child-selected) {
-		:where(.wp-block-heading) {
-			a {
-				&::after {
-					content: "";
-					inset: 0;
-					position: absolute;
-					z-index: 10;
-				}
-			}
-		}
 	}
 
 	/* Animate the Cover block image */
@@ -39,16 +20,6 @@
 		filter: saturate(100%) brightness(100%);
 		transform: scale(1);
 		transition: all 0.35s ease;
-	}
-
-	&:not(.has-child-selected) {
-		&:focus-within,
-		&:hover {
-			:where(.wp-block-cover__image-background) {
-				filter: saturate(200%) brightness(40%);
-				transform: scale(1.15);
-			}
-		}
 	}
 
 	/* Animate label area */
@@ -64,20 +35,35 @@
 		}
 	}
 
-	&:focus-within,
-	&:hover {
-		:where(.is-vertical) {
-			.wp-block-group:first-of-type {
-				opacity: 1;
-				transform: scale(1) translateX(0);
+	/* Make whole card clickable */
+	&:not(.has-child-selected) {
+
+		:where(.wp-block-heading) {
+
+			a {
+
+				&::after {
+					content: "";
+					inset: 0;
+					position: absolute;
+					z-index: 10;
+				}
 			}
 		}
-	}
 
-	/* Animate content area */
-	&:not(.has-child-selected) {
+		&:focus-within,
+		&:hover {
+
+			:where(.wp-block-cover__image-background) {
+				filter: saturate(200%) brightness(40%);
+				transform: scale(1.15);
+			}
+		}
+
 		:where(.is-vertical) {
+
 			.wp-block-group:first-of-type + .wp-block-group {
+
 				p {
 					max-height: 0;
 					opacity: 0;
@@ -92,8 +78,17 @@
 
 	&:focus-within,
 	&:hover {
+		box-shadow: var(--wp--preset--shadow--large);
+
 		:where(.is-vertical) {
+
+			.wp-block-group:first-of-type {
+				opacity: 1;
+				transform: scale(1) translateX(0);
+			}
+
 			.wp-block-group:first-of-type + .wp-block-group {
+
 				p {
 					max-height: 100%;
 					opacity: 1;
@@ -101,9 +96,11 @@
 			}
 		}
 	}
+
 }
 
 @media (prefers-reduced-motion: reduce) {
+
 	.is-style-card--interactive *,
 	.is-style-card--interactive *::after,
 	.is-style-card--interactive *::before {
@@ -114,7 +111,9 @@
 }
 
 @media (max-width: $medium) {
+
 	.is-style-card--interactive {
+
 		/* Disable hover/focus box-shadow change */
 		&:focus-within,
 		&:hover {
@@ -130,6 +129,7 @@
 
 		/* Label area always visible */
 		:where(.is-vertical) {
+
 			.wp-block-group:first-of-type {
 				opacity: 1;
 				transform: none;
@@ -138,6 +138,7 @@
 
 			/* Content always visible */
 			.wp-block-group:first-of-type + .wp-block-group {
+
 				p {
 					max-height: none !important;
 					opacity: 1 !important;

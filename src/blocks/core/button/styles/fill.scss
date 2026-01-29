@@ -6,16 +6,14 @@
 --------------------------------------------- */
 .wp-block-button:not([class*="is-style-"]) > .wp-block-button__link,
 .wp-block-button.is-style-fill > .wp-block-button__link {
+
 	/* Hover effect for buttons without a background */
 	// &:not(.has-background):hover {
 	// 	background-color: var(--wp--preset--color--brand);
 	// }
 
 	&.has-background:hover {
-		background-image: linear-gradient(
-			rgba(0, 0, 0, 0.2),
-			rgba(0, 0, 0, 0.2)
-		);
+		background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 		background-blend-mode: overlay;
 	}
 
@@ -24,6 +22,7 @@
 
 	/* [Brand-3]  */
 	.is-style-section-brand-3 & {
+
 		&:not(.has-background):hover {
 			background-color: var(--wp--preset--color--brand);
 			color: var(--wp--preset--color--base);
@@ -32,6 +31,7 @@
 
 	/* [Contrast-2] */
 	.is-style-section-contrast-2 & {
+
 		&:not(.has-background):hover {
 			background-color: var(--wp--preset--color--brand);
 		}

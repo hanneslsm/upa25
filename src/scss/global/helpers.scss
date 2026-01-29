@@ -230,15 +230,21 @@
 
 /* Responsive
 --------------------------------------------- */
-// One single mixin generates all breakpoint-specific utility classes.
-// $mode accepts either min or max to switch between `min-width` and `max-width`.
+// One single mixin generates all breakpoint-specific utility
+// classes.
+// $mode accepts either min or max to switch between
+// `min-width` and `max-width`.
 @mixin responsive-styles($breakpoint, $prefix, $mode: max) {
-	@media screen and (#{ $mode }-width: $breakpoint) {
+
+	@media screen and (
+		#{ $mode }-width: $breakpoint
+	) {
+
 		/**
  		* Title: Dev Tools
  		**/
 		.#{$prefix}-border-red {
-			border: 1px solid red !important;
+			border: 1px solid #f00 !important;
 		}
 
 		/**

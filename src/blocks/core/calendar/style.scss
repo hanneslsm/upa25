@@ -5,7 +5,6 @@
 /* General Styling
 --------------------------------------------- */
 :where(.wp-block-calendar table:not(.has-background)) {
-
 	td > a {
 		display: flex;
 		justify-content: space-evenly;
@@ -27,7 +26,6 @@
 }
 
 .wp-block-calendar {
-
 	td {
 		border: 1px solid var(--wp--preset--color--base-4);
 		padding: 0.25em;

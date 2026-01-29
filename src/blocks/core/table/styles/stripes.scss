@@ -20,7 +20,6 @@
 
 	/* [Contrast] */
 	.is-style-section-contrast & {
-
 		tr {
 			border-bottom: 1px solid var(--wp--preset--color--contrast-6);
 		}
@@ -28,7 +27,6 @@
 
 	/* [Brand] */
 	.is-style-section-brand & {
-
 		tr {
 			border-bottom: 1px solid var(--wp--preset--color--base-6);
 		}
@@ -41,7 +39,6 @@
 	/* [Contrast] */
 	/* stylelint-disable-next-line no-duplicate-selectors */
 	.is-style-section-contrast & {
-
 		tbody tr:nth-child(odd) {
 			background-color: var(--wp--preset--color--contrast-2);
 		}
@@ -50,7 +47,6 @@
 	/* [Brand] */
 	/* stylelint-disable-next-line no-duplicate-selectors */
 	.is-style-section-brand & {
-
 		tbody tr:nth-child(odd) {
 			background-color: var(--wp--preset--color--contrast);
 		}

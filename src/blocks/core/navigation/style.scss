@@ -11,9 +11,9 @@
 }
 
 @media screen and (min-width: $medium) {
-
 	.wp-block-navigation
-	.has-child:not(.open-on-click):hover > .wp-block-navigation__submenu-container {
+		.has-child:not(.open-on-click):hover
+		> .wp-block-navigation__submenu-container {
 		width: 250px;
 		box-shadow: var(--wp--preset--shadow--x-large);
 
@@ -29,7 +29,6 @@
 
 /* Bug fix */
 @media (max-width: $medium) {
-
 	.wp-block-navigation__responsive-container.is-menu-open {
 		min-height: 100vh;
 		z-index: 9999;

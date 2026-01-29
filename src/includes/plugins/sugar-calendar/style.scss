@@ -5,7 +5,6 @@
  */
 
 .theme-upa25 {
-
 	.sc-frontend-single-event__details > div {
 		border-bottom: 1px solid var(--wp--preset--color--base-4);
 		padding-bottom: 0.5em;
@@ -13,13 +12,13 @@
 	}
 
 	.sc_event_details_inner
-	.sc-frontend-single-event
-	.sugar_calendar_event_ticketing_frontend_single_event
-	.sugar_calendar_event_ticketing_frontend_single_event__buy_now,
+		.sc-frontend-single-event
+		.sugar_calendar_event_ticketing_frontend_single_event
+		.sugar_calendar_event_ticketing_frontend_single_event__buy_now,
 	.sc_event_details_inner
-	.sc-frontend-single-event
-	.sugar_calendar_event_ticketing_frontend_single_event
-	.sugar_calendar_event_ticketing_frontend_single_event__buy_now--woocommerce {
+		.sc-frontend-single-event
+		.sugar_calendar_event_ticketing_frontend_single_event
+		.sugar_calendar_event_ticketing_frontend_single_event__buy_now--woocommerce {
 		background: var(--wp--preset--color--brand-3);
 		border-radius: 999px;
 
@@ -29,15 +28,15 @@
 	}
 
 	#sc-event-ticketing-wrap
-	#sc-event-ticketing-price-wrap
-	.sc-event-ticketing-price-wrap__add-to-cart-section
-	.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
-	#sc-event-ticketing-buy-button,
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button,
 	#sc-event-ticketing-wrap
-	#sc-event-ticketing-price-wrap
-	.sc-event-ticketing-price-wrap__add-to-cart-section
-	.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
-	#sc-event-ticketing-buy-button-woocommerce {
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button-woocommerce {
 		background: var(--wp--preset--color--brand-3);
 		border-radius: 999px;
 

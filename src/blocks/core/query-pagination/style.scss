@@ -5,9 +5,9 @@
 /* General Styling
 --------------------------------------------- */
 /* This navigation style is also used in
-* core-post-content.scss and core-query-pagination.scss
+* comments-pagination and post-content
 */
-.wp-block-comments-pagination-numbers {
+.wp-block-query-pagination-numbers {
 	.page-numbers {
 		padding: 0.5em 1em;
 		border: 1px solid var(--wp--preset--color--base-4);

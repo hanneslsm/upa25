@@ -86,8 +86,7 @@ folder inside `src/scss/blocks` with a file named after the block and prefixed b
 
 ### Template Parts
 
-`upa25` ships with multiple template parts such as `footer-wide` and
-`footer-centered`. To add another part:
+To add another part:
 
 1. Create an HTML file in the `parts/` folder and reference a pattern from it.
 2. Add the corresponding pattern file inside `patterns/`.

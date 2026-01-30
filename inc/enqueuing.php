@@ -7,7 +7,7 @@
  * - build/includes/{category}/{name}/ — Component assets (plugins, utilities, etc.)
  *
  * @package upa25
- * @version 5.0.0
+ * @version 5.1.0
  */
 
 declare( strict_types=1 );
@@ -127,6 +127,8 @@ add_action( 'init', 'upa25_register_block_assets', 9 );
 
 /**
  * Auto-load PHP files from build/blocks/ (e.g., block controls, filters).
+ *
+ * Skips render.php files as these are block render templates handled by WordPress.
  */
 function upa25_autoload_block_php_files(): void {
 	$blocks_dir = get_theme_file_path( 'build/blocks' );
@@ -140,7 +142,8 @@ function upa25_autoload_block_php_files(): void {
 	);
 
 	foreach ( $iterator as $file ) {
-		if ( $file->isFile() && 'php' === $file->getExtension() ) {
+		// Skip render.php files (block render templates handled by WP block rendering).
+		if ( $file->isFile() && 'php' === $file->getExtension() && 'render.php' !== $file->getFilename() ) {
 			require_once $file->getPathname();
 		}
 	}
@@ -149,6 +152,8 @@ add_action( 'after_setup_theme', 'upa25_autoload_block_php_files', 5 );
 
 /**
  * Auto-load PHP files from build/includes/ (e.g., component logic, filters).
+ *
+ * Skips render.php files as these are render templates handled by WordPress.
  */
 function upa25_autoload_includes_php_files(): void {
 	$includes_dir = get_theme_file_path( 'build/includes' );
@@ -162,7 +167,8 @@ function upa25_autoload_includes_php_files(): void {
 	);
 
 	foreach ( $iterator as $file ) {
-		if ( $file->isFile() && 'php' === $file->getExtension() ) {
+		// Skip render.php files (render templates handled by the theme).
+		if ( $file->isFile() && 'php' === $file->getExtension() && 'render.php' !== $file->getFilename() ) {
 			require_once $file->getPathname();
 		}
 	}

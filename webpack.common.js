@@ -51,8 +51,9 @@ const ENTRY_PATTERNS = {
 	blocks: [
 		'blocks/**/style.scss',
 		'blocks/**/editor.scss',
-		'blocks/**/view.js',
-		'blocks/**/editor.js',
+		// All JS files compiled here. Loading context (editor/frontend/conditional) is controlled
+		// by block.json (custom blocks) or PHP hooks (core customizations, includes).
+		'blocks/**/*.js',
 		'blocks/**/styles/*.scss',
 	],
 };

@@ -19,7 +19,7 @@
 		color: var(--wp--preset--color--base);
 		font-size: var(--wp--preset--font-size--medium);
 		padding: var(--wp--preset--spacing--10);
-		border-radius: 999px;
+		border-radius: var(--wp--preset--border-radius--full);
 		padding-left: var(--wp--preset--spacing--30);
 		padding-right: var(--wp--preset--spacing--30);
 	}

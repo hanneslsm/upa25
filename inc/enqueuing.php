@@ -331,6 +331,7 @@ function upa25_is_plugin_active( string $slug ): bool {
 	// Try common patterns
 	$patterns = array(
 		"{$slug}/{$slug}.php",
+		"{$slug}/wp-{$slug}.php",
 		"{$slug}/plugin.php",
 		"{$slug}/index.php",
 		"{$slug}.php",

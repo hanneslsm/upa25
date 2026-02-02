@@ -19,7 +19,8 @@
 		"!.editorconfig",
 		"!.gitignore",
 		"!package.json",
-		"!webpack.*.js"
+		"!webpack.*.js",
+		"!**/.webpack-cache/**"
 	],
 	"author": "hanneslsm",
 	"license": "GPL-2.0",

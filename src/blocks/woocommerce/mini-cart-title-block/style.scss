@@ -1,0 +1,17 @@
+///
+/// Block: WooCommerce Mini Cart Title
+///
+
+.wc-block-mini-cart__title {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+// .wp-block-woocommerce-mini-cart-title-label-block {
+// }
+
+.wp-block-woocommerce-mini-cart-title-items-counter-block {
+	color: var(--wp--preset--color--contrast-3);
+	font-size: 0.825em;
+}

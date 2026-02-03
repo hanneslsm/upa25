@@ -6,7 +6,7 @@
 --------------------------------------------- */
 :where(.wp-block-search__button-inside .wp-block-search__inside-wrapper) {
 	border: 1px solid var(--wp--preset--color--base-4);
-	border-radius: 0 999px 999px 0;
+	border-radius: var(--wp--preset--border-radius--full);
 }
 
 /* Update button padding when icon is present */

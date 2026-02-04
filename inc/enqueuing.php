@@ -51,6 +51,7 @@ add_action( 'after_setup_theme', 'upa25_register_editor_styles' );
 | - style.css — Base block styles (auto-enqueued via wp_enqueue_block_style)
 | - styles/*.css — Style variations (registered, enqueued when is-style-* detected)
 | - block.json — Custom block registration (calls register_block_type)
+| - editor.js — Editor-only scripts (enqueued via enqueue_block_editor_assets)
 |
 */
 
@@ -124,6 +125,45 @@ function upa25_register_block_assets(): void {
 	}
 }
 add_action( 'init', 'upa25_register_block_assets', 9 );
+
+/**
+ * Enqueue editor.js scripts for core block extensions.
+ *
+ * Scans build/blocks/{namespace}/{block}/ for editor.js files and enqueues
+ * them in the block editor. Skips custom blocks (those with block.json) as
+ * they handle their own editor scripts.
+ */
+function upa25_enqueue_block_editor_scripts(): void {
+	$blocks_dir = get_theme_file_path( 'build/blocks' );
+	if ( ! is_dir( $blocks_dir ) ) {
+		return;
+	}
+
+	// Scan for namespace directories (core, woocommerce, etc.)
+	foreach ( glob( $blocks_dir . '/*', GLOB_ONLYDIR ) as $namespace_path ) {
+		$namespace = basename( $namespace_path );
+
+		// Scan for block directories within namespace
+		foreach ( glob( $namespace_path . '/*', GLOB_ONLYDIR ) as $block_path ) {
+			$block_slug = basename( $block_path );
+
+			// Skip custom blocks (they handle their own scripts via block.json)
+			if ( file_exists( $block_path . '/block.json' ) ) {
+				continue;
+			}
+
+			// Enqueue editor.js if it exists
+			$editor_js = $block_path . '/editor.js';
+			if ( file_exists( $editor_js ) ) {
+				$handle   = "upa25-block-{$namespace}-{$block_slug}-editor";
+				$relative = "build/blocks/{$namespace}/{$block_slug}/editor.js";
+
+				upa25_enqueue_script_asset( $handle, $relative, false );
+			}
+		}
+	}
+}
+add_action( 'enqueue_block_editor_assets', 'upa25_enqueue_block_editor_scripts' );
 
 /**
  * Auto-load PHP files from build/blocks/ (e.g., block controls, filters).

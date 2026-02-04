@@ -7,7 +7,7 @@
  * - build/includes/{category}/{name}/ — Component assets (plugins, utilities, etc.)
  *
  * @package upa25
- * @version 5.1.0
+ * @version 5.2.0
  */
 
 declare( strict_types=1 );
@@ -216,11 +216,10 @@ function upa25_autoload_includes_php_files(): void {
 add_action( 'after_setup_theme', 'upa25_autoload_includes_php_files', 5 );
 
 /**
- * Auto-load PHP files from build/plugins/ early in theme setup.
+ * Auto-load PHP files from build/plugins/ during theme setup.
  *
  * Runs on after_setup_theme (late priority) so plugin files can hook into
- * after_setup_theme and init. Uses class/constant checks since is_plugin_active()
- * isn't reliable this early.
+ * after_setup_theme and init.
  */
 function upa25_autoload_plugin_php_files(): void {
 	$plugins_dir = get_theme_file_path( 'build/plugins' );
@@ -232,8 +231,8 @@ function upa25_autoload_plugin_php_files(): void {
 	foreach ( glob( $plugins_dir . '/*', GLOB_ONLYDIR ) as $plugin_path ) {
 		$plugin_slug = basename( $plugin_path );
 
-		// Only load if the plugin is active (check class/constant existence)
-		if ( ! upa25_is_plugin_loaded( $plugin_slug ) ) {
+		// Only load if the plugin is active
+		if ( ! upa25_is_plugin_active( $plugin_slug ) ) {
 			continue;
 		}
 
@@ -250,55 +249,6 @@ function upa25_autoload_plugin_php_files(): void {
 	}
 }
 add_action( 'after_setup_theme', 'upa25_autoload_plugin_php_files', 99 );
-
-/**
- * Check if a plugin is loaded by detecting its class or constant.
- *
- * This works earlier than is_plugin_active() since it checks if the plugin
- * code has actually been loaded, not just if it's in the active plugins option.
- *
- * @param string $slug Plugin slug.
- * @return bool
- */
-function upa25_is_plugin_loaded( string $slug ): bool {
-	// Map plugin slugs to their main class or constant
-	$plugin_indicators = array(
-		'woocommerce'       => array( 'class' => 'WooCommerce' ),
-		'sugar-calendar'    => array( 'class' => 'Sugar_Calendar\Plugin' ),
-		'wc-serial-numbers' => array( 'class' => 'WC_Serial_Numbers' ),
-		'contact-form-7'    => array( 'constant' => 'WPCF7_VERSION' ),
-		'wordpress-seo'     => array( 'constant' => 'WPSEO_VERSION' ),
-		'gutenberg'         => array( 'function' => 'gutenberg_init' ),
-	);
-
-	if ( ! isset( $plugin_indicators[ $slug ] ) ) {
-		// Fallback: try common class naming patterns
-		$class_patterns = array(
-			str_replace( '-', '_', ucwords( $slug, '-' ) ),
-			str_replace( '-', '_', strtoupper( $slug ) ),
-		);
-		foreach ( $class_patterns as $class ) {
-			if ( class_exists( $class, false ) ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	$indicator = $plugin_indicators[ $slug ];
-
-	if ( isset( $indicator['class'] ) && class_exists( $indicator['class'], false ) ) {
-		return true;
-	}
-	if ( isset( $indicator['constant'] ) && defined( $indicator['constant'] ) ) {
-		return true;
-	}
-	if ( isset( $indicator['function'] ) && function_exists( $indicator['function'] ) ) {
-		return true;
-	}
-
-	return false;
-}
 
 /*
 |--------------------------------------------------------------------------

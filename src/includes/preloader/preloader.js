@@ -43,8 +43,12 @@
 			// Add loading class to body.
 			document.body.classList.add( 'upa25-preloading' );
 
-			this.progressBar = this.preloader.querySelector( '.upa25-preloader__progress' );
-			this.progressFill = this.preloader.querySelector( '.upa25-preloader__progress-fill' );
+			this.progressBar = this.preloader.querySelector(
+				'.upa25-preloader__progress'
+			);
+			this.progressFill = this.preloader.querySelector(
+				'.upa25-preloader__progress-fill'
+			);
 
 			// Prevent scroll during loading.
 			document.documentElement.style.overflow = 'hidden';
@@ -85,15 +89,21 @@
 			this.progress += ( targetProgress - this.progress ) * 0.1;
 
 			if ( this.progressFill ) {
-				this.progressFill.style.transform = 'scaleX(' + ( this.progress / 100 ) + ')';
+				this.progressFill.style.transform =
+					'scaleX(' + this.progress / 100 + ')';
 			}
 
 			// Update ARIA value for accessibility.
 			if ( this.progressBar ) {
-				this.progressBar.setAttribute( 'aria-valuenow', Math.round( this.progress ) );
+				this.progressBar.setAttribute(
+					'aria-valuenow',
+					Math.round( this.progress )
+				);
 			}
 
-			this.animationFrame = requestAnimationFrame( () => this.animateProgress() );
+			this.animationFrame = requestAnimationFrame( () =>
+				this.animateProgress()
+			);
 		}
 
 		/**
@@ -145,14 +155,11 @@
 
 			// Fade out with Web Animations API.
 			const fadeOut = this.preloader.animate(
-				[
-					{ opacity: 1 },
-					{ opacity: 0 }
-				],
+				[ { opacity: 1 }, { opacity: 0 } ],
 				{
 					duration: 400,
 					easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-					fill: 'forwards'
+					fill: 'forwards',
 				}
 			);
 

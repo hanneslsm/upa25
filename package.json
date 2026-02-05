@@ -8,7 +8,7 @@
 		"lint:css": "wp-scripts lint-style 'src/**/*.scss'",
 		"lint:css:fix": "wp-scripts lint-style 'src/**/*.scss' --fix",
 		"lint:js": "wp-scripts lint-js 'src/**/*.{js,jsx,json,ts,tsx}'",
-		"format": "wp-scripts format 'src/**/*.{js,jsx,json,ts,tsx,css,scss,php}' '!src/fonts/**'",
+		"format": "wp-scripts format 'src/**/*.{js,jsx,json,ts,tsx,css,scss}' '!src/fonts/**'",
 		"zip": "wp-scripts plugin-zip",
 		"packages-update": "wp-scripts packages-update"
 	},

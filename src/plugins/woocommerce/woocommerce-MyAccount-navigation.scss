@@ -1,0 +1,22 @@
+///
+/// Styles the WooCommerce My Account navigation
+///
+///
+
+.woocommerce-account .woocommerce-MyAccount-navigation {
+	ul {
+		border: 1px solid var(--wp--preset--color--base-4);
+	}
+	li {
+		padding: 0;
+	}
+
+	li a {
+		border-bottom: 1px solid var(--wp--preset--color--base-4);
+		display: block;
+		padding: 0.75em;
+	}
+	.is-active {
+		background-color: var(--wp--preset--color--base-2);
+	}
+}

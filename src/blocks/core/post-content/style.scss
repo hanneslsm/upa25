@@ -8,20 +8,20 @@
 	input[type="password"] {
 		border: 1px solid var(--wp--preset--color--base-4);
 		background: var(--wp--preset--color--base-2);
+		padding: var(--wp--preset--spacing--10);
 		color: var(--wp--preset--color--contrast-2);
 		font-size: var(--wp--preset--font-size--medium);
-		padding: var(--wp--preset--spacing--10);
 	}
 
 	input[type="submit"] {
 		border: 1px solid var(--wp--preset--color--base-4);
+		border-radius: var(--wp--preset--border-radius--full);
 		background: var(--wp--preset--color--contrast);
+		padding: var(--wp--preset--spacing--10);
+		padding-right: var(--wp--preset--spacing--30);
+		padding-left: var(--wp--preset--spacing--30);
 		color: var(--wp--preset--color--base);
 		font-size: var(--wp--preset--font-size--medium);
-		padding: var(--wp--preset--spacing--10);
-		border-radius: var(--wp--preset--border-radius--full);
-		padding-left: var(--wp--preset--spacing--30);
-		padding-right: var(--wp--preset--spacing--30);
 	}
 }
 
@@ -33,11 +33,11 @@
 */
 .post-nav-links {
 	.post-page-numbers {
-		padding: 0.5em 1em;
 		border: 1px solid var(--wp--preset--color--base-4);
 		border-radius: 3px;
-		text-decoration: none;
+		padding: 0.5em 1em;
 		font-variant-numeric: tabular-nums;
+		text-decoration: none;
 	}
 
 	a:hover {

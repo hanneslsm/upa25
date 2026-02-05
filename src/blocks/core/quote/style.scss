@@ -9,17 +9,17 @@
 
 	p:first-of-type {
 		&::before {
-			content: open-quote;
 			display: inline-block;
 			position: relative;
+			content: open-quote;
 		}
 	}
 
 	p:last-of-type {
 		&::after {
-			content: close-quote;
 			display: inline-block;
 			position: relative;
+			content: close-quote;
 		}
 	}
 }

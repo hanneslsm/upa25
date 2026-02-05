@@ -9,22 +9,22 @@
 
 	li {
 		position: relative;
+		margin-block-end: var(--wp--preset--spacing--10);
 		padding-left: 30px;
 		list-style: none;
-		margin-block-end: var(--wp--preset--spacing--10);
 	}
 
 	li::after {
 		position: absolute;
-		left: 0;
 		top: 0.25em;
+		left: 0;
+		border-radius: 50%;
+		background-color: var(--wp--preset--color--base-3);
 		width: 2ch;
 		height: 2ch;
-		color: #e73d00;
-		text-align: center;
-		background-color: var(--wp--preset--color--base-3);
-		line-height: 1.2;
 		content: "\2717";
-		border-radius: 50%;
+		color: #e73d00;
+		line-height: 1.2;
+		text-align: center;
 	}
 }

@@ -10,11 +10,11 @@
 */
 .wp-block-query-pagination-numbers {
 	.page-numbers {
-		padding: 0.5em 1em;
 		border: 1px solid var(--wp--preset--color--base-4);
 		border-radius: 3px;
-		text-decoration: none;
+		padding: 0.5em 1em;
 		font-variant-numeric: tabular-nums;
+		text-decoration: none;
 	}
 
 	a:hover {

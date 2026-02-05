@@ -5,8 +5,8 @@
 /* Block Style: Scale Effect
 --------------------------------------------- */
 .wp-block-gallery.is-style-scale-effect figure {
-	transition: all 200ms ease-in-out;
 	z-index: 1000;
+	transition: all 200ms ease-in-out;
 
 	&:hover {
 		transform: scale(1.1);

@@ -5,9 +5,9 @@
 /* Block Style for Table
 --------------------------------------------- */
 .wp-block-table.is-style-compact {
+	overflow-y: hidden;
 	font-size: var(--wp--preset--font-size--small);
 	line-height: 1;
-	overflow-y: hidden;
 
 	td {
 		padding: var(--wp--preset--spacing--10);

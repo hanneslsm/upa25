@@ -8,8 +8,8 @@
 .wp-block-file__button:is(a):hover,
 .wp-block-file__button:is(a):visited {
 	opacity: 1;
-	text-decoration: none;
 	box-shadow: var(--wp--preset--shadow--medium);
+	text-decoration: none;
 }
 
 :where(.wp-block-file__button):is(a):active {

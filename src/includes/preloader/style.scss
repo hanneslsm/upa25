@@ -14,13 +14,13 @@
 
 .screen-reader-text {
 	clip: rect(1px, 1px, 1px, 1px);
-	clip-path: inset(50%);
-	height: 1px;
-	width: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
 	position: absolute;
+	clip-path: inset(50%);
+	margin: -1px;
+	padding: 0;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
 	word-wrap: normal !important;
 }
 
@@ -43,22 +43,22 @@ body.upa25-preloading {
 // =============================================================================
 
 .upa25-preloader {
+	display: flex;
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 99999;
-	background-color: var(--wp--preset--color--base); // Theme white
-	display: flex;
-	align-items: center;
 	justify-content: center;
-	overflow: hidden;
+	align-items: center;
 
 	// GPU acceleration
 	transform: translateZ(0);
+	z-index: 99999;
 	backface-visibility: hidden;
 	will-change: opacity;
+	background-color: var(--wp--preset--color--base); // Theme white
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
 }
 
 // =============================================================================
@@ -70,12 +70,12 @@ body.upa25-preloading {
 	flex-direction: column;
 	align-items: center;
 	gap: var(--wp--preset--spacing--40); // 3rem from theme
-	width: 100%;
-	max-width: 400px;
-	padding: var(--wp--preset--spacing--30); // 2.25rem from theme
 
 	// Subtle entry animation
 	animation: upa25-fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+	padding: var(--wp--preset--spacing--30); // 2.25rem from theme
+	width: 100%;
+	max-width: 400px;
 }
 
 // =============================================================================
@@ -83,35 +83,35 @@ body.upa25-preloading {
 // =============================================================================
 
 .upa25-preloader__logo-wrapper {
-	position: relative;
 	display: flex;
-	align-items: center;
+	position: relative;
 	justify-content: center;
+	align-items: center;
 
 	// Subtle scale animation
 	animation: upa25-logo-breathe 2s ease-in-out infinite;
 }
 
 .upa25-preloader__logo {
-	max-width: 120px;
-	width: 100%;
-	height: auto;
 	display: block;
-
-	// Smooth rendering
-	image-rendering: -webkit-optimize-contrast;
-	image-rendering: crisp-edges;
 
 	// GPU acceleration
 	transform: translateZ(0);
 	backface-visibility: hidden;
+
+	// Smooth rendering
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: crisp-edges;
+	width: 100%;
+	max-width: 120px;
+	height: auto;
 }
 
 .upa25-preloader__logo-text {
-	font-family: var(--wp--preset--font-family--josefin-sans);
-	font-size: clamp(1.5rem, 4vw, 2.5rem);
-	font-weight: 600;
 	color: var(--wp--preset--color--contrast); // Theme dark color
+	font-weight: 600;
+	font-size: clamp(1.5rem, 4vw, 2.5rem);
+	font-family: var(--wp--preset--font-family--josefin-sans);
 	letter-spacing: -0.02em;
 }
 
@@ -120,13 +120,13 @@ body.upa25-preloading {
 // =============================================================================
 
 .upa25-preloader__progress {
+	position: relative;
+	border-radius: 9999px;
+	background-color: var(--wp--preset--color--base-4); // Light gray from theme
 	width: 100%;
 	max-width: 320px;
 	height: 2px;
-	background-color: var(--wp--preset--color--base-4); // Light gray from theme
-	border-radius: 9999px;
 	overflow: hidden;
-	position: relative;
 }
 
 // =============================================================================
@@ -137,21 +137,21 @@ body.upa25-preloading {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: var(
-		--wp--preset--color--brand
-	); // Theme brand pink #D62261
-	border-radius: 9999px;
-	transform-origin: left center;
 	transform: scaleX(0);
-	will-change: transform;
+	transform-origin: left center;
 
 	// GPU acceleration
 	backface-visibility: hidden;
 
 	// Smooth transition for completion
 	transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: transform;
+	border-radius: 9999px;
+	background-color: var(
+		--wp--preset--color--brand
+	); // Theme brand pink #D62261
+	width: 100%;
+	height: 100%;
 }
 
 // =============================================================================
@@ -160,12 +160,12 @@ body.upa25-preloading {
 
 @keyframes upa25-fade-in-up {
 	0% {
-		opacity: 0;
 		transform: translateY(20px);
+		opacity: 0;
 	}
 	100% {
-		opacity: 1;
 		transform: translateY(0);
+		opacity: 1;
 	}
 }
 

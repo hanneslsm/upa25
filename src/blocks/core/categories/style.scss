@@ -13,8 +13,8 @@
 	 * Label styling
 	 */
 	.wp-block-categories__label {
-		font-weight: 600;
 		margin-bottom: 1rem;
+		font-weight: 600;
 	}
 
 	/**
@@ -37,18 +37,18 @@
 		 */
 		.wp-block-categories__term-link {
 			display: inline-block;
-			padding: 0.5rem 1rem;
+			transition: all 0.2s ease-in-out;
+			border-radius: 0.25rem;
 			background-color: var(--wp--preset--color--contrast, #000);
+			padding: 0.5rem 1rem;
 			color: var(--wp--preset--color--base, #fff);
 			text-decoration: none;
-			border-radius: 0.25rem;
-			transition: all 0.2s ease-in-out;
 
 			&:hover,
 			&:focus {
-				background-color: var(--wp--preset--color--primary, #333);
 				transform: translateY(-2px);
 				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+				background-color: var(--wp--preset--color--primary, #333);
 			}
 		}
 
@@ -57,8 +57,8 @@
 		 */
 		.wp-block-categories__term-count {
 			opacity: 0.7;
-			font-size: 0.875em;
 			margin-left: 0.25rem;
+			font-size: 0.875em;
 		}
 
 		/**
@@ -80,17 +80,17 @@
 		 * Hierarchical children styling
 		 */
 		.wp-block-categories__term-children {
-			margin-top: 0.5rem;
-			padding-left: 1rem;
 			display: flex;
 			flex-wrap: wrap;
 			gap: 0.5rem;
+			margin-top: 0.5rem;
+			padding-left: 1rem;
 
 			.wp-block-categories__term {
 				.wp-block-categories__term-link {
+					opacity: 0.9;
 					padding: 0.375rem 0.75rem;
 					font-size: 0.9em;
-					opacity: 0.9;
 				}
 			}
 		}

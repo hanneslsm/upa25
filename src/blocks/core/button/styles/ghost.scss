@@ -5,10 +5,10 @@
 /* Block Style: Ghost
 --------------------------------------------- */
 .wp-block-button.is-style-ghost > .wp-block-button__link {
-	color: currentcolor;
-	background-color: transparent;
-	border: transparent;
 	box-shadow: none;
+	border: transparent;
+	background-color: transparent;
+	color: currentcolor;
 
 	&:hover {
 		background-color: color-mix(

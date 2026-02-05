@@ -12,8 +12,8 @@
 	}
 
 	thead {
-		background-color: var(--wp--preset--color--base-2);
 		border-bottom: 1px solid var(--wp--preset--color--base-6);
+		background-color: var(--wp--preset--color--base-2);
 		text-align: left;
 	}
 
@@ -22,8 +22,8 @@
 	}
 
 	tfoot {
-		background-color: var(--wp--preset--color--base-2);
 		border-top: 1px solid var(--wp--preset--color--base-6);
+		background-color: var(--wp--preset--color--base-2);
 		text-align: left;
 
 		tr {
@@ -40,13 +40,13 @@
 	.is-style-section-contrast &,
 	.is-style-section-brand & {
 		thead {
-			background-color: transparent;
 			border-bottom: 2px solid var(--wp--preset--color--base-2);
+			background-color: transparent;
 		}
 
 		tfoot {
-			background-color: transparent;
 			border-top: 2px solid var(--wp--preset--color--base-6);
+			background-color: transparent;
 
 			tr {
 				border-bottom: none;

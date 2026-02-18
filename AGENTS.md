@@ -7,18 +7,26 @@
 - When making changes across multiple files, verify consistency and make all related updates together.
 - Always double-check for side effects: document references, titles, and cross-theme consistency.
 
+## Goals
+
 - Follow WordPress coding standards for PHP, JavaScript, and CSS.
 - Prioritize security: sanitize input, escape output, verify nonces, and check capabilities.
 - Deliver accessible experiences: keyboard navigation, focus visibility, contrast, and reduced motion.
 - Maintain performance: minimize queries, cache where appropriate, and load only required assets.
 - Keep code clean, readable, and maintainable with minimal complexity.
 
-## Documentation and Comments
+## Documentation Standards
 
-- Keep README.md, readme.txt, and any guide docs current and consistent.
-- Review docs in `docs/` (including `docs/src.md`) when working in `src/`.
-- Use WordPress-style docblocks and short, meaningful comments that explain intent.
-- Always keep documentation up to date with code and workflow changes.
+- Apply DRY strictly: every piece of information lives in exactly one place.
+- `README.md` is the entry point only — quick start and a pointer to `docs/`.
+- Detailed content (scripts, build output, enqueuing, source structure, deployment) belongs in `docs/`.
+- Never duplicate content between `README.md` and `docs/`.
+- Keep `docs/` logically divided: `build.md` for build and scripts, `src.md` for source structure, `deployment.md` for releases.
+- When adding or changing information, put it in the correct doc and nowhere else.
+- Keep all docs current with the actual code; stale docs are worse than no docs.
+- Use WordPress-style docblocks for all PHP functions, classes, hooks, and filters.
+- Use JSDoc for JavaScript functions and modules.
+- Write comments that explain intent, not mechanics — prefer why over what.
 
 ## Development Workflow
 

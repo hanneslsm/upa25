@@ -63,7 +63,7 @@ The `{plugin-slug}` must match the plugin's directory name in `wp-content/plugin
 ### Examples
 
 - `plugins/woocommerce/` → Loads when WooCommerce is active
-- `plugins/sugar-calendar/` → Loads when Sugar Calendar is active
+- `plugins/hello-dolly/` → Loads when Hello Dolly is active
 - `plugins/contact-form-7/` → Loads when Contact Form 7 is active
 
 ### Auto-loading behavior
@@ -107,8 +107,8 @@ Move third-party or integration-specific SCSS out of `scss/` and into `includes/
 
 For example:
 
-- Prefer: `includes/plugins/sugar-calendar/style.scss`
-- Avoid: `scss/custom/sugar-calendar.scss`
+- Prefer: `includes/plugins/hello-dolly/style.scss`
+- Avoid: `scss/custom/hello-dolly.scss`
 
 ---
 
@@ -117,7 +117,7 @@ For example:
 ### Folder names
 
 - Use lowercase and hyphens.
-- Use real domain words (e.g., `sugar-calendar`, not `sc`).
+- Use real domain words (e.g., `hello-dolly`, not `hd`).
 
 ### File names
 
@@ -211,7 +211,7 @@ Include components are detected by CSS class matching:
 Plugin assets load automatically when their plugin is active:
 
 ```
-src/plugins/sugar-calendar/style.scss → Loads when Sugar Calendar is active
+src/plugins/hello-dolly/style.scss → Loads when Hello Dolly is active
 src/plugins/woocommerce/disable-checkout-note.php → Auto-required when WooCommerce is active
 ```
 
@@ -276,8 +276,8 @@ Don’t:
 
 ### New plugin integration
 
-- Path: `plugins/sugar-calendar/style.scss`
-- Optional: `plugins/sugar-calendar/view.js`
+- Path: `plugins/hello-dolly/style.scss`
+- Optional: `plugins/hello-dolly/view.js`
 - PHP customization: `plugins/woocommerce/disable-checkout-note.php`
 
 ### New cross-cutting UI feature

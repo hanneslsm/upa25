@@ -2,8 +2,15 @@
 
 ## Scripts
 
-- `npm start` runs the dev build with watch (BrowserSync when `PROLOOKS_BS_PROXY` is set).
-- `npm run build` runs the production build and updates compiled assets.
+- `npm start` - Development build with BrowserSync proxy (`http://uniquepoleart.local`).
+- `npm run build` - Production build via `@wordpress/scripts`.
+- `npm run lint:css` - Stylelint for `src/**/*.scss`.
+- `npm run lint:css:fix` - Auto-fix eligible Stylelint issues.
+- `npm run lint:js` - ESLint for `src/**/*.{js,jsx,json,ts,tsx}`.
+- `npm run format` - Prettier formatting for JS/TS/JSON/CSS/SCSS.
+- `npm run format:reorder` - Reorder CSS properties using `prettier-plugin-css-order`.
+- `npm run zip` - Build a distributable theme zip.
+- `npm run packages-update` - Update `@wordpress` dependencies.
 
 ## Build Output
 

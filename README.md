@@ -2,7 +2,9 @@
 
 ![Made in Europe](https://img.shields.io/badge/Made_in_Europe-white?logo=europeanunion&logoColor=FFCC00&labelColor=003399)
 
-A Full Site Editing (FSE) WordPress block theme for [Unique Pole Art](https://poledance-darmstadt.de).
+![Theme screenshot](screenshot.png)
+
+upa25 is a custom block theme for [Unique Pole Art](https://poledance-darmstadt.de). This theme includes a custom build pipeline and utilities that extend the block editor.
 
 ## Requirements
 

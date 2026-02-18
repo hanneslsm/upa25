@@ -45,3 +45,9 @@
 		}
 	}
 }
+
+
+/* Hide the default "Buy Now" button from the Sugar Calendar Event Ticketing plugin, as we are using the WooCommerce integration instead. */
+.sugar_calendar_event_ticketing_frontend_single_event{
+	display: none;
+}

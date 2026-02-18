@@ -1,144 +1,31 @@
-# `src/` — Theme Source Conventions
+# Source Structure
 
-This document defines **how we organize source files** in `src/` and **how to add new styles/scripts safely and predictably**.
+## Principles
 
-It is intentionally **tool-agnostic**: do not treat the current file structure, bundler setup, or `enqueue.php` as the source of truth. This README is the source of truth.
+- Organize by feature, not by file type.
+- Put block-owned assets in `blocks/`.
+- Keep global styles small and intentional.
+- Name things for humans.
 
----
+## Folders
 
-## Core Principles
+- `blocks/` - Block styles, scripts, and variations.
+- `includes/` - Theme-level components (non-block features).
+- `scss/` - Global foundations (tokens, base, utilities).
+- `images/`, `svg/` - Static assets copied into `build/`.
+- `plugins/` - Plugin-specific overrides when used.
 
-1. **Organize by feature, not by file type.**
-   Keep related SCSS, JS, and (if needed) PHP together.
-2. **Prefer block-aligned structure.**
-   If something is tied to a block, place it under `blocks/`.
-3. **Keep global styles small and intentional.**
-   Global SCSS should define tokens, base rules, and shared patterns only.
-4. **Name things for humans.**
-   Choose clear, stable names that reflect what the code *does*.
+## Conventions
 
----
+- Prefer `style.scss`, `editor.scss`, `view.js`, `editor.js`, `render.php`.
+- Block variations live in `blocks/**/styles/*.scss` and use `.is-style-*`.
+- Never reference `src/` assets at runtime; always use `build/`.
 
-## Top-Level Structure (Conceptual)
+## Adding a Feature
 
-The exact build pipeline may change, but the **meaning** of each area should remain stable:
-
-- `blocks/`
-  Block-specific assets and block style variations.
-- `includes/`
-  Feature folders for non-block behavior (UI features, utilities).
-- `plugins/`
-  Plugin-specific customizations (auto-loaded when plugin is active).
-- `scss/`
-  Global styling foundations (tokens, base, elements, utilities).
-- `images/`
-  Static raster images that ship with the theme.
-- `svg/`
-  Static SVG assets that ship with the theme.
-
-If you introduce a new top-level folder, document it here first.
-
----
-
-## `images/` and `svg/` — Static Theme Assets
-
-Use these folders for theme-owned assets (not WordPress Media Library uploads).
-
-Conventions:
-
-- Put raster files in `src/images/...` (e.g., `jpg`, `png`, `webp`, `avif`).
-- Put standalone SVGs in `src/svg/...`.
-- Keep subfolders stable and human-readable. The build output mirrors this structure.
-
-Build behavior (current pipeline):
-
-- Production builds copy `src/images/...` to `build/images/...`.
-- Production builds also create `build/webp/...` versions of raster files.
-- Production builds copy `src/svg/...` to `build/svg/...`.
-- Imports from SCSS/JS emit to `build/images/...` as asset files.
-
-Referencing assets at runtime:
-
-- Never reference `src/...` from PHP, patterns, or templates.
-- Reference built assets via `get_template_directory_uri() . '/build/images/...'` (or `/build/webp/...` and `/build/svg/...`).
-
----
-
-## `blocks/` — Block-Scoped Assets
-
-Use this when styles/scripts are tightly coupled to a block.
-
-### Custom blocks (create-block)
-
-Custom blocks are created with `@wordpress/create-block`. Keep the generated structure intact
-(`block.json`, `index.js`, `render.php` when dynamic, etc.). We build and ship from `build/`,
-never from `src/`.
-
-### Folder layout
-
-Use a two-level namespace:
-
-- `blocks/core/<block-name>/...` for core blocks
-- `blocks/<slug>/<block-name>/...` for custom blocks
-
-Examples:
-
-- `blocks/core/image/`
-- `blocks/core/button/`
-- `blocks/upa/hero/`
-
-### File roles (conventions)
-
-Inside a block folder, use these names when relevant:
-
-- `style.scss`
-  Front-end block styles.
-- `editor.scss`
-  Editor-only styles.
-- `view.js`
-  Front-end behavior.
-- `editor.js`
-  Editor behavior.
-- `render.php`
-  Server-side rendering, if needed.
-
-Not every block needs every file. Only add what you use.
-
-### Block style variations
-
-Use a `styles/` subfolder for block style variations:
-
-- `blocks/core/button/styles/fill.scss`
-- `blocks/core/button/styles/outline.scss`
-
-All block style variation selectors should start with:
-
-- `.is-style-...`
-
----
-
-## `includes/` — Feature Folders (Non-Block)
-
-Use `includes/` for cross-cutting features or behaviors that are **not owned by a single block**.
-
-Examples:
-
-- UI features (e.g., modals, spotlight effects, filters)
-- Shared interactive behaviors
-- Theme utilities
-
-### Folder layout
-
-Organize by slug/owner, then by feature:
-
-- `includes/<slug>/<feature>/...`
-
-Examples:
-
-- `includes/upa/spotlight/view.js`
-- `includes/custom/forms/style.scss`
-
-### File roles
+1. Decide the owner: `blocks/` (block), `includes/` (theme component), or `scss/` (global).
+2. Add only the entry files you need.
+3. Run `npm run build` and verify the compiled assets in `build/`.
 
 Use the same file naming conventions as blocks where possible:
 

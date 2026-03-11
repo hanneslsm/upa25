@@ -22,12 +22,12 @@ jobs:
         npm run build
 
     - name: 📂 FTP Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
       with:
         server: ${{ secrets.PROD_FTP_HOST }}
         username: ${{ secrets.PROD_FTP_USER }}
         password: ${{ secrets.PROD_FTP_PASSWORD }}
-        protocol: ftps-legac
+        protocol: ftps-legacy
         port: 22
         exclude: |
           **/.git/

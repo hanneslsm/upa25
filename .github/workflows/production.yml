@@ -28,6 +28,7 @@ jobs:
         username: ${{ secrets.PROD_FTP_USER }}
         password: ${{ secrets.PROD_FTP_PASSWORD }}
         protocol: sftp
+        port: 22
         exclude: |
           **/.git/
           **/.git/**

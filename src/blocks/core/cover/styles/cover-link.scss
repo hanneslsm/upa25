@@ -1,0 +1,57 @@
+///
+/// Cover
+///
+@use "../../../../scss/global/variables" as *;
+
+/* Block Style: Cover Link
+--------------------------------------------- */
+.wp-block-cover.is-style-cover-link {
+	text-shadow:
+		0 3px 16px rgba(0, 0, 0, 0.2),
+		0 3px 3px rgba(0, 0, 0, 0.8);
+
+	* {
+		transition: all 200ms ease-in-out;
+		interpolate-size: allow-keywords;
+	}
+
+	/* Link Funtionality */
+	a::after {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		overflow: clip;
+		content: "";
+	}
+
+	/* Link Styling */
+	a {
+		color: var(--wp--preset--color--base-2);
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+			text-decoration-color: var(--wp--preset--color--brand-4);
+			text-underline-offset: 0.2em;
+		}
+	}
+
+	.wp-block-button {
+		text-shadow: none;
+	}
+}
+
+@media screen and (min-width: $medium) {
+	.is-style-cover-link {
+		.has-background-dim {
+			display: none;
+		}
+
+		&:hover .has-background-dim {
+			display: inherit;
+		}
+	}
+}

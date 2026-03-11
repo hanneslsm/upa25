@@ -1,0 +1,26 @@
+///
+/// Image
+///
+
+/* Block Style: Picture Frame
+--------------------------------------------- */
+.wp-block-image.is-style-picture-frame {
+	transition: all 0.2s ease-in-out;
+
+	img {
+		transition: all 0.2s ease-in-out;
+		outline: 1px solid var(--wp--preset--color--base-3);
+		outline-offset: -1px;
+		box-shadow: var(--wp--preset--shadow--small);
+		border: 0.6em solid var(--wp--preset--color--base);
+		overflow: none;
+	}
+
+	&:hover img {
+		box-shadow: var(--wp--preset--shadow--medium);
+	}
+
+	&:hover {
+		transform: rotate(-2deg) !important;
+	}
+}

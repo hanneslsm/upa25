@@ -1,0 +1,18 @@
+///
+/// Paragraph
+///
+
+/* Block Style: Overline
+--------------------------------------------- */
+p.is-style-overline {
+	color: var(--wp--preset--color--brand);
+	font-weight: 600;
+}
+
+.is-style-section-brand-3 p.is-style-overline {
+	border-radius: 999px;
+	background-color: var(--wp--preset--color--brand-2);
+	padding: 0 2ex;
+	color: var(--wp--preset--color--brand-5);
+	font-weight: 400;
+}

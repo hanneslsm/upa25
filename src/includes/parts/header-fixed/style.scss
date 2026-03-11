@@ -1,0 +1,56 @@
+///
+/// Template-part: Header Fixed
+///
+
+:root {
+	--header-fixed-height: 0;
+	--header-fixed-admin-offset: 0;
+	--header-fixed-dynamic-offset: 0;
+}
+
+body.has-header-fixed {
+	padding-top: var(--header-fixed-height, 0);
+	scroll-padding-top: calc(
+		var(--header-fixed-height, 0px) + var(--header-fixed-admin-offset, 0px)
+	);
+}
+
+body.has-header-fixed
+	header.wp-block-template-part
+	.wp-block-group.is-style-header-fixed {
+	position: fixed;
+	top: calc(
+		var(--header-fixed-admin-offset, 0px) +
+			var(--header-fixed-dynamic-offset, 0px)
+	);
+	right: 0;
+	left: 0;
+	transform: translateY(0);
+	z-index: 9999;
+	transition: transform 0.25s ease;
+	will-change: transform;
+	inset-inline-end: 0;
+	inset-inline-start: 0;
+	width: 100%;
+}
+
+body.has-header-fixed
+	header.wp-block-template-part
+	.wp-block-group.is-style-header-fixed.is-hidden {
+	transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.has-header-fixed
+		header.wp-block-template-part
+		.wp-block-group.is-style-header-fixed {
+		transform: none;
+		transition: none;
+	}
+
+	body.has-header-fixed
+		header.wp-block-template-part
+		.wp-block-group.is-style-header-fixed.is-hidden {
+		transform: none;
+	}
+}

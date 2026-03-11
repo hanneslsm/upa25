@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"$schema": "https://schemas.wp.org/wp/6.7/theme.json",
-	"blockTypes": ["core/group", "core/columns", "core/column"],
+	"blockTypes": [ "core/group", "core/columns", "core/column" ],
 	"slug": "section-brand-4",
 	"title": "[Brand-4]",
 	"styles": {
@@ -10,19 +10,19 @@
 			"text": "var:preset|color|contrast-3"
 		},
 		"elements": {
-			"heading":{
+			"heading": {
 				"color": {
 					"text": "var:preset|color|contrast"
 				}
 			},
-			"link":{
+			"link": {
 				"color": {
 					"text": "var:preset|color|brand"
 				},
 				"typography": {
 					"textDecoration": "underline"
 				},
-				":hover":{
+				":hover": {
 					"color": {
 						"text": "var:preset|color|brand-2"
 					},
@@ -39,9 +39,18 @@
 					"text": "var:preset|color|base"
 				}
 			},
-			"core/separator":{
+			"core/separator": {
 				"color": {
 					"text": "var:preset|color|brand-3"
+				}
+			},
+			"core/accordion-item": {
+				"border": {
+					"bottom": {
+						"color": "var(--wp--preset--color--brand-3)",
+						"style": "solid",
+						"width": "1px"
+					}
 				}
 			}
 		}

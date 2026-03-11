@@ -28,7 +28,7 @@ jobs:
         username: ${{ secrets.PROD_FTP_USER }}
         password: ${{ secrets.PROD_FTP_PASSWORD }}
         exclude: |
-          **/.git*
-          **/.git*/**
+          **/.git/
+          **/.git/**
           **/node_modules/**
-          **/src/**
+          **/src/images/**

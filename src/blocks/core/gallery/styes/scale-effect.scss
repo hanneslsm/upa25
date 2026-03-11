@@ -1,0 +1,22 @@
+///
+/// Gallery
+///
+
+/* Block Style: Scale Effect
+--------------------------------------------- */
+.wp-block-gallery.is-style-scale-effect figure {
+	z-index: 1000;
+	transition: all 200ms ease-in-out;
+
+	&:hover {
+		transform: scale(1.1);
+	}
+
+	img {
+		transition: all 200ms ease-in-out;
+
+		&:hover {
+			box-shadow: var(--wp--preset--shadow--x-large);
+		}
+	}
+}

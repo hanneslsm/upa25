@@ -1,0 +1,19 @@
+///
+/// Block Style: Compact
+///
+
+/* Block Style for Table
+--------------------------------------------- */
+.wp-block-table.is-style-compact {
+	overflow-y: hidden;
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1;
+
+	td {
+		padding: var(--wp--preset--spacing--10);
+	}
+
+	.wp-element-caption {
+		line-height: 1.5;
+	}
+}

@@ -1,0 +1,53 @@
+/**
+ * Sugar Calendar plugin styles.
+ *
+ * @package UPA25
+ */
+
+.theme-upa25 {
+	.sc-frontend-single-event__details > div {
+		border-bottom: 1px solid var(--wp--preset--color--base-4);
+		padding-bottom: 0.5em;
+		width: 100%;
+	}
+
+	.sc_event_details_inner
+		.sc-frontend-single-event
+		.sugar_calendar_event_ticketing_frontend_single_event
+		.sugar_calendar_event_ticketing_frontend_single_event__buy_now,
+	.sc_event_details_inner
+		.sc-frontend-single-event
+		.sugar_calendar_event_ticketing_frontend_single_event
+		.sugar_calendar_event_ticketing_frontend_single_event__buy_now--woocommerce {
+		border-radius: 999px;
+		background: var(--wp--preset--color--brand-3);
+
+		&:hover {
+			background: var(--wp--preset--color--brand-2);
+		}
+	}
+
+	#sc-event-ticketing-wrap
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button,
+	#sc-event-ticketing-wrap
+		#sc-event-ticketing-price-wrap
+		.sc-event-ticketing-price-wrap__add-to-cart-section
+		.sc-event-ticketing-price-wrap__add-to-cart-section__btn-container
+		#sc-event-ticketing-buy-button-woocommerce {
+		border-radius: 999px;
+		background: var(--wp--preset--color--brand-3);
+
+		&:hover {
+			background: var(--wp--preset--color--brand-2);
+		}
+	}
+}
+
+
+/* Hide the default "Buy Now" button from the Sugar Calendar Event Ticketing plugin, as we are using the WooCommerce integration instead. */
+.sugar_calendar_event_ticketing_frontend_single_event{
+	display: none;
+}

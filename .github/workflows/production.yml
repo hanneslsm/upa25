@@ -27,6 +27,7 @@ jobs:
         server: ${{ secrets.PROD_FTP_HOST }}
         username: ${{ secrets.PROD_FTP_USER }}
         password: ${{ secrets.PROD_FTP_PASSWORD }}
+        protocol: ftps
         exclude: |
           **/.git/
           **/.git/**

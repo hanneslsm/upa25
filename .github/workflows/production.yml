@@ -11,7 +11,7 @@ jobs:
         shell: bash
     steps:
     - name: 🚚 Get latest code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         fetch-depth: 2
         ref: main
@@ -21,16 +21,12 @@ jobs:
         npm install
         npm run build
 
-    - name: 📂 FTP Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+    - name: 📂 SFTP Sync files
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.6
       with:
         server: ${{ secrets.PROD_FTP_HOST }}
         username: ${{ secrets.PROD_FTP_USER }}
+        sftp_only: true
         password: ${{ secrets.PROD_FTP_PASSWORD }}
-        protocol: ftps-legacy
         port: 22
-        exclude: |
-          **/.git/
-          **/.git/**
-          **/node_modules/**
-          **/src/images/**
+        rsyncArgs: --exclude=**/.git/ --exclude=**/node_modules/ --exclude=**/src/images/

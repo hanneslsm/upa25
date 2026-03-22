@@ -21,12 +21,16 @@ jobs:
         npm install
         npm run build
 
-    - name: 🚀 FTP/SFTP file deployer
-      uses: milanmk/actions-file-deployer@1.17
+    - name: 🚀 SFTP Upload
+      uses: Dylan700/sftp-upload-action@v1.2.3
       with:
-        remote-protocol: "sftp"
-        remote-host: ${{ secrets.PROD_FTP_HOST }}
-        remote-user: ${{ secrets.PROD_FTP_USER }}
-        remote-password: ${{ secrets.PROD_FTP_PASSWORD }}
-        sync: "full"
-        sync-delta-excludes: "**/.git/,**/node_modules/,**/src/images/"
+        server: ${{ secrets.PROD_FTP_HOST }}
+        username: ${{ secrets.PROD_FTP_USER }}
+        password: ${{ secrets.PROD_FTP_PASSWORD }}
+        port: 22
+        uploads: |
+          ./ => ./
+        ignore: |
+          .git
+          node_modules
+          src/images

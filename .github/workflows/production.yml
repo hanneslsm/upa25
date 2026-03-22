@@ -37,4 +37,3 @@ jobs:
           **/node_modules/**
           **/src/images
           **/src/images/**
-        delete: 'true'

@@ -31,6 +31,11 @@ jobs:
         uploads: |
           ./ => ./
         ignore: |
-          .git
-          node_modules
-          src/images
+          **/.git
+          **/.git/**
+          **/node_modules
+          **/node_modules/**
+          **/src/images
+          **/src/images/**
+        delete: 'true'
+        dry-run: 'true'

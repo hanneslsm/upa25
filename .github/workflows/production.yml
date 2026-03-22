@@ -38,4 +38,3 @@ jobs:
           **/src/images
           **/src/images/**
         delete: 'true'
-        dry-run: 'true'

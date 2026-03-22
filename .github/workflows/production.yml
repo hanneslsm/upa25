@@ -21,12 +21,12 @@ jobs:
         npm install
         npm run build
 
-    - name: 📂 SFTP Sync files
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.6
+    - name: 🚀 FTP/SFTP file deployer
+      uses: milanmk/actions-file-deployer@1.17
       with:
-        server: ${{ secrets.PROD_FTP_HOST }}
-        username: ${{ secrets.PROD_FTP_USER }}
-        sftp_only: true
-        password: ${{ secrets.PROD_FTP_PASSWORD }}
-        port: 22
-        rsyncArgs: --exclude=**/.git/ --exclude=**/node_modules/ --exclude=**/src/images/
+        remote-protocol: "sftp"
+        remote-host: ${{ secrets.PROD_FTP_HOST }}
+        remote-user: ${{ secrets.PROD_FTP_USER }}
+        remote-password: ${{ secrets.PROD_FTP_PASSWORD }}
+        sync: "full"
+        sync-delta-excludes: "**/.git/,**/node_modules/,**/src/images/"

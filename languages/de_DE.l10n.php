@@ -1,0 +1,2 @@
+<?php
+return ['domain'=>NULL,'plural-forms'=>'nplurals=2; plural=(n != 1);','language'=>'de_DE','project-id-version'=>'upa25','pot-creation-date'=>'2026-03-24T00:00:00+00:00','po-revision-date'=>'2026-03-24T00:00:00+00:00','x-generator'=>'manual','messages'=>['Tickets:'=>'Tickets:','Sold Out'=>'Ausverkauft','%s remaining'=>'%s verfügbar','%s registered'=>'%s angemeldet','Tickets Available'=>'Tickets verfügbar','Ticket availability'=>'Ticketverfügbarkeit']];

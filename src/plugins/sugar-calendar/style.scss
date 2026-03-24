@@ -51,3 +51,37 @@
 .sugar_calendar_event_ticketing_frontend_single_event{
 	display: none;
 }
+
+/* Tickets remaining progress bar */
+.theme-upa25 {
+	.sc-frontend-single-event__details__tickets-remaining {
+		.sc-frontend-single-event__details__val {
+			align-items: center;
+			display: flex;
+			flex-direction: row;
+			gap: 0.6em;
+		}
+
+		.upa25-tickets-value {
+			flex-shrink: 0;
+			white-space: nowrap;
+		}
+
+		.upa25-tickets-bar {
+			background: var(--wp--preset--color--base-4);
+			border-radius: 999px;
+			flex: 1;
+			height: 5px;
+			min-width: 3rem;
+			overflow: hidden;
+
+			&__fill {
+				background: var(--wp--preset--color--brand-3);
+				border-radius: 999px;
+				height: 100%;
+				transition: width 0.3s ease;
+				width: var(--upa25-tickets-pct, 0%);
+			}
+		}
+	}
+}

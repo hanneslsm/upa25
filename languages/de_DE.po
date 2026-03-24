@@ -39,3 +39,23 @@ msgstr "Tickets verfügbar"
 #. translators: ARIA label for the progress bar.
 msgid "Ticket availability"
 msgstr "Ticketverfügbarkeit"
+
+#. translators: Shown when all remaining tickets are already in the cart.
+msgid "Sorry, there are no more tickets available for this event."
+msgstr "Leider sind für diese Veranstaltung keine Tickets mehr verfügbar."
+
+#. translators: 1: total remaining, 2: quantity already in cart.
+msgid "Sorry, only %1$s ticket(s) remaining for this event. You already have %2$s in your cart."
+msgstr "Leider sind nur noch %1$s Ticket(s) für diese Veranstaltung verfügbar. Du hast bereits %2$s in deinem Warenkorb."
+
+#. translators: %s: number of tickets remaining.
+msgid "Sorry, only %s ticket(s) remaining for this event."
+msgstr "Leider sind nur noch %s Ticket(s) für diese Veranstaltung verfügbar."
+
+#. translators: %s: number of tickets remaining.
+msgid "Cart quantity was adjusted. Only %s ticket(s) remain for this event."
+msgstr "Die Menge im Warenkorb wurde angepasst. Es sind nur noch %s Ticket(s) für diese Veranstaltung verfügbar."
+
+#. translators: Shown when cart ticket item is removed because event sold out.
+msgid "This event is sold out. The ticket was removed from your cart."
+msgstr "Diese Veranstaltung ist ausverkauft. Das Ticket wurde aus deinem Warenkorb entfernt."

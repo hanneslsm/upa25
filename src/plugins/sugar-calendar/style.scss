@@ -54,6 +54,21 @@
 
 /* Tickets remaining progress bar */
 .theme-upa25 {
+	.upa25-tickets-bar {
+		background: var(--wp--preset--color--base-4);
+		border-radius: 999px;
+		overflow: hidden;
+
+		&__fill {
+			background: var(--wp--preset--color--brand-3);
+			border-radius: 999px;
+			display: block;
+			height: 100%;
+			transition: width 0.3s ease;
+			width: var(--upa25-tickets-pct, 0%);
+		}
+	}
+
 	.sc-frontend-single-event__details__tickets-remaining {
 		.sc-frontend-single-event__details__val {
 			align-items: center;
@@ -68,19 +83,42 @@
 		}
 
 		.upa25-tickets-bar {
-			background: var(--wp--preset--color--base-4);
-			border-radius: 999px;
 			flex: 1;
 			height: 5px;
 			min-width: 3rem;
-			overflow: hidden;
+		}
+	}
 
-			&__fill {
-				background: var(--wp--preset--color--brand-3);
-				border-radius: 999px;
-				height: 100%;
-				transition: width 0.3s ease;
-				width: var(--upa25-tickets-pct, 0%);
+	.sugar-calendar-event-list-block__event__datetime {
+		.upa25-sc-list-tickets {
+			align-items: center;
+			display: inline-flex;
+			gap: 0.5em;
+			margin-left: 0.6em;
+			white-space: nowrap;
+		}
+
+		.upa25-sc-list-tickets__label,
+		.upa25-tickets-value {
+			line-height: 1.2;
+		}
+
+		.upa25-tickets-bar--list {
+			flex: 0 0 4.5rem;
+			height: 5px;
+			min-width: 4.5rem;
+		}
+
+		.upa25-tickets-bar--list .upa25-tickets-bar__fill {
+			width: 0;
+		}
+
+		@for $i from 0 through 20 {
+			$pct-class: $i * 5;
+			$pct-width: $pct-class * 1%;
+
+			.upa25-tickets-bar--list.upa25-tickets-bar--pct-#{$pct-class} .upa25-tickets-bar__fill {
+				width: $pct-width;
 			}
 		}
 	}

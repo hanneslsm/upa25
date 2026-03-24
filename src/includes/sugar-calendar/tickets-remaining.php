@@ -13,15 +13,15 @@
  * For unlimited-capacity events the number of registered attendees is shown.
  *
  * @param object $event Sugar Calendar event object.
- * @return void
+ * @return array<string,mixed>|null
  */
-function upa25_render_sugar_calendar_tickets_remaining( $event ): void {
+function upa25_sc_get_tickets_display_data( $event ): ?array {
 	if ( ! is_object( $event ) || empty( $event->id ) ) {
-		return;
+		return null;
 	}
 
 	if ( ! function_exists( 'get_event_meta' ) ) {
-		return;
+		return null;
 	}
 
 	$event_id = (int) $event->id;
@@ -29,7 +29,7 @@ function upa25_render_sugar_calendar_tickets_remaining( $event ): void {
 	// Only render for events that have ticketing enabled.
 	$tickets_enabled = (bool) get_event_meta( $event_id, 'tickets', true );
 	if ( ! $tickets_enabled ) {
-		return;
+		return null;
 	}
 
 	$total_capacity = (int) get_event_meta( $event_id, 'ticket_quantity', true );
@@ -66,23 +66,44 @@ function upa25_render_sugar_calendar_tickets_remaining( $event ): void {
 			? sprintf( __( '%s registered', 'upa25' ), number_format_i18n( $purchased ) )
 			: __( 'Tickets Available', 'upa25' );
 	}
+
+	return array(
+		'value'     => $value,
+		'show_bar'  => $show_bar,
+		'pct_sold'  => $pct_sold,
+		'remaining' => $remaining,
+	);
+}
+
+/**
+ * Render a tickets-remaining row inside the Sugar Calendar event details area.
+ *
+ * @param object $event Sugar Calendar event object.
+ * @return void
+ */
+function upa25_render_sugar_calendar_tickets_remaining( $event ): void {
+	$data = upa25_sc_get_tickets_display_data( $event );
+
+	if ( empty( $data ) ) {
+		return;
+	}
 	?>
 	<div class="sc-frontend-single-event__details__tickets-remaining sc-frontend-single-event__details-row">
 		<div class="sc-frontend-single-event__details__label">
 			<?php esc_html_e( 'Tickets:', 'upa25' ); ?>
 		</div>
 		<div class="sc-frontend-single-event__details__val">
-			<span class="upa25-tickets-value"><?php echo esc_html( $value ); ?></span>
-			<?php if ( $show_bar ) : ?>
+			<span class="upa25-tickets-value"><?php echo esc_html( $data['value'] ); ?></span>
+			<?php if ( ! empty( $data['show_bar'] ) ) : ?>
 			<div
 				class="upa25-tickets-bar"
 				role="progressbar"
 				aria-label="<?php esc_attr_e( 'Ticket availability', 'upa25' ); ?>"
-				aria-valuenow="<?php echo esc_attr( 100 - $pct_sold ); ?>"
+				aria-valuenow="<?php echo esc_attr( 100 - (int) $data['pct_sold'] ); ?>"
 				aria-valuemin="0"
 				aria-valuemax="100"
 			>
-				<div class="upa25-tickets-bar__fill" style="--upa25-tickets-pct: <?php echo esc_attr( $pct_sold ); ?>%"></div>
+				<div class="upa25-tickets-bar__fill" style="--upa25-tickets-pct: <?php echo esc_attr( (int) $data['pct_sold'] ); ?>%"></div>
 			</div>
 			<?php endif; ?>
 		</div>
@@ -90,3 +111,39 @@ function upa25_render_sugar_calendar_tickets_remaining( $event ): void {
 	<?php
 }
 add_action( 'sugar_calendar_frontend_event_details', 'upa25_render_sugar_calendar_tickets_remaining', 55 );
+
+/**
+ * Add tickets remaining info to Sugar Calendar Event List block list view.
+ *
+ * @param string $output      Current date/time output.
+ * @param object $event       Sugar Calendar event object.
+ * @param string $event_date  Event date string.
+ * @param string $time_format Time format.
+ * @return string
+ */
+function upa25_add_tickets_to_sugar_calendar_list_view( string $output, $event, string $event_date, string $time_format ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	$data = upa25_sc_get_tickets_display_data( $event );
+
+	if ( empty( $data ) ) {
+		return $output;
+	}
+
+	$list_markup = '<span class="upa25-sc-list-tickets">';
+	$list_markup .= '<span class="upa25-sc-list-tickets__label">' . esc_html__( 'Tickets:', 'upa25' ) . '</span>';
+	$list_markup .= '<span class="upa25-tickets-value">' . esc_html( $data['value'] ) . '</span>';
+
+	if ( ! empty( $data['show_bar'] ) ) {
+		$pct_bucket = (int) ( round( (int) $data['pct_sold'] / 5 ) * 5 );
+		$pct_bucket = min( 100, max( 0, $pct_bucket ) );
+
+		$list_markup .= sprintf(
+			'<span class="upa25-tickets-bar upa25-tickets-bar--list upa25-tickets-bar--pct-%1$d" aria-hidden="true"><span class="upa25-tickets-bar__fill"></span></span>',
+			$pct_bucket
+		);
+	}
+
+	$list_markup .= '</span>';
+
+	return trim( $output . ' ' . $list_markup );
+}
+add_filter( 'sugar_calendar_block_event_list_event_list_view_event_view_dt_display', 'upa25_add_tickets_to_sugar_calendar_list_view', 10, 4 );

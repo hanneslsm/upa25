@@ -4,6 +4,8 @@
  * @package UPA25
  */
 
+@use "../../scss/global/variables" as *;
+
 .theme-upa25 {
 	.sc-frontend-single-event__details > div {
 		border-bottom: 1px solid var(--wp--preset--color--base-4);
@@ -106,6 +108,7 @@
 		.upa25-tickets-bar--list {
 			flex: 0 0 4.5rem;
 			height: 5px;
+			max-width: 10rem;
 			min-width: 4.5rem;
 		}
 
@@ -119,6 +122,28 @@
 
 			.upa25-tickets-bar--list.upa25-tickets-bar--pct-#{$pct-class} .upa25-tickets-bar__fill {
 				width: $pct-width;
+			}
+		}
+	}
+
+	@media (max-width: $large) {
+		.sugar-calendar-event-list-block__event__datetime {
+			align-items: flex-start;
+			flex-wrap: wrap;
+
+			.upa25-sc-list-tickets {
+				display: flex;
+				flex-basis: 100%;
+				order: 10;
+				margin-left: 0;
+				margin-top: 0.35em;
+				width: 100%;
+			}
+
+			.upa25-tickets-bar--list {
+				flex: 1;
+				max-width: 6rem;
+				min-width: 3.5rem;
 			}
 		}
 	}

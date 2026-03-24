@@ -1,6 +1,6 @@
 {
 	"name": "upa25",
-	"version": "0.3.2",
+	"version": "0.4.0",
 	"main": "index.js",
 	"scripts": {
 		"start": "PROLOOKS_BS_PROXY=http://uniquepoleart.local wp-scripts start --config webpack.dev.js",

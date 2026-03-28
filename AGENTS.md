@@ -24,6 +24,9 @@
 - Keep `docs/` logically divided: `build.md` for build and scripts, `src.md` for source structure, `deployment.md` for releases.
 - When adding or changing information, put it in the correct doc and nowhere else.
 - Keep all docs current with the actual code; stale docs are worse than no docs.
+- Keep version metadata in sync when behavior or public output changes (for example file header `@version`, theme/plugin version fields, and related docs).
+- Add or update changelog entries when changes are user-visible, behavior-affecting, or release-relevant.
+- Follow WordPress changelog style when applicable (clear headings, concise bullet points, and human-readable change summaries).
 - Use WordPress-style docblocks for all PHP functions, classes, hooks, and filters.
 - Use JSDoc for JavaScript functions and modules.
 - Write comments that explain intent, not mechanics — prefer why over what.

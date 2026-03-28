@@ -7,7 +7,7 @@
  * - build/includes/{category}/{name}/ — Component assets (plugins, utilities, etc.)
  *
  * @package upa25
- * @version 5.2.0
+ * @version 5.2.1
  */
 
 declare( strict_types=1 );
@@ -316,6 +316,24 @@ function upa25_get_includes_component_map(): array {
 function upa25_is_plugin_active( string $slug ): bool {
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	// First try by directory slug against active plugins.
+	$active_plugins = (array) get_option( 'active_plugins', array() );
+	foreach ( $active_plugins as $plugin_file ) {
+		if ( $slug === dirname( (string) $plugin_file ) ) {
+			return true;
+		}
+	}
+
+	// Multisite network-active plugins.
+	if ( is_multisite() ) {
+		$network_plugins = (array) get_site_option( 'active_sitewide_plugins', array() );
+		foreach ( array_keys( $network_plugins ) as $plugin_file ) {
+			if ( $slug === dirname( (string) $plugin_file ) ) {
+				return true;
+			}
+		}
 	}
 
 	// Try common patterns

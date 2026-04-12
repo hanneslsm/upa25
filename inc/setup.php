@@ -30,6 +30,8 @@ add_action('after_setup_theme', 'upa25_setup');
  * @link https://developer.wordpress.org/plugins/hooks/actions/
  * @since 0.4.4
  */
-if ( !function_exists( 'wp_password_change_notification' ) ) {
-    function wp_password_change_notification() {}
+if ( ! function_exists( 'wp_password_change_notification' ) ) {
+    function wp_password_change_notification( $user ) {
+        return;
+    }
 }
